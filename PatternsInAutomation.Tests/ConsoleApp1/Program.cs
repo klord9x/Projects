@@ -5,6 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using PatternsInAutomation.Tests.Beginners;
 using PatternsInAutomation.Tests.Beginners.Selenium.Bing.Pages;
 using System;
+using ConsoleApp1.Beginners.Pages.FecreditLogin;
 using POP = PatternsInAutomation.Tests.Beginners.Pages.BingMainPage;
 
 namespace ConsoleApp1
@@ -19,7 +20,7 @@ namespace ConsoleApp1
             Program a = new Program();
             a.SetupTest();
 
-            a.SearchTextInBing_First();
+            a.LoginFinnOne();
         }
 
 
@@ -37,12 +38,11 @@ namespace ConsoleApp1
         }
 
         [TestMethod]
-        public void SearchTextInBing_First()
+        public void LoginFinnOne()
         {
-            BingMainPage bingMainPage = new BingMainPage(this.Driver);
-            bingMainPage.Navigate();
-            bingMainPage.Search("Automate The Planet");
-            bingMainPage.ValidateResultsCount("340,000 RESULTS");
+            FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver);
+            loginPage.Navigate();
+            loginPage.Login();
         }
 
         [TestMethod]
