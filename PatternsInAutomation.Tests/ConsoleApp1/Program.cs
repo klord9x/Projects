@@ -7,6 +7,8 @@ using PatternsInAutomation.Tests.Beginners.Selenium.Bing.Pages;
 using System;
 using ConsoleApp1.Beginners.Pages.FecreditLogin;
 using POP = PatternsInAutomation.Tests.Beginners.Pages.BingMainPage;
+using OpenQA.Selenium.Chrome;
+using System.IO;
 
 namespace ConsoleApp1
 {
@@ -27,8 +29,12 @@ namespace ConsoleApp1
         [TestInitialize]
         public void SetupTest()
         {
-            this.Driver = new FirefoxDriver();
+            var options = new ChromeOptions();
+            options.AddExtension(Path.GetFullPath(@"C:\extensions\0.0.10_0.crx"));
+//            var driver = new ChromeDriver(options);
+            this.Driver = new ChromeDriver(options);
             this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
+//            String mainHandle = this.Driver.CurrentWindowHandle;
         }
 
         [TestCleanup]
