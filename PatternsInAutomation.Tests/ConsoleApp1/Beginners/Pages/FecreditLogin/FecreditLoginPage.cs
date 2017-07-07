@@ -65,6 +65,9 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
             
             //switch to new window. Page 2
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
+//            _browser.SwitchTo().DefaultContent();
+            _browser.SwitchTo().Frame("frameForwardToApp");
+            _browser.SwitchTo().Frame("contents");
             this.Map.BtnPage2Click1Element.Click();
             this.Map.BtnPage2Click2Element.Click();
 

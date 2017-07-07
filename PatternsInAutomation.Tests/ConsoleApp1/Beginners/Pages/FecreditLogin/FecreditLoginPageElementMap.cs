@@ -60,10 +60,7 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
         {
             get
             {
-//                return this._browser.FindElement(By.XPath("/html/body/form/div[3]"));
-//                return this._browser.FindElement(By.ClassName("menuRow"));
-//                return this._browser.FindElement(By.CssSelector("td.menuTree"));
-                return this._browser.FindElement(By.CssSelector("td.menuRow"));
+                return this._browser.FindElement(By.XPath("/html/body/form/div[3]/table/tbody/tr/td[1]"));
             }
         }
 
@@ -71,8 +68,7 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
         {
             get
             {
-//                return this._browser.FindElement(By.XPath("//*[@id='178']/div "));
-                return this._browser.FindElement(By.ClassName("menu"));
+                return this._browser.FindElement(By.XPath("//*[@id='178']/div "));
             }
         }
 
