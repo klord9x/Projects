@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternsInAutomation.Tests", "PatternsInAutomation.Tests\PatternsInAutomation.Tests.csproj", "{8E4E4E04-3409-4454-998A-38BCBE3779CF}"
 EndProject
@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.NLog.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.EventLogOperations", "CSharp.Series.EventLogOperations\CSharp.Series.EventLogOperations.csproj", "{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDataVPBank", "ConsoleApp1\AutoDataVPBank.csproj", "{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

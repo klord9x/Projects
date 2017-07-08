@@ -8,8 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace ConsoleApp1.Beginners.Pages.FecreditLogin
+namespace AutoDataVPBank.Beginners.Pages.FecreditLogin
 {
    
     public class ReCord
@@ -35,12 +36,12 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
     class FecreditLoginPage
     {
         private readonly IWebDriver _browser;
-        private const string Name = @"CC100278";
-        private const string Password = @"Khoinguyen@2";
+        //private const string Name = @"CC100278";
+        //private const string Password = @"Khoinguyen@2";
         private const string Url = @"https://cps.fecredit.com.vn/finnsso/gateway/SSOGateway?requestID=7000003";
 
-        private const string Signed = "02/05/2016";
-        private const string SignedTo = "02/05/2016";
+        //private const string Signed = "02/05/2016";
+        //private const string SignedTo = "02/05/2016";
         IWebElement page = null;
 
         public FecreditLoginPage(IWebDriver browser)
@@ -65,13 +66,13 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
         /// <summary>
         /// #1. Login Url.
         /// </summary>
-        public void Login()
+        public void Login(string User, string pass, string signform, string signto, string active)
         {
             this.Map.TxtNameElement.Clear();
-            this.Map.TxtNameElement.SendKeys(Name);
+            this.Map.TxtNameElement.SendKeys(User);
 
             this.Map.TxtPasswordElement.Clear();
-            this.Map.TxtPasswordElement.SendKeys(Password);
+            this.Map.TxtPasswordElement.SendKeys(pass);
 
             this.Map.DataActionElement.Click();
             /*Check have alert:
@@ -109,27 +110,27 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            this.EnquiryScreen();
+            this.EnquiryScreen(signform, signto, active);
         }
 
         /// <summary>
         /// 2. Enquiry Screen Page, Search content.
         /// </summary>
 
-        public void EnquiryScreen ()
+        public void EnquiryScreen (string Signeform, string signto, string active)
         {
             string page1WindowHandle = _browser.CurrentWindowHandle; //Save Enquiry Screen.
             SelectElement selActivityId = new SelectElement(this.ScreenMap.SelectBoxSelActivityIdElement);
             SelectElement selProduct = new SelectElement(this.ScreenMap.SelectBoxSelProductElement);
 
-            selActivityId.SelectByValue("BDE");
+            selActivityId.SelectByText(active);
             selProduct.SelectByValue("PERSONAL");
 
             this.ScreenMap.TxtSignedToElement.Clear();
-            this.ScreenMap.TxtSignedToElement.SendKeys(SignedTo);
+            this.ScreenMap.TxtSignedToElement.SendKeys(signto);
 
             this.ScreenMap.TxtSingedElement.Clear();
-            this.ScreenMap.TxtSingedElement.SendKeys(Signed);
+            this.ScreenMap.TxtSingedElement.SendKeys(Signeform);
 //            driver.Manage().Timeouts().SetPageLoadTimeout(timespan);
 
 //            _browser.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(120));
@@ -180,7 +181,7 @@ namespace ConsoleApp1.Beginners.Pages.FecreditLogin
             Microsoft.Office.Interop.Excel._Worksheet oSheet;
             Microsoft.Office.Interop.Excel.Range oRng;
             object misvalue = System.Reflection.Missing.Value;
-            string pathExcelFile = @"I:\AutoDataVPBank.xls";
+            string pathExcelFile = Application.StartupPath + @"\AutoDataVPBank.xls";
             //check File exits
             if (File.Exists(pathExcelFile))
             {

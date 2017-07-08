@@ -6,7 +6,7 @@ using OpenQA.Selenium.Support.UI;
 using BingMainPage = PatternsInAutomation.Tests.Beginners.Selenium.Bing.Pages.BingMainPage;
 using POP = PatternsInAutomation.Tests.Beginners.Pages.BingMainPage;
 
-namespace ConsoleApp1.Beginners
+namespace AutoDataVPBank.Beginners
 {
     [TestClass]
     public class BingTests
