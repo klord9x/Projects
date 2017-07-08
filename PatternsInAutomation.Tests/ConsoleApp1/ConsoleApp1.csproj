@@ -33,6 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.UnitTesting.11.0.50727.1\lib\net45\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
       <Private>True</Private>
@@ -58,6 +63,7 @@
     <Compile Include="Beginners\Pages\BingMainPage\BingMainPage.cs" />
     <Compile Include="Beginners\Pages\BingMainPage\BingMainPageElementMap.cs" />
     <Compile Include="Beginners\Pages\BingMainPage\BingMainPageValidator.cs" />
+    <Compile Include="Beginners\Pages\FecreditLogin\EnquiryScreenPageElementMap.cs" />
     <Compile Include="Beginners\Pages\FecreditLogin\FecreditLoginPage.cs" />
     <Compile Include="Beginners\Pages\FecreditLogin\FecreditLoginPageElementMap.cs" />
     <Compile Include="Beginners\Selenium\Bing\Pages\BingMainPage.cs" />

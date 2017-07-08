@@ -29,6 +29,8 @@ namespace ConsoleApp1
         [TestInitialize]
         public void SetupTest()
         {
+            System.Environment.SetEnvironmentVariable("webdriver.chrome.driver",
+                @"C:/chromedriver_win32/chromedriver.exe");
             var options = new ChromeOptions();
             options.AddExtension(Path.GetFullPath(@"C:\extensions\0.0.10_0.crx"));
 //            var driver = new ChromeDriver(options);
