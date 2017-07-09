@@ -19,14 +19,6 @@ namespace AutoDataVPBank
 {
     class Program
     {
-        
-
-        //static void Main(string[] args)
-        //{
-        //    Program a = new Program();
-        //    a.SetupTest();
-        //    a.LoginFinnOne();
-        //}
         [STAThread]
         static void Main()
         {
