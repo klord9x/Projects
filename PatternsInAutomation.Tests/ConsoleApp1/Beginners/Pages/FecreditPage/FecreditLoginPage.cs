@@ -29,6 +29,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         public string TsaCode { get; set; }
         public string TsaName { get; set; }
         public string SaPhoneNumber { get; set; }
+        public string ApplicationNo { get; set; }
+        public string Assign { get; set; }
+        public string ReferncesName { get; set; }
+        public string History { get; set; }
 
     }
     
@@ -65,7 +69,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <summary>
         /// #1. Login Url.
         /// </summary>
-        public void Login(string user, string pass, string signform, string signto, string active)
+        public void Login(string user, string pass, string signform, string signto, string active, string stage)
         {
             string message = "";
             LoginMap.TxtNameElement.Clear();
@@ -136,13 +140,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            EnquiryScreen(signform, signto, active);
+            EnquiryScreen(signform, signto, active, stage);
         }
 
         /// <summary>
         /// 2. Enquiry Screen Page, Search content.
         /// </summary>
-        public void EnquiryScreen (string signform, string signto, string active)
+        public void EnquiryScreen (string signform, string signto, string active, string stage)
         {
             string enquiryScreenWindow = _browser.CurrentWindowHandle; //Save Enquiry Screen.
             SelectElement selActivityId = new SelectElement(ScreenMap.SelectBoxSelActivityIdElement);
@@ -186,20 +190,21 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             _Workbook oWb = oXl.Workbooks.Add("");
             var oSheet = (_Worksheet)oWb.ActiveSheet;
             //Add table headers going cell by cell.
-            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number" };
+            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History"};
+
             for (int i = 0; i < lheader.Count; i++)
             {
                 oSheet.Cells[1, i + 1] = lheader[i];
             }
 
             //Format A1:D1 as bold, vertical alignment = center.
-            oSheet.Range["A1", "O1"].Font.Bold = true;
-            oSheet.Range["A1", "O1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
+            oSheet.Range["A1", "S1"].Font.Bold = true;
+            oSheet.Range["A1", "S1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
             int indexRecord = 2;
             List < ReCord >lxxReCords= new List<ReCord>();
 
             //TODO Call function Fetch all Row of the table 
-            GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow);
+            GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage);
 
             //TODO Click next page or select next page:
             //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
@@ -228,11 +233,11 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     Console.WriteLine(e);
                 }
 
-                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow);
+                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow,stage);
             }
 
             //AutoFit columns A:D.
-            var oRng = oSheet.Range["A1", "O1"];
+            var oRng = oSheet.Range["A1", "S1"];
             oRng.EntireColumn.AutoFit();
 
             oXl.Visible = false;
@@ -250,8 +255,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// Get all detail need export.
         /// </summary>
         /// <param name="e"></param>
+        /// <param name="stage"></param>
         /// <returns></returns>
-        public ReCord GetAllDetail(IWebElement e)
+        public ReCord GetAllDetail(IWebElement e, string stage)
         {
             e.Click();
             //Switch to last window: detail 1
@@ -273,6 +279,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             string selTSACode = _browser.FindElementSafe(By.Name("selTSACode")).GetAttribute("value");
             string selDSAName = _browser.FindElementSafe(By.Name("selDSAName")).GetAttribute("value");
             string selTSAName = _browser.FindElementSafe(By.Name("selTSAName")).GetAttribute("value");
+            string servicePhone = _browser.FindElementSafe(By.Name("txtServicePhoneNumber")).GetAttribute("value");
 
             //=======================
 
@@ -298,13 +305,39 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             tabWork.Click();
             //Just get row by Name, don't need foreach all table.
             string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttribute("value");
-            string homePhone = _browser.FindElementSafe(By.Name("txtPhoneOne")).GetAttribute("value");
             string mobile = _browser.FindElementSafe(By.Name("txtMobile")).GetAttribute("value");
 
             //2.3 Address: ???
             //2.4 Income/Liability tab:
             IWebElement tabIncome = _browser.FindElementSafe(By.PartialLinkText("Income/Liability"));
             tabIncome.Click();
+            string inCome1 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]")).Text;
+            string inCome2 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[3]/td[3]")).Text;
+
+            //3. References:
+            IWebElement tabReferences = _browser.FindElementSafe(By.PartialLinkText("References"));
+            string strReferences = "";
+            tabReferences.Click();
+            //Select all href link:
+            List<IWebElement> listRef = new List<IWebElement> (_browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
+           
+            foreach (var href in listRef)
+            {
+                strReferences += href.Text +" :";
+                href.Click();
+                strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttribute("value") + "; ";
+            }
+
+            //4. History: Get Select second last element with css
+            string history = "";
+            if (stage == "Reject Review")
+            {
+                IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
+                tabHistory.Click();
+                history = _browser.FindElementSafe(By.CssSelector("#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font")).Text;
+            }
+           
+
 
             ReCord rec = new ReCord
             {
@@ -312,17 +345,19 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 Gender = selSex,
                 Age = txtAge,
                 IdCardNumber = txtTINNo,
-                Phone = homePhone,
+                Phone = mobile,
                 State = selState,
                 Stage = "",
                 Scheme = scheme,
                 Company = companyName,
-                Income = "",
+                Income = inCome1,
                 DsaCode = selDSACode,
                 DsaName = selDSAName,
                 TsaCode = selTSACode,
                 TsaName = selTSAName,
-                SaPhoneNumber = mobile
+                SaPhoneNumber = servicePhone,
+                ReferncesName = strReferences,
+                History = history,
             };
             _browser.Close();
 
@@ -360,12 +395,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="indexRecord"></param>
         /// <param name="oSheet"></param>
         /// <param name="enquiryScreenWindow"></param>
-        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow)
+        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage)
         {
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
-            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
+//            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
+//            String assigned = "";
             // Traverse each row
             foreach (var elemTr in lstTrElem)
             {
@@ -377,17 +413,20 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));
                 if (lstTdElem.Count > 0)
                 {
+                    var detailHref = lstTdElem[0].Text;
+                    //string applicationNo = 
+                    var assigned = lstTdElem[1].Text;
                     var fullNameRow = lstTdElem[2].Text;
                     // Traverse each column
-                    foreach (var elemTd in lstTdElem)
-                    {
-                        //Get Text value of first td.
-                        if (lstTdElem.First() == elemTd)
-                        {
-                            detailHref = elemTd.Text;
-                        }
-
-                    }
+//                    foreach (var elemTd in lstTdElem)
+//                    {
+//                        //Get Text value of first td.
+//                        if (lstTdElem.First() == elemTd)
+//                        {
+//                            detailHref = elemTd.Text;
+//                        }
+//
+//                    }
 
                     //Click to detail1 Row:
                     //Or can be identified as href link 
@@ -399,7 +438,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     }
                     IWebElement element = _browser.FindElementSafe(By.PartialLinkText(detailHref));
 
-                    ReCord recData = GetAllDetail(element);
+                    ReCord recData = GetAllDetail(element, stage);
 
                     // Create an array to multiple values at once.
                     List<string> arrRecord = new List<string>() { };
@@ -410,7 +449,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     arrRecord.Add(recData.IdCardNumber);
                     arrRecord.Add(recData.Phone);
                     arrRecord.Add(recData.State);
-                    arrRecord.Add(recData.Stage);
+                    arrRecord.Add(stage);
                     arrRecord.Add(recData.Scheme);
                     arrRecord.Add(recData.Company);
                     arrRecord.Add(recData.Income);
@@ -419,8 +458,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     arrRecord.Add(recData.TsaCode);
                     arrRecord.Add(recData.TsaName);
                     arrRecord.Add(recData.SaPhoneNumber);
+                    arrRecord.Add(detailHref);
+                    arrRecord.Add(assigned);
+                    arrRecord.Add(recData.ReferncesName);
+                    arrRecord.Add(recData.History);
                     string indexRow = "A" + indexRecord;
-                    string indexCol = "O" + indexRecord;
+                    string indexCol = "S" + indexRecord;
                     oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
                     indexRecord++;
                 }

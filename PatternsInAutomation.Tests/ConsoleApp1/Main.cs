@@ -45,7 +45,7 @@ namespace AutoDataVPBank
         {
             FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver);
             loginPage.Navigate();
-            loginPage.Login(txtUser.Text,txtPass.Text,txtSignFo.Text,txtSignTo.Text,cboActive.Text);
+            loginPage.Login(txtUser.Text,txtPass.Text,txtSignFo.Text,txtSignTo.Text,cboActive.Text, this.cboActive.Text);
         }
 
         private void Main_Load(object sender, EventArgs e)
