@@ -108,7 +108,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (LoginMap.BtnPage1CasarchElement == null)
             {
                 _browser.Quit();
-                MessageBox.Show(message, @"Oh noes!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(message, @"Oh No!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Console.WriteLine(@"Can't login");
                 return;
             }
@@ -261,6 +261,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //Switch to last window: detail 2
             element.Click();
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
+            //TODO: Get all value of tab.
+
             //Handler data in detail2:
             //1. Sourcing: /html/body/form/table[5]; /html/body/form/table[6]
             //Handler table by column.
@@ -325,6 +327,30 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             _browser.Close();
 
             return rec;
+        }
+
+        /// <summary>
+        /// Get value of Input element in Tag.
+        /// </summary>
+        /// <param name="tabName"></param>
+        /// <param name="txtNameList"></param>
+        /// <param name="listRecord"></param>
+        public List<KeyValuePair<string, string>> GetTxtValuesInTag(String tabName, String txtNameList, ref List<KeyValuePair<string, string>> listRecord)
+        {
+            string[] arrName = txtNameList.Split(',');
+            //Click to tab:
+            IWebElement tab = _browser.FindElementSafe(By.PartialLinkText(tabName));
+            tab.Click();
+            foreach (var txtName in arrName)
+            {
+                IWebElement txtElement = _browser.FindElementSafe(By.Name(txtName));
+                if (txtElement != null)
+                {
+                    listRecord.Add(new KeyValuePair<string, string>(txtName, txtElement.GetAttribute("value")));
+                }
+            }
+
+            return listRecord;
         }
 
         /// <summary>
