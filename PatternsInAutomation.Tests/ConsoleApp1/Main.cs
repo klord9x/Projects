@@ -24,14 +24,18 @@ namespace AutoDataVPBank
         {
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
+            string curFile = @"C:\extensions\0.0.10_0.crx";
             var options = new ChromeOptions();
-            options.AddExtension(Path.GetFullPath(@"C:\extensions\0.0.10_0.crx"));
+            if (File.Exists(curFile))
+            {
+                options.AddExtension(Path.GetFullPath(curFile));
+            }
             this.Driver = new ChromeDriver(chromeDriverService, options);
             this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
         }
 
         [TestCleanup]
-        public void TeardownTest()
+        public void Teardown()
         {
             this.Driver.Quit();
         }
@@ -46,8 +50,8 @@ namespace AutoDataVPBank
 
         private void Main_Load(object sender, EventArgs e)
         {
-            this.txtUser.Text = "CC100278";
-            this.txtPass.Text = "Khoinguyen@2";
+            this.txtUser.Text = @"CC100278";
+            this.txtPass.Text = @"Khoinguyen@2";
             this.txtSignFo.Text = @"02/05/2016";
             this.txtSignTo.Text = @"02/05/2016";
             this.cboActive.SelectedItem = "Detail Data Entry";
@@ -57,8 +61,8 @@ namespace AutoDataVPBank
         {
             SetupDriver();
             LoginFinnOne();
-            TeardownTest();
-            this.Close();
+            Teardown();
+//            this.Close();
         }
        
     }

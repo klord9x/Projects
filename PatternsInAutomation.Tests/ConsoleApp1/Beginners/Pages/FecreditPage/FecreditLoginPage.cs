@@ -5,6 +5,7 @@ using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using Application = System.Windows.Forms.Application;
 
@@ -46,7 +47,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             _browser = browser;
         }
 
-        protected FecreditLoginPageElementMap Map
+        protected FecreditLoginPageElementMap LoginMap
         {
             get { return new FecreditLoginPageElementMap(_browser); }
         }
@@ -60,20 +61,22 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             _browser.Navigate().GoToUrl(Url);
         }
+
         /// <summary>
         /// #1. Login Url.
         /// </summary>
         public void Login(string user, string pass, string signform, string signto, string active)
         {
-            Map.TxtNameElement.Clear();
-            Map.TxtNameElement.SendKeys(user);
+            string message = "";
+            LoginMap.TxtNameElement.Clear();
+            LoginMap.TxtNameElement.SendKeys(user);
 
-            Map.TxtPasswordElement.Clear();
-            Map.TxtPasswordElement.SendKeys(pass);
+            LoginMap.TxtPasswordElement.Clear();
+            LoginMap.TxtPasswordElement.SendKeys(pass);
 
             try
             {
-                Map.DataActionElement.Click();
+                LoginMap.DataActionElement.Click();
             }
             catch (Exception e)
             {
@@ -90,7 +93,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 WebDriverWait wait = new WebDriverWait(_browser, TimeSpan.FromSeconds(5));
                 wait.Until(ExpectedConditions.AlertIsPresent());
                 IAlert alert = _browser.SwitchTo().Alert();
-                Console.WriteLine(alert.Text);
+                message = alert.Text;
+                Console.WriteLine(message);
                 alert.Accept();
             }
             catch (Exception e)
@@ -101,7 +105,14 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //switch to new window. Page 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             string enquiryScreenWindow = _browser.CurrentWindowHandle;
-            Map.BtnPage1CasarchElement.Click();
+            if (LoginMap.BtnPage1CasarchElement == null)
+            {
+                _browser.Quit();
+                MessageBox.Show(message, @"Oh noes!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Console.WriteLine(@"Can't login");
+                return;
+            }
+            LoginMap.BtnPage1CasarchElement?.Click();
 
             //switch to new window. Page 2
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
@@ -109,8 +120,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 _browser.SwitchTo().Frame("frameForwardToApp");
                 _browser.SwitchTo().Frame("contents");
-                Map.BtnPage2Click1Element.Click();
-                Map.BtnPage2Click2Element.Click();
+                LoginMap.BtnPage2Click1Element.Click();
+                LoginMap.BtnPage2Click2Element.Click();
             }
             catch (WebDriverException e)
             {
@@ -121,7 +132,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch back to original window. Page 1
             _browser.SwitchTo().Window(enquiryScreenWindow);
-            Map.BtnPage1ExitElement.Click();
+            LoginMap.BtnPage1ExitElement.Click();
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
