@@ -170,9 +170,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 Thread.Sleep(5000);
                 Console.WriteLine(e);
             }
-
-            //Try find result if exist: 
-            var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 10);
+            try
+            {
+                //Try find result if exist: 
+                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 10);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+//                throw;
+            }
+            
 
 
             ////////////////////////////////////////////////////////////////////////////////////
