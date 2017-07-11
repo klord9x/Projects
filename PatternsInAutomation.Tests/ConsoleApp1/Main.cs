@@ -23,18 +23,18 @@ namespace AutoDataVPBank
         [TestInitialize]
         public void SetupDriver()
         {
-            //var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            //chromeDriverService.HideCommandPromptWindow = true;
-            //string curFile = @"C:\extensions\0.0.10_0.crx";
-            //var options = new ChromeOptions();
-            //if (File.Exists(curFile))
-            //{
-            //    options.AddExtension(Path.GetFullPath(curFile));
-            //}
-            //this.Driver = new ChromeDriver(chromeDriverService, options);
-            var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
-            firefoxDriverService.HideCommandPromptWindow = true;
-            this.Driver = new FirefoxDriver(firefoxDriverService);
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            chromeDriverService.HideCommandPromptWindow = true;
+            string curFile = @"C:\extensions\0.0.10_0.crx";
+            var options = new ChromeOptions();
+            if (File.Exists(curFile))
+            {
+                options.AddExtension(Path.GetFullPath(curFile));
+            }
+            this.Driver = new ChromeDriver(chromeDriverService, options);
+//            var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
+//            firefoxDriverService.HideCommandPromptWindow = true;
+//            this.Driver = new FirefoxDriver(firefoxDriverService);
             this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
         }
 

@@ -135,7 +135,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
 
 //            _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-//            _browser.WaitForLoad();
+            _browser.WaitForLoad();
 
             //switch back to original window. Page 1. Logout
             _browser.SwitchTo().Window(page1WindowHandle);
@@ -143,7 +143,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            _browser.WaitForLoad();
+//            _browser.WaitForLoad();
             EnquiryScreen(signform, signto, active, stage);
         }
 
@@ -198,43 +198,59 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 File.Delete(pathExcelFile);
             }
             //Start Excel and get Application object.
-            Microsoft.Office.Interop.Excel.Application oXl;
-            try
-            {
-                oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                Console.WriteLine(e);
-                return;
-            }
+//            Microsoft.Office.Interop.Excel.Application oXl;
+//            try
+//            {
+//                oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
+//            }
+//            catch (Exception e)
+//            {
+//                MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+//                Console.WriteLine(e);
+//                return;
+//            }
             
 
             //Get a new workbook.
-            _Workbook oWb = oXl.Workbooks.Add("");
-            var oSheet = (_Worksheet)oWb.ActiveSheet;
+//            _Workbook oWb = oXl.Workbooks.Add("");
+//            var oSheet = (_Worksheet)oWb.ActiveSheet;
             //Add table headers going cell by cell.
-            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History"};
-
-            for (int i = 0; i < lheader.Count; i++)
-            {
-                oSheet.Cells[1, i + 1] = lheader[i];
-            }
+//            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History"};
+//
+//            for (int i = 0; i < lheader.Count; i++)
+//            {
+//                oSheet.Cells[1, i + 1] = lheader[i];
+//            }
 
             //Format A1:D1 as bold, vertical alignment = center.
-            oSheet.Range["A1", "S1"].Font.Bold = true;
-            oSheet.Range["A1", "S1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
+//            oSheet.Range["A1", "S1"].Font.Bold = true;
+//            oSheet.Range["A1", "S1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
             int indexRecord = 2;
             List < ReCord >lxxReCords= new List<ReCord>();
 
             //TODO Call function Fetch all Row of the table 
-            GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage);
+            //GetDataTable(lxxReCords, ref indexRecord, null, enquiryScreenWindow, stage);
 
             //TODO Click next page or select next page:
             //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
             int n = 1;
             int page = 1;
+            // select the drop down list
+            SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
+            //create select element object 
+//            var selectElement = new SelectElement(education);
+
+            //select by value
+            try
+            {
+                selectElement.SelectByValue("5");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+//                throw;
+            }
+            
             try
             {
                 IWebElement lastOption = _browser.FindElement(By.CssSelector("#selPageIndex > option:last-child"));
@@ -251,7 +267,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 IWebElement nextPage = _browser.FindElement(By.XPath("//*[@id='formID206']/table[5]/tbody/tr/td/font/a[3]"));
                 try
                 {
-                    nextPage?.Click();
+                    nextPage?.ClickSafe(_browser);
                     //TODO: Fix page loading:
                 }
                 catch (Exception e)
@@ -262,12 +278,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 }
                 //_browser.WaitForLoad();
 
-                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow,stage);
+                GetDataTable(lxxReCords, ref indexRecord, null, enquiryScreenWindow,stage);
             }
 
             //AutoFit columns A:D.
-            var oRng = oSheet.Range["A1", "S1"];
-            oRng.EntireColumn.AutoFit();
+//            var oRng = oSheet.Range["A1", "S1"];
+//            oRng.EntireColumn.AutoFit();
 
             //Create file to save:
             //var folder = ("\\" + signform + "_" + signto).Replace("/", "");
@@ -278,15 +294,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //    File.Delete(pathExcelFile);
             //}
 
-            oXl.Visible = false;
-            oXl.UserControl = false;
-            oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                false, false, XlSaveAsAccessMode.xlNoChange,
-                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+//            oXl.Visible = false;
+//            oXl.UserControl = false;
+//            oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+//                false, false, XlSaveAsAccessMode.xlNoChange,
+//                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
-            oWb.Close();
+//            oWb.Close();
             //oXL.Workbooks.Open(pathExcelFile);
-            System.Diagnostics.Process.Start(pathExcelFile);
+//            System.Diagnostics.Process.Start(pathExcelFile);
         }
 
         /// <summary>
@@ -312,7 +328,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //1. Sourcing: /html/body/form/table[5]; /html/body/form/table[6]
             //Handler table by column.
             IWebElement tabSourcing = _browser.FindElementSafe(By.PartialLinkText("Sourcing"));
-            tabSourcing?.Click();
+            tabSourcing?.ClickSafe(_browser);
             string scheme = _browser.FindElementSafe(By.Name("selSchemeDesc")).GetAttributeSafe("value");
             string selDSACode = _browser.FindElementSafe(By.Name("selDSACode")).GetAttributeSafe("value");
             string selTSACode = _browser.FindElementSafe(By.Name("selTSACode")).GetAttributeSafe("value");
@@ -328,14 +344,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            {
 //                return null;
 //            }
-            tabDemographic?.Click();
+            tabDemographic?.ClickSafe(_browser);
             //Click information user:
             IWebElement userName = _browser.FindElementSafe(By.XPath("//*[@id='formID184']/table[5]/tbody/tr[3]/td[1]/a"));
-//            if (userName == null)
-//            {
-//                return rec;
-//            }
-            userName?.Click();
+            //            if (userName == null)
+            //            {
+            //                return rec;
+            //            }
+            if (userName.Text != "")
+            {
+                userName?.ClickSafe(_browser);
+            }
 
             //2.1 Personal tab:
             IWebElement tabPersonal = _browser.FindElementSafe(By.PartialLinkText("Personal"));
@@ -345,12 +364,18 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            }
 //            else
 //            {
-            tabPersonal?.Click();
+            tabPersonal?.ClickSafe(_browser);
             string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttributeSafe("value");
             string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttributeSafe("value");
+            string selSex = "";
             IWebElement comboBox = _browser.FindElementSafe(By.Name("selSex"));
-            SelectElement selectedValue = new SelectElement(comboBox);
-            string selSex = selectedValue.SelectedOption.Text;
+            if (comboBox != null)
+            {
+                SelectElement selectedValue = new SelectElement(comboBox);
+                selSex = selectedValue.SelectedOption.Text;
+
+            }
+
             string selState = _browser.FindElementSafe(By.Name("selState")).GetAttributeSafe("value");
 //            rec.Gender = selSex;
 //            rec.Age = txtAge;
@@ -369,7 +394,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            }
 //            else
 //            {
-            tabWork?.Click();
+            tabWork?.ClickSafe(_browser);
             //Just get row by Name, don't need foreach all table.
             string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
 //            rec.Company = companyName;
@@ -379,21 +404,21 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //2.3 Address: ???
             //2.4 Income/Liability tab:
             IWebElement tabIncome = _browser.FindElementSafe(By.PartialLinkText("Income/Liability"));
-            tabIncome?.Click();
+            tabIncome?.ClickSafe(_browser);
             string inCome1 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]")).TextSafe();
 //            string inCome2 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[3]/td[3]")).TextSafe();
 
             //3. References:
             IWebElement tabReferences = _browser.FindElementSafe(By.PartialLinkText("References"));
             string strReferences = "";
-            tabReferences?.Click();
+            tabReferences?.ClickSafe(_browser);
             //Select all href link:
             List<IWebElement> listRef = new List<IWebElement> (_browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
            
             foreach (var href in listRef)
             {
                 strReferences += href.TextSafe() + " :";
-                href?.Click();
+                href?.ClickSafe(_browser);
                 strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
             }
 
@@ -402,13 +427,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (stage == "Reject Review")
             {
                 IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
-                tabHistory?.Click();
+                tabHistory?.ClickSafe(_browser);
                 history = _browser.FindElementSafe(
                         By.CssSelector(
                             "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
                     .TextSafe();
             }
-          
 
             ReCord rec = new ReCord
             {
@@ -446,7 +470,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             string[] arrName = txtNameList.Split(',');
             //Click to tab:
             IWebElement tab = _browser.FindElementSafe(By.PartialLinkText(tabName));
-            tab?.Click();
+            tab?.ClickSafe(_browser);
             foreach (var txtName in arrName)
             {
                 IWebElement txtElement = _browser.FindElementSafe(By.Name(txtName));
@@ -468,10 +492,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="enquiryScreenWindow"></param>
         public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage)
         {
-            //_browser.WaitForLoad();
+            _browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
-            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
+            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(By.TagName("tr")));
 //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
 //            String assigned = "";
             // Traverse each row
@@ -482,7 +506,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     continue;
                 }
                 // Fetch the columns from a particuler row
-                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));
+                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElementsSafe(By.TagName("td")));
                 if (lstTdElem.Count > 0)
                 {
                     var detailHref = lstTdElem[0].TextSafe();
@@ -526,10 +550,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     arrRecord.Add(recData.History);
                     string indexRow = "A" + indexRecord;
                     string indexCol = "S" + indexRecord;
-                    oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
+//                    oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
                     //AutoFit columns A:D.
-                    var oRng = oSheet.Range["A1", "T1"];
-                    oRng.EntireColumn.AutoFit();
+//                    var oRng = oSheet.Range["A1", "T1"];
+//                    oRng.EntireColumn.AutoFit();
                     indexRecord++;
                 }
                 _browser.SwitchTo().Window(enquiryScreenWindow);

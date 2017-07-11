@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 using OpenQA.Selenium.Support.Extensions;
 
 namespace AutoDataVPBank.Beginners.Pages.FecreditPage
@@ -29,6 +30,19 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             return driver.FindElementSafe(by);
         }
 
+        public static IReadOnlyCollection<IWebElement> FindElementsSafe(this IWebElement element, By by)
+        {
+            try
+            {
+                return element.FindElements(by);
+            }
+            catch (StaleElementReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return element.FindElements(by);
+            }
+        }
+
         public static string GetAttributeSafe(this IWebElement element, string attr)
         {
             return element?.GetAttribute(attr);
@@ -49,5 +63,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //        {
 //            return driver.ExecuteJavaScript<string>(script);
 //        }
+        public static void ClickSafe(this IWebElement element, IWebDriver driver)
+        {
+            element.Click();
+            driver.WaitForLoad();
+        }
     }
 }
