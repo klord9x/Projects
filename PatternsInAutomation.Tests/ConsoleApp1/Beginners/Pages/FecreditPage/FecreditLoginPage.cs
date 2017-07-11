@@ -184,13 +184,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
 
             ////////////////////////////////////////////////////////////////////////////////////
-            object misvalue = System.Reflection.Missing.Value;
-            var pathExcelFile = Application.StartupPath + @"\AutoDataVPBank.xls";
-            //check File exits
-            if (File.Exists(pathExcelFile))
-            {
-                File.Delete(pathExcelFile);
-            }
+//            object misvalue = System.Reflection.Missing.Value;
+//            var pathExcelFile = Application.StartupPath + @"\AutoDataVPBank.xls";
+//            //check File exits
+//            if (File.Exists(pathExcelFile))
+//            {
+//                File.Delete(pathExcelFile);
+//            }
             //Start Excel and get Application object.
             var oXl = new Microsoft.Office.Interop.Excel.Application {Visible = true};
 
@@ -217,6 +217,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //TODO Click next page or select next page:
             //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
             int n = 1;
+            int page = 1;
             try
             {
                 IWebElement lastOption = _browser.FindElement(By.CssSelector("#selPageIndex > option:last-child"));
@@ -237,6 +238,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 }
                 catch (Exception e)
                 {
+                    page = i;
                     Thread.Sleep(5000);
                     Console.WriteLine(e);
                 }
@@ -247,6 +249,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //AutoFit columns A:D.
             var oRng = oSheet.Range["A1", "S1"];
             oRng.EntireColumn.AutoFit();
+
+            //Create file to save:
+            var folder = ("\\" + signform + "_" + signto).Replace("/", "");
+            var pathExcelFile = Application.StartupPath + folder + @"\AutoDataVPBank" + page + ".xls";
+            //check File exits
+            if (File.Exists(pathExcelFile))
+            {
+                File.Delete(pathExcelFile);
+            }
 
             oXl.Visible = false;
             oXl.UserControl = false;
