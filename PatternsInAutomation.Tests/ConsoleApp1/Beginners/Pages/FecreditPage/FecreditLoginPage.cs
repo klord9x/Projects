@@ -143,7 +143,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            //_browser.WaitForLoad();
+            _browser.WaitForLoad();
             EnquiryScreen(signform, signto, active, stage);
         }
 
@@ -179,7 +179,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             try
             {
                 //Try find result if exist: 
-                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 10);
+                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 50);
             }
             catch (Exception e)
             {

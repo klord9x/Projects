@@ -24,9 +24,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (timeoutInSeconds > 0)
             {
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-                return wait.Until(drv => drv.FindElement(by));
+                return wait.Until(drv => drv.FindElementSafe(by));
             }
-            return driver.FindElement(by);
+            return driver.FindElementSafe(by);
         }
 
         public static string GetAttributeSafe(this IWebElement element, string attr)
