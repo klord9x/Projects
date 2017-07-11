@@ -143,7 +143,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            _browser.WaitForLoad();
+            //_browser.WaitForLoad();
             EnquiryScreen(signform, signto, active, stage);
         }
 
@@ -174,18 +174,19 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 Thread.Sleep(5000);
                 Console.WriteLine(e);
             }
-            _browser.WaitForLoad();
-//            try
-//            {
-//                //Try find result if exist: 
-//                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 10);
-//            }
-//            catch (Exception e)
-//            {
-//                Console.WriteLine(e);
-////                throw;
-//            }
-            
+            //_browser.WaitForLoad();
+            //MessageBox.Show(@"Browser is ready", @"Oh Yeah!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                //Try find result if exist: 
+                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 10);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                //                throw;
+            }
+
 
 
             ////////////////////////////////////////////////////////////////////////////////////
@@ -467,7 +468,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="enquiryScreenWindow"></param>
         public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage)
         {
-            _browser.WaitForLoad();
+            //_browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
