@@ -278,6 +278,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <returns></returns>
         public ReCord GetAllDetail(IWebElement e, string stage)
         {
+            ReCord rec = new ReCord { };
             e.Click();
             //Switch to last window: detail 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
@@ -302,29 +303,59 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //=======================
 
-            //2. Demographic:
+            //2. Demographic: Error
             IWebElement tabDemographic = _browser.FindElementSafe(By.PartialLinkText("Demographic"));
+            if (tabDemographic == null)
+            {
+                return null;
+            }
             tabDemographic.Click();
             //Click information user:
             IWebElement userName = _browser.FindElementSafe(By.XPath("//*[@id='formID184']/table[5]/tbody/tr[3]/td[1]/a"));
+            if (userName == null)
+            {
+                return rec;
+            }
             userName.Click();
 
             //2.1 Personal tab:
             IWebElement tabPersonal = _browser.FindElementSafe(By.PartialLinkText("Personal"));
-            tabPersonal.Click();
-            string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttribute("value");
-            string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttribute("value");
-            IWebElement comboBox = _browser.FindElementSafe(By.Name("selSex"));
-            SelectElement selectedValue = new SelectElement(comboBox);
-            string selSex = selectedValue.SelectedOption.Text;
-            string selState = _browser.FindElementSafe(By.Name("selState")).GetAttribute("value");
+            if (tabPersonal == null)
+            {
+                return rec;
+            }
+            else
+            {
+                tabPersonal.Click();
+                string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttribute("value");
+                string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttribute("value");
+                IWebElement comboBox = _browser.FindElementSafe(By.Name("selSex"));
+                SelectElement selectedValue = new SelectElement(comboBox);
+                string selSex = selectedValue.SelectedOption.Text;
+                string selState = _browser.FindElementSafe(By.Name("selState")).GetAttribute("value");
+                rec.Gender = selSex;
+                rec.Age = txtAge;
+                rec.IdCardNumber = txtTINNo;
+                rec.State = selState;
+            }
+            
 
             //2.2 Work Detail tab:
             IWebElement tabWork = _browser.FindElementSafe(By.PartialLinkText("Work Detail"));
-            tabWork.Click();
-            //Just get row by Name, don't need foreach all table.
-            string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttribute("value");
-            string mobile = _browser.FindElementSafe(By.Name("txtMobile")).GetAttribute("value");
+            if (tabWork == null)
+            {
+                return rec;
+            }
+            else
+            {
+                tabWork.Click();
+                //Just get row by Name, don't need foreach all table.
+                string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttribute("value");
+                string mobile = _browser.FindElementSafe(By.Name("txtMobile")).GetAttribute("value");
+                rec.Phone = mobile;
+                rec.Company = companyName;
+            }
+          
 
             //2.3 Address: ???
             //2.4 Income/Liability tab:
@@ -353,31 +384,53 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
                 tabHistory.Click();
-                history = _browser.FindElementSafe(By.CssSelector("#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font")).Text;
+                var his = _browser.FindElementSafe(
+                    By.CssSelector(
+                        "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"));
+                if (his!=null)
+                {
+                    history = his.Text;
+                }
+                //history = _browser.FindElementSafe(By.CssSelector("#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))?.Text;
             }
+
+
+            rec.FullName = "";
            
+           
+            rec.Stage = "";
+            rec.Scheme = scheme;
+          
+            rec.Income = inCome1;
+            rec.DsaCode = selDSACode;
+            rec.DsaName = selDSAName;
+            rec.TsaCode = selTSACode;
+            rec.TsaName = selTSAName;
+            rec.SaPhoneNumber = servicePhone;
+            rec.ReferncesName = strReferences;
+            rec.History = history;
+          
 
-
-            ReCord rec = new ReCord
-            {
-                FullName = "",
-                Gender = selSex,
-                Age = txtAge,
-                IdCardNumber = txtTINNo,
-                Phone = mobile,
-                State = selState,
-                Stage = "",
-                Scheme = scheme,
-                Company = companyName,
-                Income = inCome1,
-                DsaCode = selDSACode,
-                DsaName = selDSAName,
-                TsaCode = selTSACode,
-                TsaName = selTSAName,
-                SaPhoneNumber = servicePhone,
-                ReferncesName = strReferences,
-                History = history,
-            };
+            //ReCord rec = new ReCord
+            //{
+            //    FullName = "",
+            //    Gender = selSex,
+            //    Age = txtAge,
+            //    IdCardNumber = txtTINNo,
+            //    Phone = mobile,
+            //    State = selState,
+            //    Stage = "",
+            //    Scheme = scheme,
+            //    Company = companyName,
+            //    Income = inCome1,
+            //    DsaCode = selDSACode,
+            //    DsaName = selDSAName,
+            //    TsaCode = selTSACode,
+            //    TsaName = selTSAName,
+            //    SaPhoneNumber = servicePhone,
+            //    ReferncesName = strReferences,
+            //    History = history,
+            //};
             _browser.Close();
 
             return rec;
