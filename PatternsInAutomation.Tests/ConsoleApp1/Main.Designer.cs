@@ -167,7 +167,10 @@
             this.Controls.Add(this.txtSignFo);
             this.Controls.Add(this.txtPass);
             this.Controls.Add(this.btnRun);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Main";
             this.Text = "AutoDataVPBank";
             this.Load += new System.EventHandler(this.Main_Load);
