@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using Application = System.Windows.Forms.Application;
+using System.Diagnostics;
 
 namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 {
@@ -116,7 +117,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 Console.WriteLine(@"Can't login");
                 return;
             }
-            LoginMap.BtnPage1CasarchElement?.Click();
+            //TODO: Fail here
+            LoginMap.BtnPage1CasarchElement?.ClickSafe(_browser);
 
             //switch to new window. Page 2
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
@@ -125,17 +127,18 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 _browser.SwitchTo().Frame("frameForwardToApp");
                 _browser.SwitchTo().Frame("contents");
-                LoginMap.BtnPage2Click1Element?.Click();
-                LoginMap.BtnPage2Click2Element?.Click();
+                LoginMap.BtnPage2Click1Element?.ClickSafe(_browser);
+                LoginMap.BtnPage2Click2Element?.ClickSafe(_browser);
             }
             catch (WebDriverException e)
             {
+                return;
 //                Console.WriteLine(e);
 //                throw;
             }
 
 //            _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            _browser.WaitForLoad();
+//            _browser.WaitForLoad();
 
             //switch back to original window. Page 1. Logout
             _browser.SwitchTo().Window(page1WindowHandle);
@@ -171,23 +174,30 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Thread.Sleep(5000);
+//                Thread.Sleep(5000);
                 Console.WriteLine(e);
             }
-            //_browser.WaitForLoad();
-            //MessageBox.Show(@"Browser is ready", @"Oh Yeah!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            try
+
+            //TODO: Try find result if exist Maxtimeout = 5': 
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            while (s.Elapsed < TimeSpan.FromSeconds(300))
             {
-                //Try find result if exist: 
-                var employeeLabel = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 50);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                //                throw;
+                try
+                {
+                    var resultElement = _browser.FindElement(By.CssSelector("#selPageIndex > option"), 5);
+                    if (resultElement != null)
+                    {
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
 
-
+            s.Stop();
 
             ////////////////////////////////////////////////////////////////////////////////////
             object misvalue = System.Reflection.Missing.Value;
@@ -198,33 +208,33 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 File.Delete(pathExcelFile);
             }
             //Start Excel and get Application object.
-//            Microsoft.Office.Interop.Excel.Application oXl;
-//            try
-//            {
-//                oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
-//            }
-//            catch (Exception e)
-//            {
-//                MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-//                Console.WriteLine(e);
-//                return;
-//            }
+            Microsoft.Office.Interop.Excel.Application oXl;
+            try
+            {
+                oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Console.WriteLine(e);
+                return;
+            }
             
 
             //Get a new workbook.
-//            _Workbook oWb = oXl.Workbooks.Add("");
-//            var oSheet = (_Worksheet)oWb.ActiveSheet;
-            //Add table headers going cell by cell.
-//            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History"};
-//
-//            for (int i = 0; i < lheader.Count; i++)
-//            {
-//                oSheet.Cells[1, i + 1] = lheader[i];
-//            }
+            _Workbook oWb = oXl.Workbooks.Add("");
+            var oSheet = (_Worksheet)oWb.ActiveSheet;
+//            Add table headers going cell by cell.
+            List<string> lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History"};
+
+            for (int i = 0; i < lheader.Count; i++)
+            {
+                oSheet.Cells[1, i + 1] = lheader[i];
+            }
 
             //Format A1:D1 as bold, vertical alignment = center.
-//            oSheet.Range["A1", "S1"].Font.Bold = true;
-//            oSheet.Range["A1", "S1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
+            oSheet.Range["A1", "S1"].Font.Bold = true;
+            oSheet.Range["A1", "S1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
             int indexRecord = 2;
             List < ReCord >lxxReCords= new List<ReCord>();
 
@@ -258,7 +268,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Thread.Sleep(5000);
+//                Thread.Sleep(5000);
                 Console.WriteLine(e);
             }
 
@@ -273,12 +283,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 catch (Exception e)
                 {
                     page = i;
-                    Thread.Sleep(5000);
+//                    Thread.Sleep(5000);
                     Console.WriteLine(e);
                 }
                 //_browser.WaitForLoad();
 
-                GetDataTable(lxxReCords, ref indexRecord, null, enquiryScreenWindow,stage);
+                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow,stage);
             }
 
             //AutoFit columns A:D.
@@ -294,15 +304,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //    File.Delete(pathExcelFile);
             //}
 
-//            oXl.Visible = false;
-//            oXl.UserControl = false;
-//            oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-//                false, false, XlSaveAsAccessMode.xlNoChange,
-//                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            oXl.Visible = false;
+            oXl.UserControl = false;
+            oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                false, false, XlSaveAsAccessMode.xlNoChange,
+                Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
 
-//            oWb.Close();
-            //oXL.Workbooks.Open(pathExcelFile);
-//            System.Diagnostics.Process.Start(pathExcelFile);
+            oWb.Close();
+            //oXl.Workbooks.Open(pathExcelFile);
+            Process.Start(pathExcelFile);
         }
 
         /// <summary>
@@ -313,8 +323,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <returns></returns>
         public ReCord GetAllDetail(IWebElement e, string stage)
         {
-//            ReCord rec = new ReCord { };
-            e?.Click();
+            //            ReCord rec = new ReCord { };
+            if (e.Displayed && e.Enabled)
+            {
+                e?.Click();
+            }
+
             //Switch to last window: detail 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             IWebElement element = _browser.FindElementSafe(By.PartialLinkText("QDE"));
@@ -351,7 +365,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //            {
             //                return rec;
             //            }
-            if (userName.Text != "")
+            if (userName == null || userName.Text != "")
             {
                 userName?.ClickSafe(_browser);
             }
@@ -550,10 +564,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     arrRecord.Add(recData.History);
                     string indexRow = "A" + indexRecord;
                     string indexCol = "S" + indexRecord;
-//                    oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
+                    oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
                     //AutoFit columns A:D.
-//                    var oRng = oSheet.Range["A1", "T1"];
-//                    oRng.EntireColumn.AutoFit();
+                    var oRng = oSheet.Range["A1", "T1"];
+                    oRng.EntireColumn.AutoFit();
                     indexRecord++;
                 }
                 _browser.SwitchTo().Window(enquiryScreenWindow);

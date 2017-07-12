@@ -12,9 +12,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                return driver.FindElement(by);
+                return driver.FindElement(by, 15);
             }
             catch (NoSuchElementException)
+            {
+                return null;
+            }
+            catch (WebDriverException)
             {
                 return null;
             }
@@ -56,16 +60,35 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         public static void WaitForLoad(this IWebDriver driver, int timeoutSec = 15)
         {
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
-            wait.Until(wd => wd.ExecuteJavaScript<string>("return document.readyState") == "complete");
+            try
+            {
+                wait.Until(wd => wd.ExecuteJavaScript<string>("return document.readyState") == "complete");
+            }
+            catch (NoSuchWindowException e)
+            {
+                Console.WriteLine(e);
+//                driver.Close();
+//                throw;
+            }
+            catch (WebDriverTimeoutException e)
+            { Console.WriteLine(e); }
+            catch( WebDriverException e)
+            { Console.WriteLine(e);  }
         }
 
-//        public static string ExecuteJavaScriptSafe(this IWebDriver driver, string script)
-//        {
-//            return driver.ExecuteJavaScript<string>(script);
-//        }
         public static void ClickSafe(this IWebElement element, IWebDriver driver)
         {
-            element.Click();
+            try
+            {
+                element.Click();
+            }
+            catch (WebDriverException e)
+            {
+                driver.Close();
+                Console.WriteLine(e);
+//                throw;
+            }
+            
             driver.WaitForLoad();
         }
     }
