@@ -84,7 +84,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (WebDriverException e)
             {
-                driver.Close();
+//                driver.Close();
                 Console.WriteLine(e);
 //                throw;
             }
