@@ -162,6 +162,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             selActivityId.SelectByText(active);
             selProduct.SelectByValue("PERSONAL");
 
+            //ScreenMap.applicationidElement.Clear();
+            //ScreenMap.applicationidElement.SendKeys("1000694");
             ScreenMap.TxtSignedToElement.Clear();
             ScreenMap.TxtSignedToElement.SendKeys(signto);
 
@@ -321,20 +323,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="e"></param>
         /// <param name="stage"></param>
         /// <returns></returns>
-        public ReCord GetAllDetail(IWebElement e, string stage)
+        public ReCord GetAllDetail(IWebElement e, string stage, string custumName)
         {
-            //            ReCord rec = new ReCord { };
-            if (e.Displayed && e.Enabled)
-            {
-                e?.Click();
-            }
-
+            ReCord rec = new ReCord { };
+            rec.FullName = "";
+            e.Click();
             //Switch to last window: detail 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             IWebElement element = _browser.FindElementSafe(By.PartialLinkText("QDE"));
             Console.WriteLine(@"Get detail");
             //Switch to last window: detail 2
-            element?.Click();
+            element.Click();
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             //TODO: Get all value of tab.
 
@@ -342,132 +341,169 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //1. Sourcing: /html/body/form/table[5]; /html/body/form/table[6]
             //Handler table by column.
             IWebElement tabSourcing = _browser.FindElementSafe(By.PartialLinkText("Sourcing"));
-            tabSourcing?.ClickSafe(_browser);
-            string scheme = _browser.FindElementSafe(By.Name("selSchemeDesc")).GetAttributeSafe("value");
-            string selDSACode = _browser.FindElementSafe(By.Name("selDSACode")).GetAttributeSafe("value");
-            string selTSACode = _browser.FindElementSafe(By.Name("selTSACode")).GetAttributeSafe("value");
-            string selDSAName = _browser.FindElementSafe(By.Name("selDSAName")).GetAttributeSafe("value");
-            string selTSAName = _browser.FindElementSafe(By.Name("selTSAName")).GetAttributeSafe("value");
-            string servicePhone = _browser.FindElementSafe(By.Name("txtServicePhoneNumber")).GetAttributeSafe("value");
+            if (tabSourcing == null)
+            { return rec; }
+            else
+            {
+                tabSourcing.Click();
+                string scheme = _browser.FindElementSafe(By.Name("selSchemeDesc")).GetAttribute("value");
+                string selDSACode = _browser.FindElementSafe(By.Name("selDSACode")).GetAttribute("value");
+                string selTSACode = _browser.FindElementSafe(By.Name("selTSACode")).GetAttribute("value");
+                string selDSAName = _browser.FindElementSafe(By.Name("selDSAName")).GetAttribute("value");
+                string selTSAName = _browser.FindElementSafe(By.Name("selTSAName")).GetAttribute("value");
+                string servicePhone = _browser.FindElementSafe(By.Name("txtServicePhoneNumber")).GetAttribute("value");
+
+                rec.Stage = "";
+                rec.Scheme = scheme;
+                rec.DsaCode = selDSACode;
+                rec.DsaName = selDSAName;
+                rec.TsaCode = selTSACode;
+                rec.TsaName = selTSAName;
+                rec.SaPhoneNumber = servicePhone;
+            }
+
 
             //=======================
 
             //2. Demographic: Error
             IWebElement tabDemographic = _browser.FindElementSafe(By.PartialLinkText("Demographic"));
-//            if (tabDemographic == null)
-//            {
-//                return null;
-//            }
-            tabDemographic?.ClickSafe(_browser);
+            if (tabDemographic == null)
+            {
+                return rec;
+            }
+            else
+            {
+                tabDemographic.Click();
+            }
+
             //Click information user:
             IWebElement userName = _browser.FindElementSafe(By.XPath("//*[@id='formID184']/table[5]/tbody/tr[3]/td[1]/a"));
-            //            if (userName == null)
-            //            {
-            //                return rec;
-            //            }
-            if (userName == null || userName.Text != "")
+            if (custumName.Trim() != "")
             {
-                userName?.ClickSafe(_browser);
+                userName.Click();
             }
 
             //2.1 Personal tab:
             IWebElement tabPersonal = _browser.FindElementSafe(By.PartialLinkText("Personal"));
-//            if (tabPersonal == null)
-//            {
-//                return rec;
-//            }
-//            else
-//            {
-            tabPersonal?.ClickSafe(_browser);
-            string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttributeSafe("value");
-            string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttributeSafe("value");
-            string selSex = "";
-            IWebElement comboBox = _browser.FindElementSafe(By.Name("selSex"));
-            if (comboBox != null)
+            if (tabPersonal == null)
             {
+                return rec;
+            }
+            else
+            {
+                tabPersonal.Click();
+                string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttribute("value");
+                string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttribute("value");
+                IWebElement comboBox = _browser.FindElementSafe(By.Name("selSex"));
                 SelectElement selectedValue = new SelectElement(comboBox);
-                selSex = selectedValue.SelectedOption.Text;
-
+                string selSex = selectedValue.SelectedOption.Text;
+                string selState = _browser.FindElementSafe(By.Name("selState")).GetAttribute("value");
+                rec.Gender = selSex;
+                rec.Age = txtAge;
+                rec.IdCardNumber = txtTINNo;
+                rec.State = selState;
+                string mobile = _browser.FindElementSafe(By.Name("txtMobile")).GetAttribute("value");
+                rec.Phone = mobile;
             }
 
-            string selState = _browser.FindElementSafe(By.Name("selState")).GetAttributeSafe("value");
-//            rec.Gender = selSex;
-//            rec.Age = txtAge;
-//            rec.IdCardNumber = txtTINNo;
-//            rec.State = selState;
-            string mobile = _browser.FindElementSafe(By.Name("txtMobile")).GetAttributeSafe("value");
-//            rec.Phone = mobile;
-//            }
-            
 
             //2.2 Work Detail tab:
             IWebElement tabWork = _browser.FindElementSafe(By.PartialLinkText("Work Detail"));
-//            if (tabWork == null)
-//            {
-//                return rec;
-//            }
-//            else
-//            {
-            tabWork?.ClickSafe(_browser);
-            //Just get row by Name, don't need foreach all table.
-            string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
-//            rec.Company = companyName;
-//            }
-          
+            if (tabWork == null)
+            {
+                return rec;
+            }
+            else
+            {
+                tabWork.Click();
+                //Just get row by Name, don't need foreach all table.
+                string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttribute("value");
+                rec.Company = companyName;
+            }
+
 
             //2.3 Address: ???
             //2.4 Income/Liability tab:
             IWebElement tabIncome = _browser.FindElementSafe(By.PartialLinkText("Income/Liability"));
-            tabIncome?.ClickSafe(_browser);
-            string inCome1 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]")).TextSafe();
-//            string inCome2 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[3]/td[3]")).TextSafe();
+            if (tabIncome == null)
+            { return rec; }
+            else
+            {
+                tabIncome.Click();
+                string inCome1 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]")).Text;
+                string inCome2 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[3]/td[3]")).Text;
+                rec.Income = inCome1;
+            }
 
             //3. References:
             IWebElement tabReferences = _browser.FindElementSafe(By.PartialLinkText("References"));
-            string strReferences = "";
-            tabReferences?.ClickSafe(_browser);
-            //Select all href link:
-            List<IWebElement> listRef = new List<IWebElement> (_browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
-           
-            foreach (var href in listRef)
+            if (tabReferences == null)
             {
-                strReferences += href.TextSafe() + " :";
-                href?.ClickSafe(_browser);
-                strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
+                return rec;
+            }
+            else
+            {
+
+                string strReferences = "";
+                tabReferences.Click();
+                //Select all href link:
+                List<IWebElement> listRef = new List<IWebElement>(_browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
+
+                foreach (var href in listRef)
+                {
+                    strReferences += href.Text + " :";
+                    href.Click();
+                    strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttribute("value") + "; ";
+                }
+                rec.ReferncesName = strReferences;
             }
 
             //4. History: Get Select second last element with css
-            string history = "";
+
             if (stage == "Reject Review")
             {
                 IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
-                tabHistory?.ClickSafe(_browser);
-                history = _browser.FindElementSafe(
+                if (tabHistory == null)
+                { return rec; }
+                else
+                {
+                    string history = "";
+                    tabHistory.Click();
+                    var his = _browser.FindElementSafe(
                         By.CssSelector(
-                            "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
-                    .TextSafe();
+                            "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"));
+                    if (his != null)
+                    {
+                        history = his.Text;
+                    }
+                    //history = _browser.FindElementSafe(By.CssSelector("#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))?.Text;
+                    rec.History = history;
+                }
             }
 
-            ReCord rec = new ReCord
-            {
-                FullName = "",
-                Gender = selSex,
-                Age = txtAge,
-                IdCardNumber = txtTINNo,
-                Phone = mobile,
-                State = selState,
-                Stage = "",
-                Scheme = scheme,
-                Company = companyName,
-                Income = inCome1,
-                DsaCode = selDSACode,
-                DsaName = selDSAName,
-                TsaCode = selTSACode,
-                TsaName = selTSAName,
-                SaPhoneNumber = servicePhone,
-                ReferncesName = strReferences,
-                History = history,
-            };
+
+
+
+            //ReCord rec = new ReCord
+            //{
+            //    FullName = "",
+            //    Gender = selSex,
+            //    Age = txtAge,
+            //    IdCardNumber = txtTINNo,
+            //    Phone = mobile,
+            //    State = selState,
+            //    Stage = "",
+            //    Scheme = scheme,
+            //    Company = companyName,
+            //    Income = inCome1,
+            //    DsaCode = selDSACode,
+            //    DsaName = selDSAName,
+            //    TsaCode = selTSACode,
+            //    TsaName = selTSAName,
+            //    SaPhoneNumber = servicePhone,
+            //    ReferncesName = strReferences,
+            //    History = history,
+            //};
             _browser.Close();
 
             return rec;
@@ -484,13 +520,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             string[] arrName = txtNameList.Split(',');
             //Click to tab:
             IWebElement tab = _browser.FindElementSafe(By.PartialLinkText(tabName));
-            tab?.ClickSafe(_browser);
+            tab.Click();
             foreach (var txtName in arrName)
             {
                 IWebElement txtElement = _browser.FindElementSafe(By.Name(txtName));
                 if (txtElement != null)
                 {
-                    listRecord.Add(new KeyValuePair<string, string>(txtName, txtElement.GetAttributeSafe("value")));
+                    listRecord.Add(new KeyValuePair<string, string>(txtName, txtElement.GetAttribute("value")));
                 }
             }
 
@@ -506,10 +542,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="enquiryScreenWindow"></param>
         public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage)
         {
-            _browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
-            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(_browser, By.TagName("tr")));
+            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElements(By.TagName("tr")));
 //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
 //            String assigned = "";
             // Traverse each row
@@ -520,13 +555,23 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     continue;
                 }
                 // Fetch the columns from a particuler row
-                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElementsSafe(_browser, By.TagName("td")));
+                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElements(By.TagName("td")));
                 if (lstTdElem.Count > 0)
                 {
-                    var detailHref = lstTdElem[0].TextSafe();
+                    var detailHref = lstTdElem[0].Text;
                     //string applicationNo = 
-                    var assigned = lstTdElem[1].TextSafe();
-                    var fullNameRow = lstTdElem[2].TextSafe();
+                    var assigned = lstTdElem[1].Text;
+                    var fullNameRow = lstTdElem[2].Text;
+                    // Traverse each column
+//                    foreach (var elemTd in lstTdElem)
+//                    {
+//                        //Get Text value of first td.
+//                        if (lstTdElem.First() == elemTd)
+//                        {
+//                            detailHref = elemTd.Text;
+//                        }
+//
+//                    }
 
                     //Click to detail1 Row:
                     //Or can be identified as href link 
@@ -538,7 +583,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     }
                     IWebElement element = _browser.FindElementSafe(By.PartialLinkText(detailHref));
 
-                    ReCord recData = GetAllDetail(element, stage);
+                    ReCord recData = GetAllDetail(element, stage, fullNameRow);
 
                     // Create an array to multiple values at once.
                     List<string> arrRecord = new List<string>() { };
