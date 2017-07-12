@@ -43,6 +43,14 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
         }
 
+        public IWebElement BtnPage1CasElement
+        {
+            get
+            {
+                return this._browser.FindElementSafe(By.Name("btnCAS"));
+            }
+        }
+
         public IWebElement BtnPage1ExitElement
         {
             get
@@ -63,7 +71,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             get
             {
+                ////*[@id="178"]/div
                 return this._browser.FindElementSafe(By.XPath("//*[@id='178']/div "));
+            }
+        }
+
+        public IWebElement BtnPage2CasClick2Element
+        {
+            get
+            {
+                ////*[@id="178"]/div
+                return this._browser.FindElementSafe(By.XPath("//*[@id='4619']/div "));
             }
         }
 

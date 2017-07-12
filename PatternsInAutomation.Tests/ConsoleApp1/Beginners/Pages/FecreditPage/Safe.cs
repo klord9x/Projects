@@ -53,11 +53,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static string GetAttributeSafe(this IWebElement element, string attr)
         {
-            if (element == null)
-            {
-                return null;
-            }
-            return element.GetAttribute(attr);
+            return element?.GetAttribute(attr);
         }
 
         public static string TextSafe(this IWebElement element)
@@ -65,7 +61,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             return element?.Text;
         }
 
-        public static void WaitForLoad(this IWebDriver driver, int timeoutSec = 15)
+        public static void WaitForLoad(this IWebDriver driver, int timeoutSec = 60)
         {
             WebDriverWait wait = new WebDriverWait(driver, new TimeSpan(0, 0, timeoutSec));
             try
@@ -78,10 +74,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //                driver.Close();
 //                throw;
             }
-            catch (WebDriverTimeoutException e)
-            { Console.WriteLine(e); }
-            catch( WebDriverException e)
-            { Console.WriteLine(e);  }
+//            catch (WebDriverTimeoutException e)
+//            { Console.WriteLine(e); }
+//            catch( WebDriverException e)
+//            { Console.WriteLine(e);  }
         }
 
         public static void ClickSafe(this IWebElement element, IWebDriver driver)

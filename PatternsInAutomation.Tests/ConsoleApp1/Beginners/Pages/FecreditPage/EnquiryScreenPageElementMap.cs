@@ -10,14 +10,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             this._browser = browser;
         }
-        //applicationid
-        //public IWebElement applicationidElement
-        //{
-        //    get
-        //    {
-        //        return this._browser.FindElementSafe(By.Name("applicationid"));
-        //    }
-        //}
+
         public IWebElement TxtSignedToElement
         {
             get

@@ -56,8 +56,8 @@ namespace AutoDataVPBank
         {
             this.txtUser.Text = @"CC100278";
             this.txtPass.Text = @"Khoinguyen@2";
-            this.txtSignFo.Text = @"02/05/2016";
-            this.txtSignTo.Text = @"02/05/2016";
+            this.txtSignFo.Text = @"02/05/2017";
+            this.txtSignTo.Text = @"05/05/2017";
             this.cboActive.SelectedItem = "Reject Review";
         }
 
@@ -66,7 +66,7 @@ namespace AutoDataVPBank
             SetupDriver();
             LoginFinnOne();
             Teardown();
-            this.Close();
+//            this.Close();
         }
        
     }
