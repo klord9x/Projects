@@ -12,7 +12,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                return driver.FindElement(by, 15);
+                return driver.FindElement(by);
             }
             catch (NoSuchElementException)
             {
