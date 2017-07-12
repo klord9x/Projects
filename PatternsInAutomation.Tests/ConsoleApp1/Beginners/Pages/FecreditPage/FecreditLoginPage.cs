@@ -509,7 +509,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             _browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
-            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(By.TagName("tr")));
+            List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(_browser, By.TagName("tr")));
 //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
 //            String assigned = "";
             // Traverse each row
@@ -520,7 +520,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     continue;
                 }
                 // Fetch the columns from a particuler row
-                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElementsSafe(By.TagName("td")));
+                List<IWebElement> lstTdElem = new List<IWebElement>(elemTr.FindElementsSafe(_browser, By.TagName("td")));
                 if (lstTdElem.Count > 0)
                 {
                     var detailHref = lstTdElem[0].TextSafe();

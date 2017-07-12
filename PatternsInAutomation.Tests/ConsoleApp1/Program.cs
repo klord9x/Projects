@@ -24,7 +24,15 @@ namespace AutoDataVPBank
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+            try
+            {
+                Application.Run(new Main());
+            }
+            catch (StackOverflowException e)
+            {
+                Console.WriteLine(@"Error caught: {0}", e);
+            }
+            
         }
 
 

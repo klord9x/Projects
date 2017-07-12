@@ -29,13 +29,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (timeoutInSeconds > 0)
             {
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-                return wait.Until(drv => drv.FindElementSafe(by));
+                return wait.Until(drv => driver.FindElementSafe(by));
             }
             return driver.FindElementSafe(by);
         }
 
-        public static IReadOnlyCollection<IWebElement> FindElementsSafe(this IWebElement element, By by)
+        public static IReadOnlyCollection<IWebElement> FindElementsSafe(this IWebElement element, IWebDriver driver, By by, int timeoutInSeconds = 15)
         {
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
+            wait.Until(drv => element.FindElements(by));
             try
             {
                 return element.FindElements(by);
@@ -43,8 +45,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             catch (StaleElementReferenceException ex)
             {
                 Console.WriteLine(ex.Message);
-                return element.FindElements(by);
+//                return element.FindElements(by);
             }
+
+            return element.FindElements(by);
         }
 
         public static string GetAttributeSafe(this IWebElement element, string attr)
