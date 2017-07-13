@@ -84,7 +84,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                element.Click();
+                element.Click(); 
             }
             catch (WebDriverException e)
             {
