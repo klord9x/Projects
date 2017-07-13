@@ -49,11 +49,14 @@ namespace AutoDataVPBank
         {
             FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver);
             loginPage.Navigate();
-            loginPage.Login(txtUser.Text,txtPass.Text,txtSignFo.Text,txtSignTo.Text,cboActive.Text, this.cboActive.Text);
+            loginPage.Login(txtUser.Text,txtPass.Text,txtSignFo.Text,txtSignTo.Text,cboActive.Text, this.cboActive.Text,this.radioButtonCAS.Checked);
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
+            this.cboActive.Items.AddRange(new object[] {
+            "Select",
+            "Reject Review"});
             this.txtUser.Text = @"CC100278";
             this.txtPass.Text = @"Khoinguyen@2";
             this.txtSignFo.Text = @"02/05/2017";
@@ -66,7 +69,7 @@ namespace AutoDataVPBank
             SetupDriver();
             LoginFinnOne();
             Teardown();
-//            this.Close();
+            this.Close();
         }
        
     }

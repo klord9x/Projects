@@ -70,7 +70,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <summary>
         /// #1. Login Url.
         /// </summary>
-        public void Login(string user, string pass, string signform, string signto, string active, string stage)
+        public void Login(string user, string pass, string signform, string signto, string active, string stage, bool CASselect)
         {
             string message = "";
             LoginMap.TxtNameElement.Clear();
@@ -81,7 +81,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             try
             {
-                LoginMap.DataActionElement?.Click();
+                LoginMap.DataActionElement.Click();
             }
             catch (Exception e)
             {
@@ -118,8 +118,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 return;
             }
             //TODO: Fail here
-//            LoginMap.BtnPage1CasarchElement?.ClickSafe(_browser);
-            LoginMap.BtnPage1CasElement?.ClickSafe(_browser);
+            if (CASselect)
+            {
+                LoginMap.BtnPage1CasElement.ClickSafe(_browser);
+            }
+            else LoginMap.BtnPage1CasarchElement.ClickSafe(_browser);
+//            LoginMap.BtnPage1CasarchElement.ClickSafe(_browser);
+            
 
             //switch to new window. Page 2
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
@@ -128,8 +133,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 _browser.SwitchTo().Frame("frameForwardToApp");
                 _browser.SwitchTo().Frame("contents");
-                LoginMap.BtnPage2Click1Element?.ClickSafe(_browser);
-                LoginMap.BtnPage2CasClick2Element?.ClickSafe(_browser);
+                LoginMap.BtnPage2Click1Element.ClickSafe(_browser);
+                if (CASselect)
+                {
+                    LoginMap.BtnPage2CasClick2Element.ClickSafe(_browser);
+                }
+                else LoginMap.BtnPage2Click2Element.ClickSafe(_browser);
+                
             }
             catch (WebDriverException e)
             {
@@ -143,7 +153,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch back to original window. Page 1. Logout
             _browser.SwitchTo().Window(page1WindowHandle);
-            LoginMap.BtnPage1ExitElement?.Click();
+            LoginMap.BtnPage1ExitElement.Click();
 
             //switch to Enquiry Screen.
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
@@ -160,7 +170,14 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             SelectElement selActivityId = new SelectElement(ScreenMap.SelectBoxSelActivityIdElement);
             SelectElement selProduct = new SelectElement(ScreenMap.SelectBoxSelProductElement);
 
-            selActivityId.SelectByText(active);
+            if (active == "Select")
+            {
+                selActivityId.SelectByValue(active);
+            }
+            else
+            {
+                selActivityId.SelectByText(active);
+            }
             selProduct.SelectByValue("PERSONAL");
 
             ScreenMap.TxtSignedToElement.Clear();
@@ -171,7 +188,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             try
             {
-                ScreenMap.BtnBtnSearchElement?.Click();
+                ScreenMap.BtnBtnSearchElement.Click();
             }
             catch (Exception e)
             {
@@ -343,7 +360,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //            ReCord rec = new ReCord { };
             if (e.Displayed && e.Enabled)
             {
-                e?.Click();
+                e.Click();
             }
 
             //Switch to last window: detail 1
@@ -351,7 +368,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             IWebElement element = _browser.FindElementSafe(By.PartialLinkText("QDE"));
             Console.WriteLine(@"Get detail");
             //Switch to last window: detail 2
-            element?.Click();
+            element.Click();
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             //TODO: Get all value of tab.
 
@@ -359,7 +376,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //1. Sourcing: /html/body/form/table[5]; /html/body/form/table[6]
             //Handler table by column.
             IWebElement tabSourcing = _browser.FindElementSafe(By.PartialLinkText("Sourcing"));
-            tabSourcing?.ClickSafe(_browser);
+            tabSourcing.ClickSafe(_browser);
             string scheme = _browser.FindElementSafe(By.Name("selSchemeDesc")).GetAttributeSafe("value");
             string selDSACode = _browser.FindElementSafe(By.Name("selDSACode")).GetAttributeSafe("value");
             string selTSACode = _browser.FindElementSafe(By.Name("selTSACode")).GetAttributeSafe("value");
@@ -375,7 +392,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            {
 //                return null;
 //            }
-            tabDemographic?.ClickSafe(_browser);
+            tabDemographic.ClickSafe(_browser);
             //Click information user:
             IWebElement userName = _browser.FindElementSafe(By.XPath("//*[@id='formID184']/table[5]/tbody/tr[3]/td[1]/a"));
             //            if (userName == null)
@@ -384,7 +401,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //            }
             if (userName == null || userName.Text != "")
             {
-                userName?.ClickSafe(_browser);
+                userName.ClickSafe(_browser);
             }
 
             //2.1 Personal tab:
@@ -395,7 +412,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            }
 //            else
 //            {
-            tabPersonal?.ClickSafe(_browser);
+            tabPersonal.ClickSafe(_browser);
             string txtTINNo = _browser.FindElementSafe(By.Name("txtTINNo")).GetAttributeSafe("value");
             string txtAge = _browser.FindElementSafe(By.Name("txtAge")).GetAttributeSafe("value");
             string selSex = "";
@@ -425,7 +442,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            }
 //            else
 //            {
-            tabWork?.ClickSafe(_browser);
+            tabWork.ClickSafe(_browser);
             //Just get row by Name, don't need foreach all table.
             string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
 //            rec.Company = companyName;
@@ -435,21 +452,21 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //2.3 Address: ???
             //2.4 Income/Liability tab:
             IWebElement tabIncome = _browser.FindElementSafe(By.PartialLinkText("Income/Liability"));
-            tabIncome?.ClickSafe(_browser);
+            tabIncome.ClickSafe(_browser);
             string inCome1 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]")).TextSafe();
 //            string inCome2 = _browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[3]/td[3]")).TextSafe();
 
             //3. References:
             IWebElement tabReferences = _browser.FindElementSafe(By.PartialLinkText("References"));
             string strReferences = "";
-            tabReferences?.ClickSafe(_browser);
+            tabReferences.ClickSafe(_browser);
             //Select all href link:
             List<IWebElement> listRef = new List<IWebElement> (_browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
            
             foreach (var href in listRef)
             {
                 strReferences += href.TextSafe() + " :";
-                href?.ClickSafe(_browser);
+                href.ClickSafe(_browser);
                 strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
             }
 
@@ -458,7 +475,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (stage == "Reject Review")
             {
                 IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
-                tabHistory?.ClickSafe(_browser);
+                tabHistory.ClickSafe(_browser);
                 history = _browser.FindElementSafe(
                         By.CssSelector(
                             "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
@@ -501,7 +518,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             string[] arrName = txtNameList.Split(',');
             //Click to tab:
             IWebElement tab = _browser.FindElementSafe(By.PartialLinkText(tabName));
-            tab?.ClickSafe(_browser);
+            tab.ClickSafe(_browser);
             foreach (var txtName in arrName)
             {
                 IWebElement txtElement = _browser.FindElementSafe(By.Name(txtName));
