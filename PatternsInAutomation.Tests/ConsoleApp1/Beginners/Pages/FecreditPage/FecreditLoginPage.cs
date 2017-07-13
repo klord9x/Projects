@@ -168,6 +168,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         public void EnquiryScreen (string signform, string signto, string active, string stage)
         {
             string enquiryScreenWindow = _browser.CurrentWindowHandle; //Save Enquiry Screen.
+            Boolean stopNav = false;
             SelectElement selActivityId = new SelectElement(ScreenMap.SelectBoxSelActivityIdElement);
             SelectElement selProduct = new SelectElement(ScreenMap.SelectBoxSelProductElement);
 
@@ -303,11 +304,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 return;
             }
+            n = 428;
 
-            
 
             for (int i = n; i > 0; i--)
             {
+                //i = 450;
                 // select the drop down list
                 SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
                 //                IWebElement nextPage = _browser.FindElement(By.XPath("//*[@id='formID206']/table[5]/tbody/tr/td/font/a[3]"));
@@ -324,8 +326,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     Console.WriteLine(e);
                 }
                 //_browser.WaitForLoad();
-
-                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage, signform,signto);
+                if (!stopNav)
+                {
+                    GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage, signform, signto, ref stopNav);
+                }
+                else
+                {
+                    break;
+                }
+                
             }
 
             //AutoFit columns A:D.
@@ -371,6 +380,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             IWebElement element = _browser.FindElementSafe(By.PartialLinkText("QDE"));
             Console.WriteLine(@"Get detail");
             //Switch to last window: detail 2
+            if (element == null)
+            {
+                return null;
+            }
             element.Click();
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             //TODO: Get all value of tab.
@@ -546,12 +559,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="indexRecord"></param>
         /// <param name="oSheet"></param>
         /// <param name="enquiryScreenWindow"></param>
-        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage, string Asignfrom, string AsignTo)
+        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage, string Asignfrom, string AsignTo, ref Boolean stopNav)
         {
             _browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(_browser, By.TagName("tr")));
+            int temp = 0;
             //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
             //            String assigned = "";
             // Traverse each row
@@ -571,10 +585,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     //string applicationNo = 
                     var assigned = lstTdElem[1].TextSafe();
                     var fullNameRow = lstTdElem[2].TextSafe();
-                    DateTime dateAsignCurrent = DateTime.ParseExact(AsignTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    if (dateAsignCurrent >= dateAsignFrom && dateAsignCurrent < dateAsignTo)
+                    DateTime dateAsignCurrent = DateTime.ParseExact(assigned, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    if (dateAsignCurrent < dateAsignFrom || dateAsignCurrent >= dateAsignTo)
                     {
-                        break;
+                        temp++;
+                        continue;
+//                        break;
                     }
                     //Click to detail1 Row:
                     //Or can be identified as href link 
@@ -587,6 +603,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     IWebElement element = _browser.FindElementSafe(By.PartialLinkText(detailHref));
 
                     ReCord recData = GetAllDetail(element, stage);
+                    if (recData == null)
+                    {
+                        recData = new ReCord();
+                    }
 
                     // Create an array to multiple values at once.
                     List<string> arrRecord = new List<string>() { };
@@ -620,6 +640,11 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 }
                 _browser.SwitchTo().Window(enquiryScreenWindow);
             }//End foreach
+
+            if (temp == lstTrElem.Count)
+            {
+                stopNav = true;
+            }
         }
     }
 }

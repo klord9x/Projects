@@ -53,12 +53,20 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static string GetAttributeSafe(this IWebElement element, string attr)
         {
+            if (element == null)
+            {
+                return null;
+            }
             return element.GetAttribute(attr);
         }
 
         public static string TextSafe(this IWebElement element)
         {
-            return element.Text;
+            if (element == null)
+            {
+                return null;
+            }
+            return element.Text.Trim();
         }
 
         public static void WaitForLoad(this IWebDriver driver, int timeoutSec = 60)
