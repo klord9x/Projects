@@ -268,7 +268,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 page = 1;
             }
             // select the drop down list
-            SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
+//            SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
             //create select element object 
 //            var selectElement = new SelectElement(education);
 
@@ -307,7 +307,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             for (int i = n; i > 0; i--)
             {
-//                IWebElement nextPage = _browser.FindElement(By.XPath("//*[@id='formID206']/table[5]/tbody/tr/td/font/a[3]"));
+                // select the drop down list
+                SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
+                //                IWebElement nextPage = _browser.FindElement(By.XPath("//*[@id='formID206']/table[5]/tbody/tr/td/font/a[3]"));
                 try
                 {
                     selectElement.SelectByValue(i.ToString());
@@ -470,17 +472,22 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 strReferences += _browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
             }
 
-            //4. History: Get Select second last element with css
+            //4. History: Get Select 2 last element with css
             string history = "";
-            if (stage == "Reject Review")
+            IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
+            tabHistory.ClickSafe(_browser);
+            history += _browser.FindElementSafe(
+                    By.CssSelector(
+                        "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
+                .TextSafe();
+            if (history.Trim() != "")
             {
-                IWebElement tabHistory = _browser.FindElementSafe(By.PartialLinkText("Application History"));
-                tabHistory.ClickSafe(_browser);
-                history = _browser.FindElementSafe(
-                        By.CssSelector(
-                            "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
-                    .TextSafe();
+                history += "; ";
             }
+            history += _browser.FindElementSafe(
+                    By.CssSelector(
+                        "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(1) > td:nth-child(2) > font"))
+                .TextSafe();
 
             ReCord rec = new ReCord
             {
