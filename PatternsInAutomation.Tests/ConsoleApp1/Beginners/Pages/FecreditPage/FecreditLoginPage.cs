@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using Application = System.Windows.Forms.Application;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 {
@@ -324,7 +325,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 }
                 //_browser.WaitForLoad();
 
-                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage);
+                GetDataTable(lxxReCords, ref indexRecord, oSheet, enquiryScreenWindow, stage, signform,signto);
             }
 
             //AutoFit columns A:D.
@@ -545,15 +546,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="indexRecord"></param>
         /// <param name="oSheet"></param>
         /// <param name="enquiryScreenWindow"></param>
-        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage)
+        public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage, string Asignfrom, string AsignTo)
         {
             _browser.WaitForLoad();
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(_browser, By.TagName("tr")));
-//            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
-//            String assigned = "";
+            //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
+            //            String assigned = "";
             // Traverse each row
+            DateTime dateAsignFrom = DateTime.ParseExact(Asignfrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dateAsignTo = DateTime.ParseExact(AsignTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             foreach (var elemTr in lstTrElem)
             {
                 if (lstTrElem.First() == elemTr)
@@ -568,7 +571,11 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     //string applicationNo = 
                     var assigned = lstTdElem[1].TextSafe();
                     var fullNameRow = lstTdElem[2].TextSafe();
-
+                    DateTime dateAsignCurrent = DateTime.ParseExact(AsignTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    if (dateAsignCurrent >= dateAsignFrom && dateAsignCurrent < dateAsignTo)
+                    {
+                        break;
+                    }
                     //Click to detail1 Row:
                     //Or can be identified as href link 
                     //Check number
