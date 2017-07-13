@@ -129,7 +129,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to new window. Page 2
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            _browser.WaitForLoad();
+//            _browser.WaitForLoad();
+            _browser.WaitForPageLoad(15);
             try
             {
                 _browser.SwitchTo().Frame("frameForwardToApp");
@@ -150,7 +151,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
 
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            _browser.WaitForLoad();
+//            _browser.WaitForLoad();
+            _browser.WaitForPageLoad(15);
 
             //switch back to original window. Page 1. Logout
             _browser.SwitchTo().Window(page1WindowHandle);
@@ -258,9 +260,6 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             int indexRecord = 2;
             List < ReCord >lxxReCords= new List<ReCord>();
 
-            //TODO Call function Fetch all Row of the table 
-            //GetDataTable(lxxReCords, ref indexRecord, null, enquiryScreenWindow, stage);
-
             //TODO Click next page or select next page:
             //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
             int n = 1;
@@ -304,7 +303,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 return;
             }
-            n = 428;
+//            n = 428;
 
 
             for (int i = n; i > 0; i--)
@@ -316,6 +315,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 try
                 {
                     selectElement.SelectByValue(i.ToString());
+//                    _browser.WaitForLoad();
+                    _browser.WaitForPageLoad(15);
                     //nextPage?.ClickSafe(_browser);
                     //TODO: Fix page loading:
                 }
@@ -561,11 +562,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <param name="enquiryScreenWindow"></param>
         public void GetDataTable(List<ReCord> lxxReCords, ref int indexRecord, _Worksheet oSheet, string enquiryScreenWindow, string stage, string Asignfrom, string AsignTo, ref Boolean stopNav)
         {
-            _browser.WaitForLoad();
+//            _browser.WaitForLoad();
+            _browser.WaitForPageLoad(15);
             var elemTable = _browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
             // Fetch all Row of the table
             List<IWebElement> lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(_browser, By.TagName("tr")));
             int temp = 0;
+            int ntry = 10;
             //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
             //            String assigned = "";
             // Traverse each row
@@ -641,7 +644,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 _browser.SwitchTo().Window(enquiryScreenWindow);
             }//End foreach
 
-            if (temp == lstTrElem.Count)
+            //TODO: Stop when don't have record in duration.
+            if (temp == lstTrElem.Count - 1)
             {
                 stopNav = true;
             }
