@@ -49,7 +49,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Securitys">
-      <HintPath>..\..\..\Customer\QLVANTAI_SourceCodeV4\QLVANTAI\bin\Release\Dotfuscated\Securitys.dll</HintPath>
+      <HintPath>lib\Securitys.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -115,7 +115,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.30.0.1\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.30.0.1\build\Selenium.WebDriver.ChromeDriver.targets'))" />
-    <Error Condition="!Exists('..\packages\Selenium.Firefox.WebDriver.0.17.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.Firefox.WebDriver.0.17.0\build\Selenium.Firefox.WebDriver.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets'))" />
   </Target>
-  <Import Project="..\packages\Selenium.Firefox.WebDriver.0.17.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.17.0\build\Selenium.Firefox.WebDriver.targets')" />
+  <Import Project="..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets')" />
 </Project>
