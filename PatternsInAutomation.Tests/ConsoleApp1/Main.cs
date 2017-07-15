@@ -24,18 +24,29 @@ namespace AutoDataVPBank
         [TestInitialize]
         public void SetupDriver()
         {
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            chromeDriverService.HideCommandPromptWindow = true;
-            string curFile = @"C:\extensions\0.0.10_0.crx";
-            var options = new ChromeOptions();
-            if (File.Exists(curFile))
+            if (cboBrowser.SelectedItem.ToString() == "Chrome")
             {
-                options.AddExtension(Path.GetFullPath(curFile));
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                string curFile = @"C:\extensions\0.0.10_0.crx";
+                var options = new ChromeOptions();
+                if (File.Exists(curFile))
+                {
+                    options.AddExtension(Path.GetFullPath(curFile));
+                }
+                this.Driver = new ChromeDriver(chromeDriverService, options);
             }
-            this.Driver = new ChromeDriver(chromeDriverService, options);
-//            var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
-//            firefoxDriverService.HideCommandPromptWindow = true;
-//            this.Driver = new FirefoxDriver(firefoxDriverService);
+            else
+            {
+                var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
+//                firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
+//                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
+//                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
+//                FirefoxProfile firefoxProfile = new FirefoxProfile();
+//                firefoxDriverService.HideCommandPromptWindow = true;
+                this.Driver = new FirefoxDriver(firefoxDriverService);
+            }
+           
             this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
         }
 
@@ -48,9 +59,9 @@ namespace AutoDataVPBank
         [TestMethod]
         public void LoginFinnOne()
         {
-            FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver);
+            FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver, txtSignFo.Text, txtSignTo.Text, cboActive.Text);
             loginPage.Navigate();
-            loginPage.Login(txtUser.Text,txtPass.Text,txtSignFo.Text,txtSignTo.Text,cboActive.Text, this.cboActive.Text,this.radioButtonCAS.Checked);
+            loginPage.Login(txtUser.Text,txtPass.Text,this.radioButtonCAS.Checked);
         }
         string serial = "";
         private void Main_Load(object sender, EventArgs e)
@@ -68,10 +79,10 @@ namespace AutoDataVPBank
             "Reject Review"});
             this.txtUser.Text = @"CC100278";
             this.txtPass.Text = @"Khoinguyen@2";
-            this.txtSignFo.Text = @"01/05/2017";
-            this.txtSignTo.Text = @"03/05/2017";
+            this.txtSignFo.Text = @"01/07/2017";
+            this.txtSignTo.Text = @"10/07/2017";
             this.cboActive.SelectedItem = "Reject Review";
-            this.cboBrowser.SelectedItem = "Chrome";
+            this.cboBrowser.SelectedItem = "Firefox";
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium.Support.Extensions;
+using System.Diagnostics;
 
 namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 {
@@ -11,18 +12,27 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
     {
         public static IWebElement FindElementSafe(this IWebDriver driver, By by)
         {
+            WaitForLoad(driver);
             try
             {
                 return driver.FindElement(by);
             }
-            catch (NoSuchElementException)
+            catch (NoSuchElementException e)
             {
-                return null;
+                Console.WriteLine(e);
+                return FindElementSafe(driver, by);
             }
-            catch (WebDriverException)
+            catch (StaleElementReferenceException e)
             {
-                return null;
+                Console.WriteLine(e);
+                return FindElementSafe(driver, by);
             }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine(e);
+                return FindElementSafe(driver, by);
+            }
+            
         }
 
         public static IWebElement FindElement(this IWebDriver driver, By by, int timeoutInSeconds)
@@ -37,6 +47,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static IReadOnlyCollection<IWebElement> FindElementsSafe(this IWebElement element, IWebDriver driver, By by, int timeoutInSeconds = 15)
         {
+            WaitForLoad(driver);
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
             wait.Until(drv => element.FindElements(by));
             try
@@ -186,7 +197,31 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //                throw;
             }
             
-            driver.WaitForLoad();
+            driver.WaitForPageLoad(15);
+        }
+
+        public static void WaitingPageRefreshed(this IWebDriver _browser, By by)
+        {
+            //TODO: Try find result if exist Maxtimeout = 5': 
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            while (s.Elapsed < TimeSpan.FromSeconds(300))
+            {
+                try
+                {
+                    var resultElement = _browser.FindElement(by, 5);
+                    if (resultElement != null)
+                    {
+                        break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+
+            s.Stop();
         }
     }
 }
