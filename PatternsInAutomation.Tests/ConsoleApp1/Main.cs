@@ -39,14 +39,14 @@ namespace AutoDataVPBank
             else
             {
                 var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
-//                firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
-//                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
-//                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
-//                FirefoxProfile firefoxProfile = new FirefoxProfile();
-//                firefoxDriverService.HideCommandPromptWindow = true;
+                //                firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
+                //                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
+                //                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
+                //                FirefoxProfile firefoxProfile = new FirefoxProfile();
+                //                firefoxDriverService.HideCommandPromptWindow = true;
                 this.Driver = new FirefoxDriver(firefoxDriverService);
             }
-           
+
             this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
         }
 
@@ -61,7 +61,7 @@ namespace AutoDataVPBank
         {
             FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver, txtSignFo.Text, txtSignTo.Text, cboActive.Text);
             loginPage.Navigate();
-            loginPage.Login(txtUser.Text,txtPass.Text,this.radioButtonCAS.Checked);
+            loginPage.Login(txtUser.Text, txtPass.Text, this.radioButtonCAS.Checked);
         }
         string serial = "";
         private void Main_Load(object sender, EventArgs e)
@@ -70,8 +70,8 @@ namespace AutoDataVPBank
             serial = CheckKey.getSerial();
             this.txtSerial.Text = serial;
             //
-            this.labContactMe.Text = "Contact me:";
-            this.labEmail.Text = "Email:";
+            //this.labContactMe.Text = "Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
+            //this.labEmail.Text = "Email: metafatvn@gmail.com - Phone: 0896892998";
             //
 
             this.cboActive.Items.AddRange(new object[] {
@@ -80,14 +80,14 @@ namespace AutoDataVPBank
             this.txtUser.Text = @"CC100278";
             this.txtPass.Text = @"Khoinguyen@2";
             this.txtSignFo.Text = @"01/07/2017";
-            this.txtSignTo.Text = @"10/07/2017";
+            this.txtSignTo.Text = @"03/07/2017";
             this.cboActive.SelectedItem = "Reject Review";
             this.cboBrowser.SelectedItem = "Firefox";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
+
             if (!CheckKey.checkSerial(serial))
             {
                 Application.Exit();
@@ -108,7 +108,7 @@ namespace AutoDataVPBank
                 MessageBox.Show("Lối thông tin nhâp!");
                 return;
             }
-            string text=this.btnRun.Text;
+            string text = this.btnRun.Text;
             if (text == "RUN")
             {
                 //this.btnRun.Text = "STOP";
@@ -123,12 +123,17 @@ namespace AutoDataVPBank
             }
         }
 
-        private void Main_KeyDown(object sender, KeyEventArgs e)
+        private void Main_KeyDown(object sender, KeyEventArgs e)//
         {
             //MessageBox.Show(e.KeyCode.ToString());
-            if (e.Control&& e.KeyCode==System.Windows.Forms.Keys.K)
+            if (e.Control && e.KeyCode == System.Windows.Forms.Keys.K)
                 this.txtSerial.Visible = true;
         }
-       
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            this.txtSerial.Visible = true;
+        }
+
     }
 }
