@@ -46,6 +46,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         private bool _stopNav;
 
         private string _enquiryScreenWindow;
+        private string _page1WindowHandle;
         private readonly string _signform;
         private readonly string _signto;
         private readonly string _active;
@@ -124,7 +125,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             //switch to new window. Page 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-            string page1WindowHandle = _browser.CurrentWindowHandle;
+            _page1WindowHandle = _browser.CurrentWindowHandle;
             if (LoginMap.BtnPage1CasarchElement == null)
             {
                 _browser.Quit();
@@ -166,15 +167,6 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
 //            _browser.WaitForLoad();
-            _browser.WaitForPageLoad(15);
-
-            //switch back to original window. Page 1. Logout
-            _browser.SwitchTo().Window(page1WindowHandle);
-            LoginMap.BtnPage1ExitElement.Click();
-
-            //switch to Enquiry Screen.
-            _browser.SwitchTo().Window(_browser.WindowHandles.Last());
-//            _browser.WaitForLoad();
             EnquiryScreen();
         }
 
@@ -190,7 +182,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             if (_active == "Select")
             {
-                selActivityId.SelectByValue(_active);
+                selActivityId.SelectByText(_active);
             }
             else
             {
@@ -214,8 +206,11 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 Console.WriteLine(e);
             }
 
-
-
+            //switch back to original window. Page 1. Logout
+            _browser.SwitchTo().Window(_page1WindowHandle);
+            LoginMap.BtnPage1ExitElement.Click();
+            _browser.SwitchTo().Window(_enquiryScreenWindow);
+            
             //TODO: Try find result if exist Maxtimeout = 5': 
             _browser.WaitingPageRefreshed(By.CssSelector("#selPageIndex > option"));
 
