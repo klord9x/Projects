@@ -22,7 +22,7 @@ namespace AutoDataVPBank
         }
         public static bool checkSerial(string key)
         {
-            return true;
+            //return true;
             try
             {
                 string server = DecryptRijndael(Properties.Resources.Server);
@@ -42,7 +42,7 @@ namespace AutoDataVPBank
             }
             catch
             {
-                System.Windows.Forms.MessageBox.Show("Lối xác minh! Vui lòng kiểm tra!");
+                System.Windows.Forms.MessageBox.Show(@"Lối xác minh! Vui lòng kiểm tra!");
                 return false;
             }
         }

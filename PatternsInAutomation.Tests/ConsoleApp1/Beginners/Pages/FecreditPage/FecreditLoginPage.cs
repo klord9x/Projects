@@ -41,7 +41,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
     {
         private readonly IWebDriver _browser;
         //Number try get record from table before exit.
-        private int _nTry = 10;
+        private int _nTry = 5;
         //Stop search next page.
         private bool _stopNav;
 
@@ -103,6 +103,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
 //                Console.WriteLine(e);
 //                throw;
+                MessageBox.Show(@"Đăng nhập không thành công!");
             }
 
             
@@ -131,6 +132,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 _browser.Quit();
                 MessageBox.Show(message, @"Oh No!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 Console.WriteLine(@"Can't login");
+                Application.Exit();
                 return;
             }
             //TODO: Fail here
@@ -430,7 +432,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //            {
             tabWork.ClickSafe(_browser);
             //Just get row by Name, don't need foreach all table.
-            string companyName = _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
+            string txtCompnayName = _browser.FindElementSafe(By.Name("txtCompnayName")).GetAttributeSafe("value");
+            string companyName = txtCompnayName.Trim() != "" ? txtCompnayName : _browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
+           
 //            rec.Company = companyName;
 //            }
           
@@ -558,6 +562,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     //string applicationNo = 
                     var assigned = lstTdElem[1].TextSafe();
                     var fullNameRow = lstTdElem[2].TextSafe();
+                    if (fullNameRow.Trim() == "") continue;
                     DateTime dateAsignCurrent = DateTime.ParseExact(assigned, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     if (dateAsignCurrent < dateAsignFrom || dateAsignCurrent >= dateAsignTo)
                     {

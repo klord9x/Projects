@@ -49,6 +49,7 @@
             this.txtSerial = new System.Windows.Forms.TextBox();
             this.labContactMe = new System.Windows.Forms.Label();
             this.labEmail = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnRun
@@ -212,7 +213,7 @@
             this.txtSerial.Location = new System.Drawing.Point(0, 205);
             this.txtSerial.Name = "txtSerial";
             this.txtSerial.ReadOnly = true;
-            this.txtSerial.Size = new System.Drawing.Size(353, 20);
+            this.txtSerial.Size = new System.Drawing.Size(354, 20);
             this.txtSerial.TabIndex = 11;
             this.txtSerial.Visible = false;
             // 
@@ -238,11 +239,22 @@
             this.labEmail.TabIndex = 13;
             this.labEmail.Text = "Email:";
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Transparent;
+            this.button1.Location = new System.Drawing.Point(344, 205);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(10, 23);
+            this.button1.TabIndex = 14;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(351, 223);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.labEmail);
             this.Controls.Add(this.labContactMe);
             this.Controls.Add(this.txtSerial);
@@ -299,5 +311,6 @@
         private System.Windows.Forms.TextBox txtSerial;
         private System.Windows.Forms.Label labContactMe;
         private System.Windows.Forms.Label labEmail;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -27,7 +27,7 @@ namespace AutoDataVPBank
             if (cboBrowser.SelectedItem.ToString() == "Chrome")
             {
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                chromeDriverService.HideCommandPromptWindow = true;
+                //chromeDriverService.HideCommandPromptWindow = true;
                 string curFile = @"C:\extensions\0.0.10_0.crx";
                 var options = new ChromeOptions();
                 if (File.Exists(curFile))
@@ -39,11 +39,11 @@ namespace AutoDataVPBank
             else
             {
                 var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
-                //                firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
-                //                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
-                //                FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
-                //                FirefoxProfile firefoxProfile = new FirefoxProfile();
-                //                firefoxDriverService.HideCommandPromptWindow = true;
+                //firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
+                //FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
+                //FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
+                //FirefoxProfile firefoxProfile = new FirefoxProfile();
+                //firefoxDriverService.HideCommandPromptWindow = true;
                 this.Driver = new FirefoxDriver(firefoxDriverService);
             }
 
