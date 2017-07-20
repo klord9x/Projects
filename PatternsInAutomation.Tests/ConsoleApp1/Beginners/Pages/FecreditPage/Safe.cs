@@ -186,21 +186,25 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static void ClickSafe(this IWebElement element, IWebDriver driver)
         {
-            try
+            if (element != null)
             {
-                element.Click(); 
-            }
-            catch (WebDriverException e)
-            {
-//                driver.Close();
-                Console.WriteLine(e);
-//                throw;
+                try
+                {
+                    element.Click();
+                }
+                catch (WebDriverException e)
+                {
+                    //                driver.Close();
+                    Console.WriteLine(e);
+                    //                throw;
+                }
+
+                driver.WaitForPageLoad(15);
             }
             
-            driver.WaitForPageLoad(15);
         }
 
-        public static void WaitingPageRefreshed(this IWebDriver _browser, By by)
+        public static void WaitingPageRefreshed(this IWebDriver browser, By by)
         {
             //TODO: Try find result if exist Maxtimeout = 5': 
             Stopwatch s = new Stopwatch();
@@ -209,7 +213,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 try
                 {
-                    var resultElement = _browser.FindElement(by, 5);
+                    var resultElement = browser.FindElement(by, 5);
                     if (resultElement != null)
                     {
                         break;
