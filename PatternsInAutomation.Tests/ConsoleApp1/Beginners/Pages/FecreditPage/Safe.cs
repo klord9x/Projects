@@ -227,5 +227,25 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
             s.Stop();
         }
+
+        /// <summary>
+        /// Main function to login and crawler data.
+        /// </summary>
+        /// <param name="driver"></param>
+        /// <param name="signFo"></param>
+        /// <param name="signTo"></param>
+        /// <param name="active"></param>
+        /// <param name="user"></param>
+        /// <param name="pass"></param>
+        /// <param name="btCas"></param>
+        /// <param name="fromPage"></param>
+        /// <param name="fromAppNo"></param>
+        public static void LoginFinnOne(IWebDriver driver, string signFo, string signTo, string active, string user, string pass, bool btCas, int fromPage, string fromAppNo)
+        {
+            //TODO: Need fromPage, fromAppID
+            FecreditLoginPage loginPage = new FecreditLoginPage(driver, signFo, signTo, active, user, pass, btCas, fromPage, fromAppNo);
+            loginPage.Navigate();
+            loginPage.Login();
+        }
     }
 }

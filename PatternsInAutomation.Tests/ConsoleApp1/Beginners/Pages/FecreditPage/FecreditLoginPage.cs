@@ -44,15 +44,25 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         private int _nTry = 5;
         //Stop search next page.
         private bool _stopNav;
+        //Search continue:
+        private int _fromPage;
+
+        private bool _continueIndex = false;
+
+        private readonly string _user;
+        private readonly string _pass;
+        private readonly bool _btCas;
+
+        private string _fromAppNo;//
 
         private string _enquiryScreenWindow;
         private string _page1WindowHandle;
-        private readonly string _signform;
+        private readonly string _signfrom;
         private readonly string _signto;
         private readonly string _active;
 
         private readonly string _product = "PERSONAL";
-        private readonly List<string> _lheader = new List<string>() { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History" };
+        private readonly List<string> _lheader = new List<string> { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History" };
         //private const string Name = @"CC100278";
         //private const string Password = @"Khoinguyen@2";
         private const string Url = @"https://cps.fecredit.com.vn/finnsso/gateway/SSOGateway?requestID=7000003";
@@ -60,12 +70,22 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         //private const string Signed = "02/05/2016";
         //private const string SignedTo = "02/05/2016";
 
-        public FecreditLoginPage(IWebDriver browser, string signform, string signto, string active)
+        public FecreditLoginPage(IWebDriver browser, string signfrom, string signto, string active, string user, string pass, bool btCas, int fromPage, string fromAppNo)
         {
             _browser = browser;
-            _signform = signform;
+            _signfrom = signfrom;
             _signto = signto;
             _active = active;
+            _user = user;
+            _pass = pass;
+            _btCas = btCas;
+            _fromPage = active == "Reject Review" ? 12 : 1;
+            if (fromAppNo != null && fromPage > 0)
+            {
+                _fromPage = fromPage;
+                _fromAppNo = fromAppNo;
+            }
+            
         }
 
         protected FecreditLoginPageElementMap LoginMap
@@ -86,14 +106,14 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         /// <summary>
         /// #1. Login Url.
         /// </summary>
-        public void Login(string user, string pass, bool caSselect)
+        public void Login()
         {
             string message = "";
             LoginMap.TxtNameElement.Clear();
-            LoginMap.TxtNameElement.SendKeys(user);
+            LoginMap.TxtNameElement.SendKeys(_user);
 
             LoginMap.TxtPasswordElement.Clear();
-            LoginMap.TxtPasswordElement.SendKeys(pass);
+            LoginMap.TxtPasswordElement.SendKeys(_pass);
 
             try
             {
@@ -136,7 +156,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 return;
             }
             //TODO: Fail here
-            if (caSselect)
+            if (_btCas)
             {
                 LoginMap.BtnPage1CasElement.ClickSafe(_browser);
             }
@@ -153,7 +173,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 _browser.SwitchTo().Frame("frameForwardToApp");
                 _browser.SwitchTo().Frame("contents");
                 LoginMap.BtnPage2Click1Element.ClickSafe(_browser);
-                if (caSselect)
+                if (_btCas)
                 {
                     LoginMap.BtnPage2CasClick2Element.ClickSafe(_browser);
                 }
@@ -196,7 +216,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             ScreenMap.TxtSignedToElement.SendKeys(_signto);
 
             ScreenMap.TxtSingedElement.Clear();
-            ScreenMap.TxtSingedElement.SendKeys(_signform);
+            ScreenMap.TxtSingedElement.SendKeys(_signfrom);
 
             try
             {
@@ -255,13 +275,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             List < ReCord >lxxReCords= new List<ReCord>();
 
             //TODO Click next page or select next page:
-            //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
             int n = 1;
-            int page = 12;
-            if (_active == "Reject Review")
-            {
-                page = 1;
-            }
+//            int page = 12;
+//            if (_active == "Reject Review")
+//            {
+//                page = 1;
+//            }
             // select the drop down list
 //            SelectElement selectElement = new SelectElement(_browser.FindElement(By.CssSelector("#selPageIndex")));
             //create select element object 
@@ -279,9 +298,9 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 //                Thread.Sleep(5000);
                 Console.WriteLine(e);
             }
-            if (n > page)
+            if (n > _fromPage)
             {
-                n = n - page;
+                n = n - _fromPage;
             }
             else
             {
@@ -311,7 +330,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 {
                     break;
                 }
-                
+                _fromPage++;
             }
 
             oXl.Visible = false;
@@ -342,8 +361,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //Switch to last window: detail 1
             _browser.SwitchTo().Window(_browser.WindowHandles.Last());
             //TODO: firefox error.
-            //            IWebElement element = null;
-            IWebElement element = null;
+            //TODO: Fix error 500: continue again process. Not find QDE element.
+            IWebElement element;
             while (true)
             {
                 element = _browser.FindElementSafe(By.PartialLinkText("QDE"));//body > a:nth-child(1)
@@ -351,6 +370,20 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 {
                     break;
                 }
+//                _browser.
+                if (_browser.Title.Contains("ERROR 500"))
+                {
+                    //Close all open Browsers:
+                    foreach (var openBrowserWindowHandle in _browser.WindowHandles)
+                    {
+                        _browser.SwitchTo().Window(openBrowserWindowHandle);
+                        _browser.Close();
+                    }
+                    //Continue login again here.
+                    Safe.LoginFinnOne(_browser, _signfrom, _signto, _active, _user, _pass, _btCas, _fromPage - 1, e.Text);
+                    //break;
+                }
+                
             }
             
 //            IWebElement element = _browser.FindElementSafe(By.CssSelector("a[href^='Activity']"));//_browser.FindElements(By.CssSelector("a[href^='Activity']")
@@ -387,7 +420,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //            {
             //                return rec;
             //            }
-            if (userName == null || userName.Text != "")
+            if (userName == null || userName.Text.Trim() != "")
             {
                 userName.ClickSafe(_browser);
             }
@@ -545,7 +578,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             //            String detailHref = "";//Click <a href="javascript:updateFunc('0')" tabindex="0">2734182</a>
             //            String assigned = "";
             // Traverse each row
-            DateTime dateAsignFrom = DateTime.ParseExact(_signform, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime dateAsignFrom = DateTime.ParseExact(_signfrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             DateTime dateAsignTo = DateTime.ParseExact(_signto, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             foreach (var elemTr in lstTrElem)
             {
@@ -558,6 +591,15 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 if (lstTdElem.Count > 0)
                 {
                     var detailHref = lstTdElem[0].TextSafe();
+                    //TODO: Need check again this condition
+                    if (!_continueIndex && (_fromAppNo == null || detailHref == _fromAppNo))
+                    {
+                        _continueIndex = true;
+                    }
+                    if (!_continueIndex)
+                    {
+                        continue;
+                    }
                     Console.WriteLine(@"Detail : " + detailHref);
                     //string applicationNo = 
                     var assigned = lstTdElem[1].TextSafe();

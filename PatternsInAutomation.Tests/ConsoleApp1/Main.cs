@@ -8,6 +8,7 @@ using System.IO;
 using AutoDataVPBank.Beginners.Pages.FecreditPage;
 using OpenQA.Selenium.Firefox;
 using System.Globalization;
+using static AutoDataVPBank.Beginners.Pages.FecreditPage.Safe;
 
 namespace AutoDataVPBank
 {
@@ -15,6 +16,7 @@ namespace AutoDataVPBank
     {
         public IWebDriver Driver { get; set; }
         public WebDriverWait Wait { get; set; }
+        private string _serial = "";
         public Main()
         {
             InitializeComponent();
@@ -56,19 +58,12 @@ namespace AutoDataVPBank
             this.Driver.Quit();
         }
 
-        [TestMethod]
-        public void LoginFinnOne()
-        {
-            FecreditLoginPage loginPage = new FecreditLoginPage(this.Driver, txtSignFo.Text, txtSignTo.Text, cboActive.Text);
-            loginPage.Navigate();
-            loginPage.Login(txtUser.Text, txtPass.Text, this.radioButtonCAS.Checked);
-        }
-        string serial = "";
+        
         private void Main_Load(object sender, EventArgs e)
         {
             //getSerial
-            serial = CheckKey.getSerial();
-            this.txtSerial.Text = serial;
+            _serial = CheckKey.getSerial();
+            this.txtSerial.Text = _serial;
             //
             //this.labContactMe.Text = "Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
             //this.labEmail.Text = "Email: metafatvn@gmail.com - Phone: 0896892998";
@@ -88,7 +83,7 @@ namespace AutoDataVPBank
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if (!CheckKey.checkSerial(serial))
+            if (!CheckKey.checkSerial(_serial))
             {
                 Application.Exit();
                 return;
@@ -113,7 +108,7 @@ namespace AutoDataVPBank
             {
                 //this.btnRun.Text = "STOP";
                 SetupDriver();
-                LoginFinnOne();
+                Safe.LoginFinnOne(this.Driver, txtSignFo.Text, txtSignTo.Text, cboActive.Text, txtUser.Text, txtPass.Text, this.radioButtonCAS.Checked, 0, null);
                 Teardown();
                 this.Close();
             }
