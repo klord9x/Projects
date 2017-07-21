@@ -46,14 +46,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         private bool _stopNav;
         //Search continue:
         private int _fromPage;
-
         private bool _continueIndex = false;
-
         private readonly string _user;
         private readonly string _pass;
         private readonly bool _btCas;
 
-        private string _fromAppNo;//
+        private readonly string _fromAppNo;//
 
         private string _enquiryScreenWindow;
         private string _page1WindowHandle;
@@ -63,12 +61,8 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         private readonly string _product = "PERSONAL";
         private readonly List<string> _lheader = new List<string> { "Full Name", "Gender", "Age", "ID Card Number", "Phone", "State", "Stage", "Scheme", "Company", "Income", "DSA Code", "DSA Name", "TSA Code", "TSA Name", "SA Phone number", "ApplicationNo", "Assign", "References", "History" };
-        //private const string Name = @"CC100278";
-        //private const string Password = @"Khoinguyen@2";
+        
         private const string Url = @"https://cps.fecredit.com.vn/finnsso/gateway/SSOGateway?requestID=7000003";
-
-        //private const string Signed = "02/05/2016";
-        //private const string SignedTo = "02/05/2016";
 
         public FecreditLoginPage(IWebDriver browser, string signfrom, string signto, string active, string user, string pass, bool btCas, int fromPage, string fromAppNo)
         {
@@ -79,13 +73,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             _user = user;
             _pass = pass;
             _btCas = btCas;
-            _fromPage = active == "Reject Review" ? 12 : 1;
-            if (fromAppNo != null && fromPage > 0)
-            {
-                _fromPage = fromPage;
-                _fromAppNo = fromAppNo;
-            }
-            
+            _fromPage = (btCas && active == "Reject Review") ? 12 : 1;
+            if (fromAppNo == null || fromPage <= 0) return;
+            _fromPage = fromPage;
+            _fromAppNo = fromAppNo;
         }
 
         protected FecreditLoginPageElementMap LoginMap
@@ -667,7 +658,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             if (temp == lstTrElem.Count - 1)
             {
                 _nTry--;
-                if (_nTry == 0)
+                if (_nTry == 0 && _btCas)
                 {
                     _stopNav = true;
                 }
