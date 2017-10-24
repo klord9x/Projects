@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.src
 {
     public class Setting
     {

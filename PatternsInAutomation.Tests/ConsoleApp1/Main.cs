@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
-using AutoDataVPBank.Beginners.Pages.FecreditPage;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
+using AutoDataVPBank.core;
+using AutoDataVPBank.Pages.FecreditPage;
+using static AutoDataVPBank.Library;
 
 namespace AutoDataVPBank
 {
@@ -96,7 +96,6 @@ namespace AutoDataVPBank
                     case "Start":
                         btnRun.Text = @"Stop";
                         FecreditLoginPage.Start();
-                        //Close();
                         break;
                     default:
                         btnRun.Text = @"Start";

@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Security;
 using System.Threading;
+using AutoDataVPBank.src;
 using OpenQA.Selenium;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.core
 {
     public abstract class BaseWorker
     {
@@ -38,7 +38,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             try
             {
                 MoWorker.ReportProgress(0);
-                CancelTokenSrc = new CancellationTokenSource();
+                Library.CancelTokenSrc = new CancellationTokenSource();
                 try
                 {
                     Process();
@@ -46,37 +46,37 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 catch (Exception ex)
                 {
                     //TODO: Fail when not exist.
-                    Logg.Error(ex.Message);
-                    KillProcess();
+                    Library.Logg.Error(ex.Message);
+                    Library.KillProcess();
                 }
 
                 _total++;
             }
             catch (ArgumentException ae)
             {
-                Logg.Error(ae.Message);
+                Library.Logg.Error(ae.Message);
 
             }
             catch (ThreadInterruptedException tie)
             {
-                Logg.Error(tie.Message);
+                Library.Logg.Error(tie.Message);
 
             }
             catch (SecurityException se)
             {
-                Logg.Error(se.Message);
+                Library.Logg.Error(se.Message);
 
             }
             catch (Exception ex)
             {
-                Logg.Error(ex.Message);
+                Library.Logg.Error(ex.Message);
 
             }
             finally
             {
                 Monitor.Exit(SyncLock);
 
-                Logg.Info("---------End One------------");
+                Library.Logg.Info("---------End One------------");
             }
         }
         
@@ -139,13 +139,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                IsRun = true;
+                Library.IsRun = true;
                 Setup();
-                JobName = GetType().Name;
+                Library.JobName = GetType().Name;
                 // Signal the shutdown event
-                ShutdownEvent.Reset();
+                Library.ShutdownEvent.Reset();
                 // Make sure to resume any paused threads
-                PauseEvent.Set();
+                Library.PauseEvent.Set();
                 _resetEvent.Set();
                 //Start the async operation here
                 if (MoWorker.IsBusy)
@@ -183,7 +183,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 throw;
             }
         }
@@ -192,12 +192,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                IsRun = false;
+                Library.IsRun = false;
                 // Signal the shutdown event
-                ShutdownEvent.Set();
+                Library.ShutdownEvent.Set();
                 // Make sure to resume any paused threads
-                PauseEvent.Set();
-                CancelTokenSrc.Cancel();
+                Library.PauseEvent.Set();
+                Library.CancelTokenSrc.Cancel();
             }
             catch (WebDriverException)
             {

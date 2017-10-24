@@ -1,4 +1,4 @@
-﻿namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+﻿namespace AutoDataVPBank
 {
     public class Product
     {

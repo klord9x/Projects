@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using AutoDataVPBank.core;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.DriverFactory;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.Pages.FecreditPage
 {
     public class FecreditLoginPage:BaseWorker
     {
@@ -24,14 +23,14 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         {
             try
             {
-                Logg.Info("Start Browser");
-                StartBrowser();
+                Library.Logg.Info("Start Browser");
+                DriverFactory.StartBrowser();
                 Navigate();
                 Login(Library.MainForm.txtUser.Text, Library.MainForm.txtPass.Text, Library.MainForm.radioButtonCAS.Checked);
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 throw;
             }
         }
@@ -39,7 +38,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static void Navigate()
         {
-            Browser.NavigateSafe(Url);
+            DriverFactory.Browser.NavigateSafe(Url);
         }
 
         /// <summary>
@@ -57,13 +56,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 MessageBox.Show(@"Đăng nhập không thành công!");
             }
             var message = CheckAlert();
             ProcessPageOne(message, caSselect);
             ProcessPageTwo(caSselect);
-            Browser.SwitchTo().Window(Browser.WindowHandles.Last());
+            DriverFactory.Browser.SwitchTo().Window(DriverFactory.Browser.WindowHandles.Last());
             //Go to get detail:
             var enqui = new EnquiryScreenPage();
             enqui.EnquiryScreen();
@@ -72,27 +71,27 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         private static void ProcessPageTwo(bool caSselect)
         {
             //switch to new window. Page 2
-            Browser.SwitchTo().Window(Browser.WindowHandles.Last());
-            Browser.WaitForPageLoad(15);
+            DriverFactory.Browser.SwitchTo().Window(DriverFactory.Browser.WindowHandles.Last());
+            DriverFactory.Browser.WaitForPageLoad(15);
             try
             {
-                Browser.SwitchTo().Frame("frameForwardToApp");
-                Browser.SwitchTo().Frame("contents");
-                LoginMap.BtnPage2Click1Element.ClickSafe(Browser);
+                DriverFactory.Browser.SwitchTo().Frame("frameForwardToApp");
+                DriverFactory.Browser.SwitchTo().Frame("contents");
+                LoginMap.BtnPage2Click1Element.ClickSafe(DriverFactory.Browser);
                 if (caSselect)
                 {
-                    LoginMap.BtnPage2CasClick2Element.ClickSafe(Browser);
+                    LoginMap.BtnPage2CasClick2Element.ClickSafe(DriverFactory.Browser);
                 }
-                else LoginMap.BtnPage2Click2Element.ClickSafe(Browser);
+                else LoginMap.BtnPage2Click2Element.ClickSafe(DriverFactory.Browser);
 
             }
             catch (WebDriverException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 throw;
             }
         }
@@ -100,22 +99,22 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
         private static void ProcessPageOne(string message, bool caSselect)
         {
             //switch to new window. Page 1
-            Browser.SwitchTo().Window(Browser.WindowHandles.Last());
-            EnquiryScreenPage.Page1WindowHandle = Browser.CurrentWindowHandle;
+            DriverFactory.Browser.SwitchTo().Window(DriverFactory.Browser.WindowHandles.Last());
+            EnquiryScreenPage.Page1WindowHandle = DriverFactory.Browser.CurrentWindowHandle;
             if (LoginMap.BtnPage1CasarchElement == null)
             {
-                StopBrowser();
+                DriverFactory.StopBrowser();
                 MessageBox.Show(message, @"Oh No!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                Logg.Error(@"Can't login");
+                Library.Logg.Error(@"Can't login");
                 Application.Exit();
                 return;
             }
             //TODO: Fail here
             if (caSselect)
             {
-                LoginMap.BtnPage1CasElement.ClickSafe(Browser);
+                LoginMap.BtnPage1CasElement.ClickSafe(DriverFactory.Browser);
             }
-            else LoginMap.BtnPage1CasarchElement.ClickSafe(Browser);
+            else LoginMap.BtnPage1CasarchElement.ClickSafe(DriverFactory.Browser);
         }
 
         private static string CheckAlert()
@@ -125,17 +124,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
              */
             try
             {
-                var wait = new WebDriverWait(Browser, TimeSpan.FromSeconds(15));
+                var wait = new WebDriverWait(DriverFactory.Browser, TimeSpan.FromSeconds(15));
                 wait.Until(ExpectedConditions.AlertIsPresent());
-                var alert = Browser.SwitchTo().Alert();
+                var alert = DriverFactory.Browser.SwitchTo().Alert();
                 var message = alert.Text;
-                Logg.Error(message);
+                Library.Logg.Error(message);
                 alert.Accept();
                 return message;
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 throw;
             }
         }

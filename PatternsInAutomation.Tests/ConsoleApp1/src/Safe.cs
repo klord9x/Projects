@@ -8,9 +8,8 @@ using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank
 {
     internal static class Safe
     {
@@ -23,17 +22,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (NoSuchElementException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return FindElementSafe(driver, by);
             }
             catch (StaleElementReferenceException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return FindElementSafe(driver, by);
             }
             catch (WebDriverException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return null;
             }
         }
@@ -60,7 +59,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (StaleElementReferenceException ex)
             {
-                Logg.Error(ex.Message);
+                Library.Logg.Error(ex.Message);
             }
 
             return element.FindElements(by);
@@ -117,7 +116,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (NoSuchWindowException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
 //                driver.Close();
 //                throw;
             }
@@ -188,11 +187,11 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (WebDriverException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
             }
             catch (Exception e)
             {
-                 Logg.Error(e.Message);
+                 Library.Logg.Error(e.Message);
                 throw;
             }
         }
@@ -211,7 +210,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 }
                 catch (Exception e)
                 {
-                    Logg.Error(e);
+                    Library.Logg.Error(e);
                 }
 
             s.Stop();
@@ -219,10 +218,10 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 
         public static IWebElement FindElementSafeV2(this IWebDriver driver, By by, bool displayed = true)
         {
-            WaitForPageLoad(driver, Set.CloneNickSettings.PageLoad.Times.GetValue());
+            WaitForPageLoad(driver, Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
             try
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Set.CloneNickSettings.Default.Times.GetValue()));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Library.Set.CloneNickSettings.Default.Times.GetValue()));
                 return wait.Until(d =>
                 {
                     var elem = d.FindElement(by);
@@ -233,18 +232,18 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (NoSuchElementException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
 
                 return null;
             }
             catch (InvalidOperationException e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return null;
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
 
                 return null;
             }
@@ -258,12 +257,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (NoSuchElementException e)
             {
-                Logg.Info(e.Message);
+                Library.Logg.Info(e.Message);
                 return null;
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return null;
             }
         }
@@ -282,17 +281,17 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     }
                     catch (NoSuchElementException e)
                     {
-                        Logg.Info(e.Message);
+                        Library.Logg.Info(e.Message);
                     }
                     catch (Exception e)
                     {
-                        Logg.Error(e.Message);
+                        Library.Logg.Error(e.Message);
                         return null;
                     }
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 return null;
             }
 
@@ -308,24 +307,24 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     {
                         driver.Navigate().GoToUrl(url);
                         if (sleep)
-                            SleepSafe(0, Set.CloneNickSettings.Default.Times.GetValue());
+                            SleepSafe(0, Library.Set.CloneNickSettings.Default.Times.GetValue());
 
                         if (driver.Url.Contains(url))
-                            driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                            driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
                     }
 
                     catch (WebDriverTimeoutException e)
                     {
-                        Logg.Error(@"Time out: " + e.Message);
+                        Library.Logg.Error(@"Time out: " + e.Message);
                     }
                     catch (NoSuchElementException)
                     {
-                        Logg.Error(@"Can not Navigate to: " + url);
+                        Library.Logg.Error(@"Can not Navigate to: " + url);
                     }
                     catch (WebDriverException e)
                     {
                         //TODO: Why fail, it crash app, don't continue ???
-                        Logg.Error(@"Driver fail: " + e.Message);
+                        Library.Logg.Error(@"Driver fail: " + e.Message);
 
                         //Facebook.RestartFacebook();
                         throw;
@@ -338,21 +337,21 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 {
                     driver.Navigate().GoToUrl(url);
                     if (sleep)
-                        SleepSafe(0, Set.CloneNickSettings.Default.Times.Min);
+                        SleepSafe(0, Library.Set.CloneNickSettings.Default.Times.Min);
                     //var driver2 = DriverFactory.Browser.Value;
                     //driver2.Navigate().GoToUrl(url);
 
                     if (driver.Url.Contains(url))
-                        driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                        driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
                     else
-                        Logg.Error(@"Can not Navigate to: " + url);
+                        Library.Logg.Error(@"Can not Navigate to: " + url);
                 }
                 catch (NoSuchWindowException)
                 {
                 }
                 catch (WebDriverException e)
                 {
-                    Logg.Error(@"Driver fail: " + e.Message);
+                    Library.Logg.Error(@"Driver fail: " + e.Message);
                     throw;
                 }
         }
@@ -365,13 +364,13 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                     return;
                 driver.Navigate().Refresh();
                 if (wait)
-                    driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                    driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
                 if (sleep)
                     SleepSafe(0, time > 0 ? time : 69);
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 //
                 throw;
             }
@@ -394,7 +393,7 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
                 throw;
             }
         }
@@ -405,12 +404,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             {
                 //CancelTask();
                 if (time >= 1000)
-                    Logg.Info("Times= " + time + from);
+                    Library.Logg.Info("Times= " + time + from);
                 Thread.Sleep(time);
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
+                Library.Logg.Error(e.Message);
 
                 throw;
             }
@@ -427,20 +426,20 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
             catch (NullReferenceException e)
             {
-                 Logg.Error(e.Message);
-                KillProcess();
+                 Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
             catch (WebDriverException e)
             {
-                 Logg.Error(e.Message);
-                KillProcess();
+                 Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
             catch (Exception e)
             {
-                 Logg.Error(e.Message);
-                KillProcess();
+                 Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
         }

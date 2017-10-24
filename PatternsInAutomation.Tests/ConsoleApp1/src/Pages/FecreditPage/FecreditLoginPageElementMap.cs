@@ -1,6 +1,7 @@
-﻿using OpenQA.Selenium;
+﻿using AutoDataVPBank.core;
+using OpenQA.Selenium;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.Pages.FecreditPage
 {
     public class FecreditLoginPageElementMap : BasePageElementMap
     {

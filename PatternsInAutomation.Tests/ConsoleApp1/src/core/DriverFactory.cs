@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using AutoDataVPBank.src;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.RandomNumber;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.core
 {
     public static class DriverFactory
     {
@@ -58,12 +57,12 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
             }
 
             BrowserWait = new WebDriverWait(Browser, TimeSpan.FromSeconds(defaultTimeOut));
-            Browser.Manage().Timeouts().PageLoad = TimeOuts;
-            Browser.Manage().Timeouts().AsynchronousJavaScript = TimeOuts;
+            Browser.Manage().Timeouts().PageLoad = Library.TimeOuts;
+            Browser.Manage().Timeouts().AsynchronousJavaScript = Library.TimeOuts;
 
             var size = Browser.Manage().Window.Size;
-            size.Width = size.Width - Between(200, 600);
-            size.Height = size.Height + Between(200, 400);
+            size.Width = size.Width - RandomNumber.Between(200, 600);
+            size.Height = size.Height + RandomNumber.Between(200, 400);
             Browser.Manage().Window.Size = size;
             Browser.Manage().Window.Position = new Point(0, 0);
         }
@@ -91,18 +90,18 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 //profile.SetPreference("general.useragent.override", userAgent);
                 options.Profile = profile;
 
-                Browser = new FirefoxDriver(service, options, TimeOuts);
+                Browser = new FirefoxDriver(service, options, Library.TimeOuts);
             }
             catch (WebDriverException e)
             {
-                Logg.Error(e.Message);
-                KillProcess();
+                Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
-                KillProcess();
+                Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
         }
@@ -123,18 +122,18 @@ namespace AutoDataVPBank.Beginners.Pages.FecreditPage
                 // add parameter which will disable the extension
                 options.AddArgument("--disable-extensions");
                 options.AddArgument("disable-infobars");
-                Browser = new ChromeDriver(chromeDriverService, options, TimeOuts);
+                Browser = new ChromeDriver(chromeDriverService, options, Library.TimeOuts);
             }
             catch (WebDriverException e)
             {
-                Logg.Error(e.Message);
-                KillProcess();
+                Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
             catch (Exception e)
             {
-                Logg.Error(e.Message);
-                KillProcess();
+                Library.Logg.Error(e.Message);
+                Library.KillProcess();
                 throw;
             }
         }

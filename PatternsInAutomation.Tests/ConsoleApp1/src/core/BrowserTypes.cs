@@ -1,4 +1,4 @@
-﻿namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+﻿namespace AutoDataVPBank.core
 {
     public enum BrowserTypes
     {

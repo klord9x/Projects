@@ -292,7 +292,7 @@
             this.label11.TabIndex = 4;
             this.label11.Text = "Status:";
             // 
-            // Main
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

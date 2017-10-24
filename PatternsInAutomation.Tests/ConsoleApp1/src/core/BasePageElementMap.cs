@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank.core
 {
     public class BasePageElementMap
     {

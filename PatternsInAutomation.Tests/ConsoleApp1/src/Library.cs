@@ -17,13 +17,14 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
+using AutoDataVPBank.src;
 using log4net;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using Exception = System.Exception;
 using Image = System.Drawing.Image;
 
-namespace AutoDataVPBank.Beginners.Pages.FecreditPage
+namespace AutoDataVPBank
 {
     public class Library
     {

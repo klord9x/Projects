@@ -1,28 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternsInAutomation.Tests", "PatternsInAutomation.Tests\PatternsInAutomation.Tests.csproj", "{8E4E4E04-3409-4454-998A-38BCBE3779CF}"
-EndProject
-Project("{F088123C-0E9E-452A-89E6-6BA2F21D5CAC}") = "PatternsInAutomation.Diagrams", "ModelingProject1\PatternsInAutomation.Diagrams.modelproj", "{FCA718C0-DE23-40B4-832B-4F67C176ECD6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingTechniques.UnitTests", "TestingTechniques.UnitTests\TestingTechniques.UnitTests.csproj", "{A477E221-5D51-4E88-BC3F-273E022F73A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriver.Tools", "WebDriver.Tools\WebDriver.Tools.csproj", "{DF4FC3D9-A5A6-4855-BAC4-7CD3B10F52D1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDriver.Series.Tests", "WebDriver.Series.Tests\WebDriver.Series.Tests.csproj", "{C63E8E59-BD61-4A41-9039-BB5C16422D23}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.Tests", "CSharp.Series.Tests\CSharp.Series.Tests.csproj", "{7BE94B9E-0595-4BB8-B644-1B2FE66F3FB9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.Log4Net.Tests", "CSharp.Series.Log4Net.Tests\CSharp.Series.Log4Net.Tests.csproj", "{18A3C6E7-69CD-463B-BC7D-F5A12BAAFC21}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.NLog.Tests", "CSharp.Series.NLog.Tests\CSharp.Series.NLog.Tests.csproj", "{4CBCA26E-FD97-4B26-B310-039D5AF471DC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.NLog.UnitTests", "CSharp.Series.NLog.UnitTests\CSharp.Series.NLog.UnitTests.csproj", "{0CB14873-1D7F-47BE-9877-E2ABBC5E3D0B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp.Series.EventLogOperations", "CSharp.Series.EventLogOperations\CSharp.Series.EventLogOperations.csproj", "{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDataVPBank", "ConsoleApp1\AutoDataVPBank.csproj", "{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}"
 EndProject
 Global
@@ -31,46 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8E4E4E04-3409-4454-998A-38BCBE3779CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E4E4E04-3409-4454-998A-38BCBE3779CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E4E4E04-3409-4454-998A-38BCBE3779CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E4E4E04-3409-4454-998A-38BCBE3779CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCA718C0-DE23-40B4-832B-4F67C176ECD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCA718C0-DE23-40B4-832B-4F67C176ECD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCA718C0-DE23-40B4-832B-4F67C176ECD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCA718C0-DE23-40B4-832B-4F67C176ECD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A477E221-5D51-4E88-BC3F-273E022F73A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A477E221-5D51-4E88-BC3F-273E022F73A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A477E221-5D51-4E88-BC3F-273E022F73A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A477E221-5D51-4E88-BC3F-273E022F73A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF4FC3D9-A5A6-4855-BAC4-7CD3B10F52D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF4FC3D9-A5A6-4855-BAC4-7CD3B10F52D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF4FC3D9-A5A6-4855-BAC4-7CD3B10F52D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF4FC3D9-A5A6-4855-BAC4-7CD3B10F52D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C63E8E59-BD61-4A41-9039-BB5C16422D23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C63E8E59-BD61-4A41-9039-BB5C16422D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C63E8E59-BD61-4A41-9039-BB5C16422D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C63E8E59-BD61-4A41-9039-BB5C16422D23}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BE94B9E-0595-4BB8-B644-1B2FE66F3FB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BE94B9E-0595-4BB8-B644-1B2FE66F3FB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BE94B9E-0595-4BB8-B644-1B2FE66F3FB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BE94B9E-0595-4BB8-B644-1B2FE66F3FB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18A3C6E7-69CD-463B-BC7D-F5A12BAAFC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18A3C6E7-69CD-463B-BC7D-F5A12BAAFC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18A3C6E7-69CD-463B-BC7D-F5A12BAAFC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18A3C6E7-69CD-463B-BC7D-F5A12BAAFC21}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CBCA26E-FD97-4B26-B310-039D5AF471DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CBCA26E-FD97-4B26-B310-039D5AF471DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CBCA26E-FD97-4B26-B310-039D5AF471DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CBCA26E-FD97-4B26-B310-039D5AF471DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CB14873-1D7F-47BE-9877-E2ABBC5E3D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CB14873-1D7F-47BE-9877-E2ABBC5E3D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CB14873-1D7F-47BE-9877-E2ABBC5E3D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CB14873-1D7F-47BE-9877-E2ABBC5E3D0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C2F551C-DDE5-4DAF-B8F4-82915DAEB4B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\regfacebook\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -53,7 +53,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\regfacebook\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Securitys">
       <HintPath>lib\Securitys.dll</HintPath>
@@ -71,27 +71,27 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WebDriver, Version=3.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\regfacebook\packages\Selenium.WebDriver.3.6.0\lib\net45\WebDriver.dll</HintPath>
+      <HintPath>..\packages\Selenium.WebDriver.3.6.0\lib\net45\WebDriver.dll</HintPath>
     </Reference>
     <Reference Include="WebDriver.Support, Version=3.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\regfacebook\packages\Selenium.Support.3.6.0\lib\net45\WebDriver.Support.dll</HintPath>
+      <HintPath>..\packages\Selenium.Support.3.6.0\lib\net45\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Beginners\Pages\FecreditPage\BasePageElementMap.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\BaseWorker.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\BrowserTypes.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\Driver.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\EnquiryScreenPage.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\EnquiryScreenPageElementMap.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\FecreditLoginPage.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\FecreditLoginPageElementMap.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\Library.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\Product.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\RandomNumber.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\ReCord.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\Safe.cs" />
-    <Compile Include="Beginners\Pages\FecreditPage\Settings.cs" />
+    <Compile Include="src\core\BasePageElementMap.cs" />
+    <Compile Include="src\core\BaseWorker.cs" />
+    <Compile Include="src\core\BrowserTypes.cs" />
+    <Compile Include="src\core\DriverFactory.cs" />
+    <Compile Include="src\Pages\FecreditPage\EnquiryScreenPage.cs" />
+    <Compile Include="src\Pages\FecreditPage\EnquiryScreenPageElementMap.cs" />
+    <Compile Include="src\Pages\FecreditPage\FecreditLoginPage.cs" />
+    <Compile Include="src\Pages\FecreditPage\FecreditLoginPageElementMap.cs" />
+    <Compile Include="src\Library.cs" />
+    <Compile Include="src\Product.cs" />
+    <Compile Include="src\RandomNumber.cs" />
+    <Compile Include="src\ReCord.cs" />
+    <Compile Include="src\Safe.cs" />
+    <Compile Include="src\Settings.cs" />
     <Compile Include="CheckKey.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -132,13 +132,5 @@
   <Import Project="..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.18.0\build\Selenium.Firefox.WebDriver.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.GeckoDriver.Win64.0.18.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets" Condition="Exists('..\packages\Selenium.WebDriver.GeckoDriver.Win64.0.18.0\build\Selenium.WebDriver.GeckoDriver.Win64.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.GeckoDriver.0.18.0\build\Selenium.WebDriver.GeckoDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.GeckoDriver.0.18.0\build\Selenium.WebDriver.GeckoDriver.targets')" />
-  <Import Project="..\regfacebook\packages\Selenium.WebDriver.ChromeDriver.2.33.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\regfacebook\packages\Selenium.WebDriver.ChromeDriver.2.33.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\regfacebook\packages\Selenium.WebDriver.ChromeDriver.2.33.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\regfacebook\packages\Selenium.WebDriver.ChromeDriver.2.33.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
-    <Error Condition="!Exists('..\regfacebook\packages\Selenium.Firefox.WebDriver.0.19.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\regfacebook\packages\Selenium.Firefox.WebDriver.0.19.0\build\Selenium.Firefox.WebDriver.targets'))" />
-  </Target>
   <Import Project="..\regfacebook\packages\Selenium.Firefox.WebDriver.0.19.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\regfacebook\packages\Selenium.Firefox.WebDriver.0.19.0\build\Selenium.Firefox.WebDriver.targets')" />
 </Project>
