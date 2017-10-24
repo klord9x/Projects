@@ -84,6 +84,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             {
                 //Save Enquiry Screen.
                 _enquiryScreenWindow = DriverFactory.Browser.CurrentWindowHandle;
+                //TODO: Need Improve Unable to locate element: {"method":"name","selector":"selActivityId"}
                 var selActivityId = new SelectElement(ScreenMap.SelectBoxSelActivityIdElement);
                 var selProduct = new SelectElement(ScreenMap.SelectBoxSelProductElement);
 
