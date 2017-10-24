@@ -1,134 +1,127 @@
 ﻿using System;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Chrome;
-using System.IO;
-using AutoDataVPBank.Beginners.Pages.FecreditPage;
-using OpenQA.Selenium.Firefox;
+using System.Collections.Generic;
 using System.Globalization;
-using static AutoDataVPBank.Beginners.Pages.FecreditPage.Safe;
+using System.Linq;
+using System.Threading;
+using System.Windows.Forms;
+using AutoDataVPBank.Beginners.Pages.FecreditPage;
+using static AutoDataVPBank.Beginners.Pages.FecreditPage.Library;
 
 namespace AutoDataVPBank
 {
-    public partial class Main : Form
+    public partial class MainForm : Form
     {
-        public IWebDriver Driver { get; set; }
-        public WebDriverWait Wait { get; set; }
         private string _serial = "";
-        public Main()
+        private static MainForm _inst;
+        private static readonly FecreditLoginPage FecreditLoginPage = FecreditLoginPage.GetInstance;
+
+        public MainForm()
         {
             InitializeComponent();
+            // Initialize log4net.
+            log4net.Config.XmlConfigurator.Configure();
         }
 
-
-        [TestInitialize]
-        public void SetupDriver()
+        public static MainForm GetInstance
         {
-            if (cboBrowser.SelectedItem.ToString() == "Chrome")
+            get
             {
-                var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                //chromeDriverService.HideCommandPromptWindow = true;
-                string curFile = @"C:\extensions\0.0.10_0.crx";
-                var options = new ChromeOptions();
-                if (File.Exists(curFile))
-                {
-                    options.AddExtension(Path.GetFullPath(curFile));
-                }
-                this.Driver = new ChromeDriver(chromeDriverService, options);
+                if (_inst == null || _inst.IsDisposed)
+                    _inst = new MainForm();
+                return _inst;
             }
-            else
-            {
-                var firefoxDriverService = FirefoxDriverService.CreateDefaultService();
-                //firefoxDriverService.FirefoxBinaryPath = Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe");
-                //FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Mozilla Firefox\firefox.exe"));
-                //FirefoxBinary firefoxBinary = new FirefoxBinary(Path.GetFullPath(@"C:\Program Files\Nightly\firefox.exe"));
-                //FirefoxProfile firefoxProfile = new FirefoxProfile();
-                //firefoxDriverService.HideCommandPromptWindow = true;
-                this.Driver = new FirefoxDriver(firefoxDriverService);
-            }
-
-            this.Wait = new WebDriverWait(this.Driver, TimeSpan.FromSeconds(30));
         }
 
-        [TestCleanup]
-        public void Teardown()
-        {
-            this.Driver.Quit();
-        }
-
-        
         private void Main_Load(object sender, EventArgs e)
         {
             //getSerial
             _serial = CheckKey.getSerial();
-            this.txtSerial.Text = _serial;
+            txtSerial.Text = _serial;
             //
-            //this.labContactMe.Text = "Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
-            //this.labEmail.Text = "Email: metafatvn@gmail.com - Phone: 0896892998";
+            labContactMe.Text = @"Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
+            labEmail.Text = @"Email: metafatvn@gmail.com - Phone: 0896892998";
             //
+            var listProduct = new List<Product>
+            {
+                new Product {Val = "AUTO", Dis = "PRODUCT CATEGORY FOR AUTO LOANS"},
+                new Product {Val = "PERSONAL", Dis = "PRODUCT CATEGORY FOR PERSONAL LOANS"}
+            };
+            cboProDuct.DataSource = listProduct.ToList();
+            cboProDuct.DisplayMember = "dis";
+            cboProDuct.ValueMember = "val";
+            cboActive.Items.AddRange(new object[]
+            {
+                "Select",
+                "Reject Review"
+            });
 
-            this.cboActive.Items.AddRange(new object[] {
-            "Select",
-            "Reject Review"});
-            this.txtUser.Text = @"CC100278";
-            this.txtPass.Text = @"Khoinguyen@2";
-            this.txtSignFo.Text = @"01/07/2017";
-            this.txtSignTo.Text = @"03/07/2017";
-            this.cboActive.SelectedItem = "Reject Review";
-            this.cboBrowser.SelectedItem = "Firefox";
+            txtUser.Text = @"CC100278";
+            txtPass.Text = @"Duyminh@2";
+            txtSignFo.Text = @"01/10/2017";
+            txtSignTo.Text = @"03/10/2017";
+            cboActive.SelectedItem = "Reject Review";
+            cboBrowser.SelectedItem = "Chrome"; //Firefox
+            cboProDuct.SelectedValue = "AUTO";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            if (!CheckKey.checkSerial(_serial))
-            {
-                Application.Exit();
-                return;
-            }
             try
             {
-                DateTime dateAsignFrom = DateTime.ParseExact(this.txtSignFo.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                DateTime dateAsignTo = DateTime.ParseExact(this.txtSignTo.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                if (dateAsignTo.Subtract(dateAsignFrom).TotalDays >= 30 || dateAsignFrom >= dateAsignTo)
+                if (!CheckKey.checkSerial(_serial))
                 {
-                    MessageBox.Show("Lỗi ngày tháng!");
+                    Application.Exit();
                     return;
                 }
+                try
+                {
+                    var dateAsignFrom =
+                        DateTime.ParseExact(txtSignFo.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var dateAsignTo = DateTime.ParseExact(txtSignTo.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    if (dateAsignTo.Subtract(dateAsignFrom).TotalDays >= 30 || dateAsignFrom >= dateAsignTo)
+                    {
+                        MessageBox.Show(@"Lỗi ngày tháng!");
+                        return;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show(@"Lối thông tin nhâp!");
+                    Logg.Error(@"Lối thông tin nhâp!");
+                    return;
+                }
+                var text = btnRun.Text;
+                switch (text)
+                {
+                    case "Start":
+                        btnRun.Text = @"Stop";
+                        FecreditLoginPage.Start();
+                        //Close();
+                        break;
+                    default:
+                        btnRun.Text = @"Start";
+                        BaseWorker.Stop();
+                        break;
+                }
             }
-            catch
+            catch (Exception exception)
             {
-                MessageBox.Show("Lối thông tin nhâp!");
-                return;
+                Logg.Error(exception.Message);
+                throw;
             }
-            string text = this.btnRun.Text;
-            if (text == "RUN")
-            {
-                //this.btnRun.Text = "STOP";
-                SetupDriver();
-                Safe.LoginFinnOne(this.Driver, txtSignFo.Text, txtSignTo.Text, cboActive.Text, txtUser.Text, txtPass.Text, this.radioButtonCAS.Checked, 0, null);
-                Teardown();
-                this.Close();
-            }
-            if (text == "STOP")
-            {
-                this.btnRun.Text = "RUN";
-            }
+            
         }
 
-        private void Main_KeyDown(object sender, KeyEventArgs e)//
+        private void Main_KeyDown(object sender, KeyEventArgs e) //
         {
             //MessageBox.Show(e.KeyCode.ToString());
-            if (e.Control && e.KeyCode == System.Windows.Forms.Keys.K)
-                this.txtSerial.Visible = true;
+            if (e.Control && e.KeyCode == Keys.K)
+                txtSerial.Visible = true;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            this.txtSerial.Visible = true;
+            txtSerial.Visible = true;
         }
-
     }
 }

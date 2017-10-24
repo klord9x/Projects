@@ -2,77 +2,28 @@
 
 namespace AutoDataVPBank.Beginners.Pages.FecreditPage
 {
-    class EnquiryScreenPageElementMap
+    internal class EnquiryScreenPageElementMap: BasePageElementMap
     {
-        private readonly IWebDriver _browser;
+        public IWebElement TxtSignedToElement => Browser.FindElementSafeV2(By.Name("signedTo"));
 
-        public EnquiryScreenPageElementMap(IWebDriver browser)
-        {
-            this._browser = browser;
-        }
+        public IWebElement TxtSingedElement => Browser.FindElementSafeV2(By.Name("signed"));
 
-        public IWebElement TxtSignedToElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("signedTo"));
-            }
-        }
+        public IWebElement SelectBoxSelProductElement => Browser.FindElementSafeV2(By.Name("selProduct"));
 
-        public IWebElement TxtSingedElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("signed"));
-            }
-        }
+        public IWebElement SelectBoxSelActivityIdElement => Browser.FindElementSafeV2(By.Name("selActivityId"));
 
-        public IWebElement SelectBoxSelProductElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("selProduct"));
-            }
-        }
+        public IWebElement BtnBtnSearchElement => Browser.FindElementSafeV2(By.Name("btnSearch"));
 
-        public IWebElement SelectBoxSelActivityIdElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("selActivityId"));
-            }
-        }
+        public IWebElement BtnPage1ExitElement => Browser.FindElementSafeV2(By.Name("btnEXIT"));
 
-        public IWebElement BtnBtnSearchElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("btnSearch"));
-            }
-        }
+        public IWebElement BtnPage2Click1Element => Browser.FindElementSafeV2(
+            By.XPath("/html/body/form/div[3]/table/tbody/tr/td[1]"));
 
-        public IWebElement BtnPage1ExitElement
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.Name("btnEXIT"));
-            }
-        }
+        public IWebElement BtnPage2Click2Element => Browser.FindElementSafeV2(By.XPath("//*[@id='178']/div "));
 
-        public IWebElement BtnPage2Click1Element
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.XPath("/html/body/form/div[3]/table/tbody/tr/td[1]"));
-            }
-        }
-
-        public IWebElement BtnPage2Click2Element
-        {
-            get
-            {
-                return this._browser.FindElementSafe(By.XPath("//*[@id='178']/div "));
-            }
-        }
+        public IWebElement LinkQdeDetailElement => Browser.FindElementSafeV2(By.PartialLinkText("QDE"));
+        public IWebElement TabSourcingElement => Browser.FindElementSafeV2(By.CssSelector("#apy_b0i1font"));
+        public IWebElement TabDemographicElement => Browser.FindElementSafeV2(By.CssSelector("#apy_b0i2font"));
+        public IWebElement TabPersonalElement => Browser.FindElementSafeV2(By.CssSelector("#apy_b1i1font"));
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AutoDataVPBank
 {
-    partial class Main
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnRun = new System.Windows.Forms.Button();
             this.txtPass = new System.Windows.Forms.TextBox();
             this.txtUser = new System.Windows.Forms.TextBox();
@@ -50,15 +50,19 @@
             this.labContactMe = new System.Windows.Forms.Label();
             this.labEmail = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cboProDuct = new System.Windows.Forms.ComboBox();
+            this.lb_process_status = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(254, 116);
+            this.btnRun.Location = new System.Drawing.Point(254, 142);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(60, 48);
             this.btnRun.TabIndex = 0;
-            this.btnRun.Text = "RUN";
+            this.btnRun.Text = "Start";
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -131,7 +135,7 @@
             // 
             this.cboActive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboActive.FormattingEnabled = true;
-            this.cboActive.Location = new System.Drawing.Point(92, 116);
+            this.cboActive.Location = new System.Drawing.Point(92, 142);
             this.cboActive.Name = "cboActive";
             this.cboActive.Size = new System.Drawing.Size(156, 21);
             this.cboActive.TabIndex = 5;
@@ -172,7 +176,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(33, 119);
+            this.label6.Location = new System.Drawing.Point(33, 145);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(41, 13);
             this.label6.TabIndex = 8;
@@ -181,7 +185,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(33, 146);
+            this.label7.Location = new System.Drawing.Point(33, 172);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(45, 13);
             this.label7.TabIndex = 9;
@@ -194,7 +198,7 @@
             this.cboBrowser.Items.AddRange(new object[] {
             "Firefox",
             "Chrome"});
-            this.cboBrowser.Location = new System.Drawing.Point(92, 143);
+            this.cboBrowser.Location = new System.Drawing.Point(92, 169);
             this.cboBrowser.Name = "cboBrowser";
             this.cboBrowser.Size = new System.Drawing.Size(156, 21);
             this.cboBrowser.TabIndex = 10;
@@ -210,7 +214,7 @@
             // 
             // txtSerial
             // 
-            this.txtSerial.Location = new System.Drawing.Point(0, 205);
+            this.txtSerial.Location = new System.Drawing.Point(0, 226);
             this.txtSerial.Name = "txtSerial";
             this.txtSerial.ReadOnly = true;
             this.txtSerial.Size = new System.Drawing.Size(354, 20);
@@ -222,22 +226,24 @@
             this.labContactMe.AutoSize = true;
             this.labContactMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labContactMe.ForeColor = System.Drawing.Color.Red;
-            this.labContactMe.Location = new System.Drawing.Point(6, 169);
+            this.labContactMe.Location = new System.Drawing.Point(251, 9);
             this.labContactMe.Name = "labContactMe";
             this.labContactMe.Size = new System.Drawing.Size(83, 15);
             this.labContactMe.TabIndex = 12;
             this.labContactMe.Text = "Contact me:";
+            this.labContactMe.Visible = false;
             // 
             // labEmail
             // 
             this.labEmail.AutoSize = true;
             this.labEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labEmail.ForeColor = System.Drawing.Color.Red;
-            this.labEmail.Location = new System.Drawing.Point(6, 187);
+            this.labEmail.Location = new System.Drawing.Point(266, 18);
             this.labEmail.Name = "labEmail";
             this.labEmail.Size = new System.Drawing.Size(48, 15);
             this.labEmail.TabIndex = 13;
             this.labEmail.Text = "Email:";
+            this.labEmail.Visible = false;
             // 
             // button1
             // 
@@ -249,11 +255,50 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(33, 119);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(44, 13);
+            this.label9.TabIndex = 16;
+            this.label9.Text = "Product";
+            // 
+            // cboProDuct
+            // 
+            this.cboProDuct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboProDuct.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboProDuct.FormattingEnabled = true;
+            this.cboProDuct.Location = new System.Drawing.Point(92, 116);
+            this.cboProDuct.Name = "cboProDuct";
+            this.cboProDuct.Size = new System.Drawing.Size(222, 20);
+            this.cboProDuct.TabIndex = 15;
+            // 
+            // lb_process_status
+            // 
+            this.lb_process_status.AutoSize = true;
+            this.lb_process_status.Location = new System.Drawing.Point(93, 205);
+            this.lb_process_status.Name = "lb_process_status";
+            this.lb_process_status.Size = new System.Drawing.Size(38, 13);
+            this.lb_process_status.TabIndex = 4;
+            this.lb_process_status.Text = "Stop...";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(34, 205);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(40, 13);
+            this.label11.TabIndex = 4;
+            this.label11.Text = "Status:";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(351, 223);
+            this.ClientSize = new System.Drawing.Size(355, 249);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.cboProDuct);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.labEmail);
             this.Controls.Add(this.labContactMe);
@@ -267,6 +312,8 @@
             this.Controls.Add(this.cboActive);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.lb_process_status);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label1);
@@ -280,7 +327,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Main";
+            this.Name = "MainForm";
             this.Text = "AutoDataVPBank";
             this.Load += new System.EventHandler(this.Main_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
@@ -291,17 +338,17 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnRun;
-        private System.Windows.Forms.TextBox txtPass;
-        private System.Windows.Forms.TextBox txtUser;
+        public System.Windows.Forms.Button btnRun;
+        public System.Windows.Forms.TextBox txtPass;
+        public System.Windows.Forms.TextBox txtUser;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtSignFo;
+        public System.Windows.Forms.TextBox txtSignFo;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox txtSignTo;
+        public System.Windows.Forms.TextBox txtSignTo;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox cboActive;
-        private System.Windows.Forms.RadioButton radioButtonCAS;
+        public System.Windows.Forms.ComboBox cboActive;
+        public System.Windows.Forms.RadioButton radioButtonCAS;
         private System.Windows.Forms.RadioButton radioButtonCASSystem;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
@@ -312,5 +359,9 @@
         private System.Windows.Forms.Label labContactMe;
         private System.Windows.Forms.Label labEmail;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label9;
+        public System.Windows.Forms.ComboBox cboProDuct;
+        private System.Windows.Forms.Label label11;
+        public System.Windows.Forms.Label lb_process_status;
     }
 }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace AutoDataVPBank
 {
-    class Program
+    static class Program
     {
         [STAThread]
         static void Main()
@@ -26,7 +26,7 @@ namespace AutoDataVPBank
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(new Main());
+                Application.Run(MainForm.GetInstance);
             }
             catch (StackOverflowException e)
             {

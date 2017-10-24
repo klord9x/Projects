@@ -14,27 +14,27 @@ namespace AutoDataVPBank
     {
         public static string getSerial()
         {
-            HardDrive hd = new HardDrive();
-            ProcessorID cpuID = new ProcessorID();
-            string hddSerial = hd.SerialHDD();
-            string processorID = cpuID.GetProcessorID();
+            var hd = new HardDrive();
+            var cpuID = new ProcessorID();
+            var hddSerial = hd.SerialHDD();
+            var processorID = cpuID.GetProcessorID();
             return processorID + hddSerial;
         }
         public static bool checkSerial(string key)
         {
-            //return true;
+            return true;
             try
             {
-                string server = DecryptRijndael(Properties.Resources.Server);
-                string user = DecryptRijndael(Properties.Resources.User);
-                string passUser = DecryptRijndael(Properties.Resources.Pass);
-                string conection = @"Data Source=" + server + ";Initial Catalog=" + user + ";Persist Security Info=true;User ID=" + user + ";Password=" + passUser + ";";
+                var server = DecryptRijndael(Properties.Resources.Server);
+                var user = DecryptRijndael(Properties.Resources.User);
+                var passUser = DecryptRijndael(Properties.Resources.Pass);
+                var conection = @"Data Source=" + server + ";Initial Catalog=" + user + ";Persist Security Info=true;User ID=" + user + ";Password=" + passUser + ";";
 
-                string query = @"select * from CUSTOMER where  Keycode = N'" + key + "' and CustomerID=N'" + Properties.Resources.Customer + "'";
-                SqlConnection myConnection = new SqlConnection(conection);
+                var query = @"select * from CUSTOMER where  Keycode = N'" + key + "' and CustomerID=N'" + Properties.Resources.Customer + "'";
+                var myConnection = new SqlConnection(conection);
                 myConnection.Open();
-                SqlDataAdapter myAdapter = new SqlDataAdapter(query, myConnection);
-                DataSet ds = new DataSet();
+                var myAdapter = new SqlDataAdapter(query, myConnection);
+                var ds = new DataSet();
                 myAdapter.Fill(ds);
                 myConnection.Close();
                 return ds.Tables[0].Rows.Count > 0 ? true : false;
@@ -65,16 +65,16 @@ namespace AutoDataVPBank
             public string SerialNo { get; set; }
             public string SerialHDD()
             {
-                List<HardDrive> lh = new List<HardDrive>();
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMedia");
+                var lh = new List<HardDrive>();
+                var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMedia");
                 foreach (ManagementObject wmi_HD in searcher.Get())
                 {
-                    HardDrive hd = new HardDrive();
+                    var hd = new HardDrive();
                     if (wmi_HD["SerialNumber"] == null)
                         hd.SerialNo = "None";
                     else
                     {
-                        hd.SerialNo = Convert.ToString(wmi_HD["SerialNumber"]);
+                        hd.SerialNo = Convert.ToString(wmi_HD["SerialNumber"]).Trim();
                         lh.Add(hd);
                     }
                 }
@@ -85,10 +85,10 @@ namespace AutoDataVPBank
         {
             public string GetProcessorID()
             {
-                string sProcessorID = "";
-                string sQuery = "SELECT ProcessorId FROM Win32_Processor";
-                ManagementObjectSearcher oManagementObjectSearcher = new ManagementObjectSearcher(sQuery);
-                ManagementObjectCollection oCollection = oManagementObjectSearcher.Get();
+                var sProcessorID = "";
+                var sQuery = "SELECT ProcessorId FROM Win32_Processor";
+                var oManagementObjectSearcher = new ManagementObjectSearcher(sQuery);
+                var oCollection = oManagementObjectSearcher.Get();
                 foreach (ManagementObject oManagementObject in oCollection)
                 {
                     sProcessorID = Convert.ToString(oManagementObject["ProcessorId"]);
