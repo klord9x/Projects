@@ -353,7 +353,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox cboBrowser;
+        public System.Windows.Forms.ComboBox cboBrowser;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtSerial;
         private System.Windows.Forms.Label labContactMe;
