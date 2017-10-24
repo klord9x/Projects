@@ -60,11 +60,11 @@ namespace AutoDataVPBank.core
             Browser.Manage().Timeouts().PageLoad = Library.TimeOuts;
             Browser.Manage().Timeouts().AsynchronousJavaScript = Library.TimeOuts;
 
-            var size = Browser.Manage().Window.Size;
-            size.Width = size.Width - RandomNumber.Between(200, 600);
-            size.Height = size.Height + RandomNumber.Between(200, 400);
-            Browser.Manage().Window.Size = size;
-            Browser.Manage().Window.Position = new Point(0, 0);
+            //var size = Browser.Manage().Window.Size;
+            //size.Width = size.Width - RandomNumber.Between(200, 600);
+            //size.Height = size.Height + RandomNumber.Between(200, 400);
+            //Browser.Manage().Window.Size = size;
+            //Browser.Manage().Window.Position = new Point(0, 0);
         }
 
         public static void StopBrowser()
@@ -81,7 +81,7 @@ namespace AutoDataVPBank.core
                 var service = FirefoxDriverService.CreateDefaultService();
                 var options = new FirefoxOptions();
                 var profile = new FirefoxProfile();
-                //service.HideCommandPromptWindow = true;
+                service.HideCommandPromptWindow = true;
                 profile.Clean();
                 profile.DeleteAfterUse = true;
                 profile.SetPreference("browser.privatebrowsing.autostart", false);

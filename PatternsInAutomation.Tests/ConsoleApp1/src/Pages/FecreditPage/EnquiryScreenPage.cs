@@ -10,6 +10,7 @@ using Microsoft.Office.Interop.Excel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
+using static AutoDataVPBank.Library;
 using Application = System.Windows.Forms.Application;
 
 namespace AutoDataVPBank.Pages.FecreditPage
@@ -58,10 +59,18 @@ namespace AutoDataVPBank.Pages.FecreditPage
 
         public EnquiryScreenPage()
         {
-            _signform = Library.MainForm.txtSignFo.Text;
-            _signto = Library.MainForm.txtSignTo.Text;
-            _active = Library.MainForm.cboActive.Text;
-            _product = (string) Library.MainForm.cboProDuct.SelectedValue;
+            _signform = MForm.txtSignFo.Text;
+            _signto = MForm.txtSignTo.Text;
+            MForm.cboActive.Invoke((MethodInvoker)delegate
+            {
+                _active = MForm.cboActive.Text;
+            });
+
+            MForm.cboProDuct.Invoke((MethodInvoker)delegate
+            {
+                _product = (string)MForm.cboProDuct.SelectedValue;
+            });
+            
         }
 
         private static EnquiryScreenPageElementMap ScreenMap => new EnquiryScreenPageElementMap();
@@ -101,7 +110,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 throw;
             }
             
@@ -116,7 +125,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
         {
             try
             {
-                Library.Logg.Error(@"Start Get detail for: " + e.Text);
+                Logg.Error(@"Start Get detail for: " + e.Text);
                 if (e.Displayed && e.Enabled)
                 {
                     e.ClickSafe(DriverFactory.Browser);
@@ -124,10 +133,10 @@ namespace AutoDataVPBank.Pages.FecreditPage
 
                 //Switch to last window: detail 1
                 DriverFactory.Browser.SwitchTo().Window(DriverFactory.Browser.WindowHandles.Last());
-                Library.Logg.Info("Current Browser:"+DriverFactory.Browser.Title);
+                Logg.Info("Current Browser:"+DriverFactory.Browser.Title);
                 var element = ScreenMap.LinkQdeDetailElement;
 
-                Library.Logg.Error(@"Start Get detail");
+                Logg.Error(@"Start Get detail");
                 element.ClickSafe(DriverFactory.Browser);
                 //TODO: Get all value of tab.
 
@@ -136,13 +145,13 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 //Handler table by column.
                 var tabSourcing = ScreenMap.TabSourcingElement;
                 tabSourcing.ClickSafe(DriverFactory.Browser);
-                var scheme = DriverFactory.Browser.FindElementSafe(By.Name("selSchemeDesc")).GetAttributeSafe("value");
-                var selDsaCode = DriverFactory.Browser.FindElementSafe(By.Name("selDSACode")).GetAttributeSafe("value");
-                var selTsaCode = DriverFactory.Browser.FindElementSafe(By.Name("selTSACode")).GetAttributeSafe("value");
-                var selDsaName = DriverFactory.Browser.FindElementSafe(By.Name("selDSAName")).GetAttributeSafe("value");
-                var selTsaName = DriverFactory.Browser.FindElementSafe(By.Name("selTSAName")).GetAttributeSafe("value");
-                var servicePhone = DriverFactory.Browser.FindElementSafe(By.Name("txtServicePhoneNumber")).GetAttributeSafe("value");
-                var finAmountRequested = DriverFactory.Browser.FindElementSafe(By.Name("txtFinAmountRequested"))
+                var scheme = DriverFactory.Browser.FindElementSafeV2(By.Name("selSchemeDesc")).GetAttributeSafe("value");
+                var selDsaCode = DriverFactory.Browser.FindElementSafeV2(By.Name("selDSACode")).GetAttributeSafe("value");
+                var selTsaCode = DriverFactory.Browser.FindElementSafeV2(By.Name("selTSACode")).GetAttributeSafe("value");
+                var selDsaName = DriverFactory.Browser.FindElementSafeV2(By.Name("selDSAName")).GetAttributeSafe("value");
+                var selTsaName = DriverFactory.Browser.FindElementSafeV2(By.Name("selTSAName")).GetAttributeSafe("value");
+                var servicePhone = DriverFactory.Browser.FindElementSafeV2(By.Name("txtServicePhoneNumber")).GetAttributeSafe("value");
+                var finAmountRequested = DriverFactory.Browser.FindElementSafeV2(By.Name("txtFinAmountRequested"))
                     .GetAttributeSafe("value");
 
                 //=======================
@@ -163,33 +172,33 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 var tabPersonal = ScreenMap.TabPersonalElement;
                 tabPersonal.ClickSafe(DriverFactory.Browser);
 
-                var txtTinNo = DriverFactory.Browser.FindElementSafe(By.Name("txtTINNo")).GetAttributeSafe("value");
-                var txtAge = DriverFactory.Browser.FindElementSafe(By.Name("txtAge")).GetAttributeSafe("value");
+                var txtTinNo = DriverFactory.Browser.FindElementSafeV2(By.Name("txtTINNo")).GetAttributeSafe("value");
+                var txtAge = DriverFactory.Browser.FindElementSafeV2(By.Name("txtAge")).GetAttributeSafe("value");
                 var selSex = "";
-                var comboBox = DriverFactory.Browser.FindElementSafe(By.Name("selSex"));
+                var comboBox = DriverFactory.Browser.FindElementSafeV2(By.Name("selSex"));
                 if (comboBox != null)
                 {
                     var selectedValue = new SelectElement(comboBox);
                     selSex = selectedValue.SelectedOption.Text;
                 }
 
-                var selState = DriverFactory.Browser.FindElementSafe(By.Name("selState")).GetAttributeSafe("value");
+                var selState = DriverFactory.Browser.FindElementSafeV2(By.Name("selState")).GetAttributeSafe("value");
                 
-                var mobile = DriverFactory.Browser.FindElementSafe(By.Name("txtMobile")).GetAttributeSafe("value");
+                var mobile = DriverFactory.Browser.FindElementSafeV2(By.Name("txtMobile")).GetAttributeSafe("value");
                 
                 //2.2 Work Detail tab:
-                var tabWork = DriverFactory.Browser.FindElementSafe(By.CssSelector("#apy_b1i2font"));
+                var tabWork = DriverFactory.Browser.FindElementSafeV2(By.CssSelector("#apy_b1i2font"));
                 
                 tabWork.ClickSafe(DriverFactory.Browser);
                 //Just get row by Name, don't need foreach all table.
-                var txtCompnayName = DriverFactory.Browser.FindElementSafe(By.Name("txtCompnayName")).GetAttributeSafe("value");
+                var txtCompnayName = DriverFactory.Browser.FindElementSafeV2(By.Name("txtCompnayName")).GetAttributeSafe("value");
                 var companyName = txtCompnayName.Trim() != ""
                     ? txtCompnayName
-                    : DriverFactory.Browser.FindElementSafe(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
+                    : DriverFactory.Browser.FindElementSafeV2(By.Name("txtOtherEmpName")).GetAttributeSafe("value");
                 
 
                 //2.3 Address: ???
-                var tabAddress = DriverFactory.Browser.FindElementSafe(By.CssSelector("#apy_b1i3font"));
+                var tabAddress = DriverFactory.Browser.FindElementSafeV2(By.CssSelector("#apy_b1i3font"));
                 tabAddress.ClickSafe(DriverFactory.Browser);
                 var listselStateThuongTru =
                     new List<IWebElement>(DriverFactory.Browser.FindElements(By.CssSelector("a[href^='javascript:updateFunc']")));
@@ -198,12 +207,12 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 {
                     if (href.TextSafe() != "ĐỊA CHỈ THƯỜNG TRÚ") continue;
                     href.ClickSafe(DriverFactory.Browser);
-                    selStateThuongTru = DriverFactory.Browser.FindElementSafe(By.Name("selState")).GetAttributeSafe("value");
+                    selStateThuongTru = DriverFactory.Browser.FindElementSafeV2(By.Name("selState")).GetAttributeSafe("value");
                 }
                 //2.4 Income/Liability tab:
-                var tabIncome = DriverFactory.Browser.FindElementSafe(By.CssSelector("#apy_b1i4font"));
+                var tabIncome = DriverFactory.Browser.FindElementSafeV2(By.CssSelector("#apy_b1i4font"));
                 tabIncome.ClickSafe(DriverFactory.Browser);
-                var inCome1 = DriverFactory.Browser.FindElementSafe(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]"))
+                var inCome1 = DriverFactory.Browser.FindElementSafeV2(By.XPath("//*[@id='formID140']/table[7]/tbody/tr[2]/td[3]"))
                     .TextSafe();
 
                 //3. References:
@@ -212,7 +221,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     setReferences = "#apy_b0i8font";
                 if (_product == "AUTO")
                     setReferences = "#apy_b0i9font";
-                var tabReferences = DriverFactory.Browser.FindElementSafe(By.CssSelector(setReferences));
+                var tabReferences = DriverFactory.Browser.FindElementSafeV2(By.CssSelector(setReferences));
 
                 tabReferences.ClickSafe(DriverFactory.Browser);
                 var strReferences = "";
@@ -224,9 +233,13 @@ namespace AutoDataVPBank.Pages.FecreditPage
 
                 foreach (var href in listRef)
                 {
+                    if (CancelTask())
+                    {
+                        break;
+                    }
                     strReferences += href.TextSafe() + " :";
                     href.ClickSafe(DriverFactory.Browser);
-                    strReferences += DriverFactory.Browser.FindElementSafe(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
+                    strReferences += DriverFactory.Browser.FindElementSafeV2(By.Name("txtPhoneAreaCode")).GetAttributeSafe("value") + "; ";
                 }
 
                 //4. History: Get Select 2 last element with css
@@ -237,26 +250,26 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     setHistory = "#apy_b0i10font";
 
                 var history = "";
-                var tabHistory = DriverFactory.Browser.FindElementSafe(By.CssSelector(setHistory));
+                var tabHistory = DriverFactory.Browser.FindElementSafeV2(By.CssSelector(setHistory));
                 tabHistory.ClickSafe(DriverFactory.Browser);
                 try
                 {
-                    history += DriverFactory.Browser.FindElementSafe(
+                    history += DriverFactory.Browser.FindElementSafeV2(
                             By.CssSelector(
-                                "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
+                                "#formID9 > table:nth-child(84) > tbody > tr:nth-last-child(2) > td:nth-child(2) > font"))
                         .TextSafe();
                     if (history.Trim() != "")
                     {
                         history += "; ";
                     }
-                    history += DriverFactory.Browser.FindElementSafe(
+                    history += DriverFactory.Browser.FindElementSafeV2(
                             By.CssSelector(
-                                "#formID9 > table:nth-child(83) > tbody > tr:nth-last-child(1) > td:nth-child(2) > font"))
+                                "#formID9 > table:nth-child(84) > tbody > tr:nth-last-child(1) > td:nth-child(2) > font"))
                         .TextSafe();
                 }
                 catch (Exception exception)
                 {
-                    Library.Logg.Error("History error:" + exception.Message);
+                    Logg.Error("History error:" + exception.Message);
                     throw;
                 }
 
@@ -288,7 +301,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             }
             catch (Exception exception)
             {
-                Library.Logg.Error(exception.Message);
+                Logg.Error(exception.Message);
                 throw;
             }
         }
@@ -304,7 +317,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             try
             {
                 DriverFactory.Browser.WaitForPageLoad(60);
-                var elemTable = DriverFactory.Browser.FindElementSafe(By.XPath("//*[@id='formID206']/table[4]"));
+                var elemTable = DriverFactory.Browser.FindElementSafeV2(By.XPath("//*[@id='formID206']/table[4]"));
                 // Fetch all Row of the table
                 var lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(DriverFactory.Browser, By.TagName("tr")));
                 var temp = 0;
@@ -313,6 +326,10 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 var dateAsignTo = DateTime.ParseExact(_signto, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 foreach (var elemTr in lstTrElem)
                 {
+                    if (CancelTask())
+                    {
+                        break;
+                    }
                     if (Equals(lstTrElem.First(), elemTr))
                     {
                         continue;
@@ -322,7 +339,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     if (lstTdElem.Count > 0)
                     {
                         var detailHref = lstTdElem[0].TextSafe();
-                        Library.Logg.Error(@"Detail : " + detailHref);
+                        Logg.Error(@"Detail : " + detailHref);
                         //string applicationNo = 
                         var assigned = lstTdElem[1].TextSafe();
                         var fullNameRow = lstTdElem[2].TextSafe();
@@ -342,11 +359,11 @@ namespace AutoDataVPBank.Pages.FecreditPage
                         {
                             continue;
                         }
-                        Library.Logg.Error(@"Get detail for: " + detailHref);
-                        var element = DriverFactory.Browser.FindElementSafe(By.PartialLinkText(detailHref));
+                        Logg.Error(@"Get detail for: " + detailHref);
+                        var element = DriverFactory.Browser.FindElementSafeV2(By.PartialLinkText(detailHref));
 
                         var recData = GetAllDetail(element);
-                        Library.Logg.Error(@"End Get detail for: " + detailHref);
+                        Logg.Error(@"End Get detail for: " + detailHref);
                         if (recData == null)
                         {
                             recData = new ReCord();
@@ -397,7 +414,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 throw;
             }
         }
@@ -424,7 +441,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 {
                     MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation);
-                    Library.Logg.Error(e);
+                    Logg.Error(e);
                     return;
                 }
 
@@ -461,7 +478,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 }
                 catch (Exception e)
                 {
-                    Library.Logg.Error(e.Message);
+                    Logg.Error(e.Message);
                 }
                 if (n > page)
                 {
@@ -482,10 +499,8 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     selectElement.SelectByValue(i.ToString());
 
                     //TODO: Fail for first chose option; or each select option (Firefox).
-                    //Try remove element and waiting element exit when page refreshed:
-                    //                DriverFactory.Browser.ExecuteJavaScript("document.getElementById('selPageIndex').remove();");
-                    //                DriverFactory.Browser.ExecuteJavaScript("document.getElementsByName('btnReset').remove();");
-                    DriverFactory.Browser.WaitingPageRefreshed(By.Id("customer"));
+                    //Wait until have element.
+                    DriverFactory.Browser.FindElementSafeV2(By.Id("customer"));
                     if (!_stopNav)
                     {
                         GetDataTable(lxxReCords, ref indexRecord, oSheet);
@@ -508,7 +523,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 throw;
             }
             

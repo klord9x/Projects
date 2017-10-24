@@ -103,12 +103,12 @@ namespace AutoDataVPBank.core
                 _resetEvent.Set(); // signal that worker is done
 
                 //Set again Status button here:
-                Library.MainForm.btnRun.Enabled = true;
-                Library.MainForm.btnRun.Text = @"Start";
+                Library.MForm.btnRun.Enabled = true;
+                Library.MForm.btnRun.Text = @"Start";
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
+                Library.Logg.Error(exception.Message);
                 throw;
             }
         }
@@ -118,15 +118,15 @@ namespace AutoDataVPBank.core
             //If it was cancelled midway
             if (e.Cancelled)
             {
-                Library.MainForm.lb_process_status.Text = @"Task Cancelled.";
+                Library.MForm.lb_process_status.Text = @"Task Cancelled.";
             }
             else if (e.Error != null)
             {
-                Library.MainForm.lb_process_status.Text = @"Error while performing background operation.";
+                Library.MForm.lb_process_status.Text = @"Error while performing background operation.";
             }
             else
             {
-                Library.MainForm.lb_process_status.Text = @"Task Completed...";
+                Library.MForm.lb_process_status.Text = @"Task Completed...";
             }
         }
 
@@ -154,8 +154,8 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    Library.MainForm.btnRun.Enabled = false;
-                    Library.MainForm.lb_process_status.Text = @"Cancelling...";
+                    Library.MForm.btnRun.Enabled = false;
+                    Library.MForm.lb_process_status.Text = @"Cancelling...";
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -166,8 +166,8 @@ namespace AutoDataVPBank.core
                 }
                 else
                 {
-                    Library.MainForm.btnRun.Text = @"Stop";
-                    Library.MainForm.lb_process_status.Text = @"Running...";
+                    Library.MForm.btnRun.Text = @"Stop";
+                    Library.MForm.lb_process_status.Text = @"Running...";
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();
@@ -228,8 +228,8 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    Library.MainForm.btnRun.Enabled = false;
-                    Library.MainForm.lb_process_status.Text = @"Cancelling...";
+                    Library.MForm.btnRun.Enabled = false;
+                    Library.MForm.lb_process_status.Text = @"Cancelling...";
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -240,8 +240,8 @@ namespace AutoDataVPBank.core
                 }
                 else
                 {
-                    Library.MainForm.btnRun.Text = @"Stop";
-                    Library.MainForm.lb_process_status.Text = @"Running...";
+                    Library.MForm.btnRun.Text = @"Stop";
+                    Library.MForm.lb_process_status.Text = @"Running...";
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();

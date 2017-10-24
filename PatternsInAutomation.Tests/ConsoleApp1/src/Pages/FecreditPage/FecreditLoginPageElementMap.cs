@@ -1,4 +1,5 @@
-﻿using AutoDataVPBank.core;
+﻿using System.Collections.Generic;
+using AutoDataVPBank.core;
 using OpenQA.Selenium;
 
 namespace AutoDataVPBank.Pages.FecreditPage
@@ -20,8 +21,30 @@ namespace AutoDataVPBank.Pages.FecreditPage
         public IWebElement BtnPage2Click1Element => Browser.FindElementSafeV2(
             By.XPath("/html/body/form/div[3]/table/tbody/tr/td[1]"));
 
-        public IWebElement BtnPage2Click2Element => Browser.FindElementSafeV2(By.XPath("//*[@id='178']/div "));
+        public IWebElement BtnPage2Click2Element
+        {
+            get
+            {
+                var listBy = new List<By>
+                {
+                    By.XPath("//*[@id='178']/div[1]")
+                };
+                return Browser.ExistElement(listBy);
+            }
+        }
 
-        public IWebElement BtnPage2CasClick2Element => Browser.FindElementSafeV2(By.XPath("//*[@id='4619']/div "));
+        public IWebElement BtnPage2CasClick2Element
+        {
+            get
+            {
+                var listBy = new List<By>
+                {
+                    By.XPath("//*[@id='4619']/div[1]"),
+                    By.CssSelector("#4619 > div:nth-child(1)")
+                };
+                return Browser.ExistElement(listBy);
+            }
+        }
+        
     }
 }

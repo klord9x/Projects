@@ -44,7 +44,7 @@ namespace AutoDataVPBank
         protected internal string IpAddr;
         public static Stopwatch TimeRun;
         public static bool IsRun;
-        public static readonly MainForm MainForm = MainForm.GetInstance;
+        public static readonly MainForm MForm = MainForm.GetInstance;
         //Declare an instance for log4net
         public static readonly ILog Logg =
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -582,12 +582,12 @@ namespace AutoDataVPBank
             return _listEmails;
         }
 
-        public void GetSetting()
+        public static void GetSetting()
         {
             Set = ReadFromXmlFile<Settings>(Set.PathSettings.Ini);
         }
 
-        public void StoreSetting(Settings data)
+        public static void StoreSetting(Settings data)
         {
             WriteToXmlFile(data.PathSettings.Ini, data);
             Set = data;

@@ -8,6 +8,7 @@ using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
+using static AutoDataVPBank.Library;
 
 namespace AutoDataVPBank
 {
@@ -22,17 +23,17 @@ namespace AutoDataVPBank
             }
             catch (NoSuchElementException e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 return FindElementSafe(driver, by);
             }
             catch (StaleElementReferenceException e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 return FindElementSafe(driver, by);
             }
             catch (WebDriverException e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 return null;
             }
         }
@@ -42,9 +43,9 @@ namespace AutoDataVPBank
             if (timeoutInSeconds > 0)
             {
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-                return wait.Until(drv => drv.FindElementSafe(by));
+                return wait.Until(drv => drv.FindElementSafeV2(by));
             }
-            return driver.FindElementSafe(by);
+            return driver.FindElementSafeV2(by);
         }
 
         public static IReadOnlyCollection<IWebElement> FindElementsSafe(this IWebElement element, IWebDriver driver,
@@ -59,7 +60,7 @@ namespace AutoDataVPBank
             }
             catch (StaleElementReferenceException ex)
             {
-                Library.Logg.Error(ex.Message);
+                Logg.Error(ex.Message);
             }
 
             return element.FindElements(by);
@@ -116,7 +117,7 @@ namespace AutoDataVPBank
             }
             catch (NoSuchWindowException e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
 //                driver.Close();
 //                throw;
             }
@@ -187,11 +188,11 @@ namespace AutoDataVPBank
             }
             catch (WebDriverException e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
             }
             catch (Exception e)
             {
-                 Library.Logg.Error(e.Message);
+                 Logg.Error(e.Message);
                 throw;
             }
         }
@@ -210,7 +211,7 @@ namespace AutoDataVPBank
                 }
                 catch (Exception e)
                 {
-                    Library.Logg.Error(e);
+                    Logg.Error(e);
                 }
 
             s.Stop();
@@ -218,32 +219,39 @@ namespace AutoDataVPBank
 
         public static IWebElement FindElementSafeV2(this IWebDriver driver, By by, bool displayed = true)
         {
-            WaitForPageLoad(driver, Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
+            WaitForPageLoad(driver, Set.CloneNickSettings.PageLoad.Times.GetValue());
             try
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Library.Set.CloneNickSettings.Default.Times.GetValue()));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Set.CloneNickSettings.SignUp.Times.GetValue()));
                 return wait.Until(d =>
                 {
-                    var elem = d.FindElement(by);
-                    if (displayed && !elem.Displayed)
+                    try
+                    {
+                        var elem = d.FindElement(by);
+                        if (displayed && !elem.Displayed)
+                            return null;
+                        return elem;
+                    }
+                    catch (NoSuchElementException e)
+                    {
+                        Logg.Error(e.Message);
                         return null;
-                    return elem;
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Logg.Error(e.Message);
+                        return null;
+                    }
+                    catch (Exception e)
+                    {
+                        Logg.Error(e.Message);
+                        throw;
+                    }
                 });
-            }
-            catch (NoSuchElementException e)
-            {
-                Library.Logg.Error(e.Message);
-
-                return null;
-            }
-            catch (InvalidOperationException e)
-            {
-                Library.Logg.Error(e.Message);
-                return null;
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
 
                 return null;
             }
@@ -257,12 +265,12 @@ namespace AutoDataVPBank
             }
             catch (NoSuchElementException e)
             {
-                Library.Logg.Info(e.Message);
+                Logg.Info(e.Message);
                 return null;
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 return null;
             }
         }
@@ -281,24 +289,24 @@ namespace AutoDataVPBank
                     }
                     catch (NoSuchElementException e)
                     {
-                        Library.Logg.Info(e.Message);
+                        Logg.Info(e.Message);
                     }
                     catch (Exception e)
                     {
-                        Library.Logg.Error(e.Message);
+                        Logg.Error(e.Message);
                         return null;
                     }
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 return null;
             }
 
             return null;
         }
 
-        public static void NavigateSafe(this IWebDriver driver, string url, bool sleep = true, int refresh = 1)
+        public static void NavigateSafe(this IWebDriver driver, string url, bool sleep = false, int refresh = 0)
         {
             if (refresh > 0)
                 while (refresh >= 0)
@@ -307,24 +315,24 @@ namespace AutoDataVPBank
                     {
                         driver.Navigate().GoToUrl(url);
                         if (sleep)
-                            SleepSafe(0, Library.Set.CloneNickSettings.Default.Times.GetValue());
+                            SleepSafe(0, Set.CloneNickSettings.Default.Times.GetValue());
 
                         if (driver.Url.Contains(url))
-                            driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
+                            driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
                     }
 
                     catch (WebDriverTimeoutException e)
                     {
-                        Library.Logg.Error(@"Time out: " + e.Message);
+                        Logg.Error(@"Time out: " + e.Message);
                     }
                     catch (NoSuchElementException)
                     {
-                        Library.Logg.Error(@"Can not Navigate to: " + url);
+                        Logg.Error(@"Can not Navigate to: " + url);
                     }
                     catch (WebDriverException e)
                     {
                         //TODO: Why fail, it crash app, don't continue ???
-                        Library.Logg.Error(@"Driver fail: " + e.Message);
+                        Logg.Error(@"Driver fail: " + e.Message);
 
                         //Facebook.RestartFacebook();
                         throw;
@@ -337,21 +345,21 @@ namespace AutoDataVPBank
                 {
                     driver.Navigate().GoToUrl(url);
                     if (sleep)
-                        SleepSafe(0, Library.Set.CloneNickSettings.Default.Times.Min);
+                        SleepSafe(0, Set.CloneNickSettings.Default.Times.Min);
                     //var driver2 = DriverFactory.Browser.Value;
                     //driver2.Navigate().GoToUrl(url);
 
                     if (driver.Url.Contains(url))
-                        driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
+                        driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
                     else
-                        Library.Logg.Error(@"Can not Navigate to: " + url);
+                        Logg.Error(@"Can not Navigate to: " + url);
                 }
                 catch (NoSuchWindowException)
                 {
                 }
                 catch (WebDriverException e)
                 {
-                    Library.Logg.Error(@"Driver fail: " + e.Message);
+                    Logg.Error(@"Driver fail: " + e.Message);
                     throw;
                 }
         }
@@ -364,13 +372,13 @@ namespace AutoDataVPBank
                     return;
                 driver.Navigate().Refresh();
                 if (wait)
-                    driver.WaitForPageLoad(Library.Set.CloneNickSettings.PageLoad.Times.GetValue());
+                    driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
                 if (sleep)
                     SleepSafe(0, time > 0 ? time : 69);
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 //
                 throw;
             }
@@ -393,7 +401,7 @@ namespace AutoDataVPBank
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 throw;
             }
         }
@@ -404,12 +412,12 @@ namespace AutoDataVPBank
             {
                 //CancelTask();
                 if (time >= 1000)
-                    Library.Logg.Info("Times= " + time + from);
+                    Logg.Info("Times= " + time + from);
                 Thread.Sleep(time);
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
 
                 throw;
             }
@@ -426,20 +434,20 @@ namespace AutoDataVPBank
             }
             catch (NullReferenceException e)
             {
-                 Library.Logg.Error(e.Message);
-                Library.KillProcess();
+                 Logg.Error(e.Message);
+                KillProcess();
                 throw;
             }
             catch (WebDriverException e)
             {
-                 Library.Logg.Error(e.Message);
-                Library.KillProcess();
+                 Logg.Error(e.Message);
+                KillProcess();
                 throw;
             }
             catch (Exception e)
             {
-                 Library.Logg.Error(e.Message);
-                Library.KillProcess();
+                 Logg.Error(e.Message);
+                KillProcess();
                 throw;
             }
         }
