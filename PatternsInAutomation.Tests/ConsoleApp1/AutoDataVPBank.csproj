@@ -55,6 +55,12 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="QLicense">
+      <HintPath>lib\QLicense.dll</HintPath>
+    </Reference>
+    <Reference Include="QLicense.Windows.Controls">
+      <HintPath>lib\QLicense.Windows.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="Securitys">
       <HintPath>lib\Securitys.dll</HintPath>
     </Reference>
@@ -78,11 +84,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmActivation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmActivation.Designer.cs">
+      <DependentUpon>frmActivation.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\core\BasePageElementMap.cs" />
     <Compile Include="src\core\BaseWorker.cs" />
     <Compile Include="src\core\BrowserTypes.cs" />
     <Compile Include="src\core\DriverFactory.cs" />
     <Compile Include="src\core\FingerPrint.cs" />
+    <Compile Include="src\MyLicense.cs" />
     <Compile Include="src\Pages\FecreditPage\EnquiryScreenPage.cs" />
     <Compile Include="src\Pages\FecreditPage\EnquiryScreenPageElementMap.cs" />
     <Compile Include="src\Pages\FecreditPage\FecreditLoginPage.cs" />
@@ -112,12 +125,16 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="LicenseVerify.cer" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="frmActivation.resx">
+      <DependentUpon>frmActivation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

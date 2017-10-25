@@ -54,6 +54,7 @@
             this.cboProDuct = new System.Windows.Forms.ComboBox();
             this.lb_process_status = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.licInfo = new QLicense.Windows.Controls.LicenseInfoControl();
             this.SuspendLayout();
             // 
             // btnRun
@@ -291,11 +292,21 @@
             this.label11.TabIndex = 4;
             this.label11.Text = "Status:";
             // 
+            // licInfo
+            // 
+            this.licInfo.DateFormat = null;
+            this.licInfo.DateTimeFormat = null;
+            this.licInfo.Location = new System.Drawing.Point(361, 42);
+            this.licInfo.Name = "licInfo";
+            this.licInfo.Size = new System.Drawing.Size(224, 152);
+            this.licInfo.TabIndex = 17;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 269);
+            this.ClientSize = new System.Drawing.Size(597, 269);
+            this.Controls.Add(this.licInfo);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.cboProDuct);
             this.Controls.Add(this.btn_serial);
@@ -362,5 +373,6 @@
         public System.Windows.Forms.ComboBox cboProDuct;
         private System.Windows.Forms.Label label11;
         public System.Windows.Forms.Label lb_process_status;
+        private QLicense.Windows.Controls.LicenseInfoControl licInfo;
     }
 }
