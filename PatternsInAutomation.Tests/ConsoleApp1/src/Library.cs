@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -511,6 +512,41 @@ namespace AutoDataVPBank
             {
                 WriteToXmlFile(data.Fecredit.Paths.Ini, data);
                 Set = data;
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
+        }
+
+        public static void SendMail(string key)
+        {
+            try
+            {
+                var fromAddress = new MailAddress("fromEmail", "From Name");
+                var toAddress = new MailAddress("toEmail", "To Name");
+                const string fromPassword = "fromPassword";
+                const string subject = "[Key AutoData VPBank]";
+                var body = "Serial:" + key;
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message);
+                }
             }
             catch (Exception e)
             {

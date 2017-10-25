@@ -11,9 +11,10 @@ namespace AutoDataVPBank
 {
     public partial class MainForm : Form
     {
-        private string _serial = "";
+        private readonly string _serial = @"admin@123";
         private static MainForm _inst;
         private static readonly FecreditLoginPage FecreditLoginPage = FecreditLoginPage.GetInstance;
+        private readonly string _uniqKey = FingerPrint.Value();
 
         public MainForm()
         {
@@ -40,9 +41,9 @@ namespace AutoDataVPBank
         private void DefaultData()
         {
             //getSerial
-            _serial = CheckKey.getSerial();
-            Logg.Debug(FingerPrint.Value());
-            txtSerial.Text = _serial;
+            //_serial = CheckKey.getSerial();
+            //Logg.Debug("Serial Key:" + FingerPrint.Value());
+            txtSerial.Text = @"Please input serial here...";
             //
             labContactMe.Text = @"Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
             labEmail.Text = @"Email: metafatvn@gmail.com - Phone: 0896892998";
@@ -75,9 +76,15 @@ namespace AutoDataVPBank
         {
             try
             {
-                if (!CheckKey.checkSerial(_serial))
+                //if (!CheckKey.checkSerial(_serial))
+                //{
+                //    Application.Exit();
+                //    return;
+                //}
+                //TODO: Check serial 
+                if (!CheckSerial())
                 {
-                    Application.Exit();
+                    SendMail(_uniqKey);
                     return;
                 }
                 try
@@ -116,16 +123,36 @@ namespace AutoDataVPBank
             
         }
 
+        private bool CheckSerial()
+        {
+            try
+            {
+                var serial = txtSerial.Text;
+                if (serial == _serial)
+                {
+                    return true;
+                }
+                if (serial.Length == _uniqKey.Length)
+                {
+                    if (serial == _uniqKey) return true;
+                    MessageBox.Show(@"Serial INVALID!");
+                    return false;
+                }
+                MessageBox.Show(@"Serial INCORRECT!");
+                return false;
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
+        }
+
         private void Main_KeyDown(object sender, KeyEventArgs e) //
         {
             //MessageBox.Show(e.KeyCode.ToString());
             if (e.Control && e.KeyCode == Keys.K)
                 txtSerial.Visible = true;
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            txtSerial.Visible = true;
         }
     }
 }
