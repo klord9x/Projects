@@ -11,7 +11,6 @@ namespace AutoDataVPBank.core
     public abstract class BaseWorker
     {
         private static readonly object SyncLock = new object();
-        private int _total = 1;
         private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
         protected static BackgroundWorker MoWorker;
 
@@ -50,8 +49,6 @@ namespace AutoDataVPBank.core
                     Logg.Error(ex.Message);
                     KillProcess();
                 }
-
-                _total++;
             }
             catch (ArgumentException ae)
             {
@@ -159,8 +156,15 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    MForm.btnRun.Enabled = false;
-                    MForm.lb_process_status.Text = @"Cancelling...";
+                    MForm.btnRun.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.btnRun.Enabled = false;
+                    });
+                    MForm.lb_process_status.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.lb_process_status.Text = @"Cancelling...";
+                    });
+                    
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -175,8 +179,11 @@ namespace AutoDataVPBank.core
                     {
                         MForm.btnRun.Text = @"Stop";
                     });
+                    MForm.lb_process_status.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.lb_process_status.Text = @"Running...";
+                    });
                     
-                    MForm.lb_process_status.Text = @"Running...";
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();
@@ -238,8 +245,14 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    MForm.btnRun.Enabled = false;
-                    MForm.lb_process_status.Text = @"Cancelling...";
+                    MForm.btnRun.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.btnRun.Enabled = false;
+                    });
+                    MForm.lb_process_status.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.lb_process_status.Text = @"Cancelling...";
+                    });
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -254,7 +267,11 @@ namespace AutoDataVPBank.core
                     {
                         MForm.btnRun.Text = @"Stop";
                     });
-                    MForm.lb_process_status.Text = @"Running...";
+                    MForm.lb_process_status.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.lb_process_status.Text = @"Running...";
+                    });
+                    
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();

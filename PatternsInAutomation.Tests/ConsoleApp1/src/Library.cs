@@ -8,12 +8,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Permissions;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
@@ -33,15 +30,11 @@ namespace AutoDataVPBank
             "geckodriver.exe", "firefox.exe"
             , "chromedriver.exe", "chrome.exe"
         };
-        public static Settings Set = Settings.GetInstance();
-        private static readonly Random Rd = new Random();
+        public static Settings Set = Settings.GetInstance;
 
-        private static List<string[]> _listEmails = new List<string[]>();
         public static CancellationTokenSource CancelTokenSrc = new CancellationTokenSource();
         public static readonly ManualResetEvent ShutdownEvent = new ManualResetEvent(false);
         public static readonly ManualResetEvent PauseEvent = new ManualResetEvent(true);
-        protected internal string IpAddr;
-        public static Stopwatch TimeRun;
         public static bool IsRun;
         public static readonly MainForm MForm = MainForm.GetInstance;
         //Declare an instance for log4net
@@ -61,7 +54,7 @@ namespace AutoDataVPBank
         public bool CheckConnection(string url)
         {
             var s = new Stopwatch();
-            var t = Set.CloneNickSettings.PageLoad.Times.GetValue();
+            var t = Set.Fecredit.PageLoad.Times.GetValue();
             s.Start();
             while (s.Elapsed < TimeSpan.FromSeconds(t))
             {
@@ -170,14 +163,12 @@ namespace AutoDataVPBank
 
         public static void KillProcess()
         {
-            //Driver.StopAllBrowsers();
-            //Driver.StopBrowser();
             //TODO: Need exist all process running released app.
-//            Logg.Info("Kill Process...");
-//            foreach (var process in ProcessNames)
-//            {
-//                EndTask(process);
-//            }
+            Logg.Info("Kill Process...");
+            foreach (var process in ProcessNames)
+            {
+                EndTask(process);
+            }
         }
 
         public static Library GetInstance => _instance ?? (_instance = new Library());
@@ -433,23 +424,6 @@ namespace AutoDataVPBank
             }
         }
 
-
-        [SecurityPermission(SecurityAction.Demand, ControlThread = true)]
-        public static void KillTheThread(Thread th)
-        {
-            if (th == null || !th.IsAlive) return;
-            Logg.Info("Kill Thread" + th.Name);
-            try
-            {
-                th.Interrupt();
-                th.Join();
-            }
-            catch (ThreadAbortException tae)
-            {
-                Logg.Error(tae.ToString());
-            }
-        }
-
         public static TimeSpan TimeOuts => TimeSpan.FromSeconds(69);
 
         public static void Shuffle<T>(IList<T> list)
@@ -477,74 +451,6 @@ namespace AutoDataVPBank
             PauseEvent.Set();
         }
 
-        public static void Stop(Thread thread)
-        {
-            try
-            {
-                Logg.Debug($"Stop {thread.Name}");
-                // Signal the shutdown event
-                ShutdownEvent.Set();
-                // Make sure to resume any paused threads
-                PauseEvent.Set();
-                // Wait for the thread to exit
-                thread.Interrupt();
-                thread.Join();
-                Logg.Debug($"Thread {thread.Name} Stopped");
-            }
-            catch (Exception e)
-            {
-                Logg.Error(e.Message);
-                throw;
-            }
-            
-        }
-
-        public static void Start(Thread thread)
-        {
-            try
-            {
-                // Signal the shutdown event
-                ShutdownEvent.Reset();
-                // Make sure to resume any paused threads
-                PauseEvent.Set();
-                thread.Start();
-                Logg.Info($"Thread {thread.Name} Starting");
-            }
-            catch (Exception e)
-            {
-                Logg.Error(e.Message);
-                throw;
-            }
-        }
-
-        private static string GetExternalIp()
-        {
-            try
-            {
-                var externalIp = (new WebClient()).DownloadString("http://checkip.dyndns.org/");
-                externalIp = (new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"))
-                    .Matches(externalIp)[0].ToString();
-                return externalIp;
-            }
-            catch
-            {
-                Logg.Error("Can't get Public ip");
-                return null;
-            }
-        }
-
-        public static IPAddress GetIpAddress(string hostName)
-        {
-            var ping = new Ping();
-            var replay = ping.Send(hostName);
-
-            if (replay != null && replay.Status == IPStatus.Success)
-            {
-                return replay.Address;
-            }
-            return null;
-        }
-
         public static bool CancelTask()
         {
             try
@@ -566,30 +472,51 @@ namespace AutoDataVPBank
 
         public static bool PauseTask()
         {
-            PauseEvent.WaitOne(Timeout.Infinite);
-            if (ShutdownEvent.WaitOne(0))
-                return true;
-            return false;
-        }
-
-        public static List<string[]> GetListEmails()
-        {
-            if (_listEmails.Any()) return _listEmails;
-            var lines = File.ReadAllLines("./txt/temp-email.txt");
-            _listEmails = lines.Where(ln => !ln.Contains("#")).Select(l => l.Split('=')).Where(a => a.Length == 2).ToList();
-
-            return _listEmails;
+            try
+            {
+                PauseEvent.WaitOne(Timeout.Infinite);
+                return ShutdownEvent.WaitOne(0);
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
         }
 
         public static void GetSetting()
         {
-            Set = ReadFromXmlFile<Settings>(Set.PathSettings.Ini);
+            try
+            {
+                if (File.Exists(Set.Fecredit.Paths.Ini))
+                {
+                    Set = ReadFromXmlFile<Settings>(Set.Fecredit.Paths.Ini);
+                }
+                else
+                {
+                    StoreSetting(Set);
+                }
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
+            
         }
 
         public static void StoreSetting(Settings data)
         {
-            WriteToXmlFile(data.PathSettings.Ini, data);
-            Set = data;
+            try
+            {
+                WriteToXmlFile(data.Fecredit.Paths.Ini, data);
+                Set = data;
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
         }
     }
 }

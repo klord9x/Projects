@@ -11,10 +11,9 @@ namespace AutoDataVPBank.Pages.FecreditPage
 {
     public class FecreditLoginPage:BaseWorker
     {
-        private const string Url = @"https://cps.fecredit.com.vn/finnsso/gateway/SSOGateway?requestID=7000003";
         private static FecreditLoginPage _instance;
-
-        public static FecreditLoginPageElementMap LoginMap => new FecreditLoginPageElementMap();
+        private static string _loginWindowHandle;
+        private static FecreditLoginPageElementMap LoginMap => new FecreditLoginPageElementMap();
         public static FecreditLoginPage GetInstance => _instance ?? (_instance = new FecreditLoginPage());
 
         protected override void Process()
@@ -28,8 +27,14 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     StartBrowser(type);
                 });
                 
-                Browser.NavigateSafe(Url);
-                Login(MForm.txtUser.Text, MForm.txtPass.Text, MForm.radioButtonCAS.Checked);
+                Browser.NavigateSafe(Set.Fecredit.Urls.Login);
+                Login(MForm.txtUser.Text, MForm.txtPass.Text);
+                var message = CheckAlert();
+                ProcessPageOne(message, MForm.radioButtonCAS.Checked);
+                ProcessPageTwo(MForm.radioButtonCAS.Checked);
+                Browser.SwitchTo().Window(Browser.WindowHandles.Last());
+                //Go to get detail:
+                EnquiryScreenPage.GetInstance.EnquiryScreen();
             }
             catch (Exception e)
             {
@@ -38,17 +43,18 @@ namespace AutoDataVPBank.Pages.FecreditPage
             }
             finally
             {
-                StopBrowser();
+                Stop();
             }
         }
 
         /// <summary>
         /// #1. Login Url.
         /// </summary>
-        public static void Login(string user, string pass, bool caSselect)
+        public static void Login(string user, string pass)
         {
             try
             {
+                Browser.SwitchTo().Window(Browser.WindowHandles.First());
                 LoginMap.TxtNameElement.Clear();
                 LoginMap.TxtNameElement.SendKeys(user);
                 LoginMap.TxtPasswordElement.Clear();
@@ -60,13 +66,6 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 Logg.Error(e.Message);
                 MessageBox.Show(@"Đăng nhập không thành công!");
             }
-            var message = CheckAlert();
-            ProcessPageOne(message, caSselect);
-            ProcessPageTwo(caSselect);
-            Browser.SwitchTo().Window(Browser.WindowHandles.Last());
-            //Go to get detail:
-            var enqui = new EnquiryScreenPage();
-            enqui.EnquiryScreen();
         }
 
         private static void ProcessPageTwo(bool caSselect)
@@ -75,7 +74,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
             {
                 //switch to new window. Page 2
                 Browser.SwitchTo().Window(Browser.WindowHandles.Last());
-                Browser.WaitForPageLoad(15);
+                Browser.WaitForPageLoad(Set.Fecredit.PageLoad.Value);
                 Browser.SwitchTo().Frame("frameForwardToApp");
                 Browser.SwitchTo().Frame("contents");
                 //TODO: Improve, click fast not see button:
@@ -114,16 +113,14 @@ namespace AutoDataVPBank.Pages.FecreditPage
             {
                 //switch to new window. Page 1
                 Browser.SwitchTo().Window(Browser.WindowHandles.Last());
-                EnquiryScreenPage.Page1WindowHandle = Browser.CurrentWindowHandle;
+                _loginWindowHandle = Browser.CurrentWindowHandle;
                 if (LoginMap.BtnPage1CasarchElement == null)
                 {
-                    StopBrowser();
                     MessageBox.Show(message, @"Oh No!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Logg.Error(@"Can't login");
-                    Application.Exit();
-                    return;
+                    throw new Exception(message);
                 }
-                //TODO: Fail here
+
                 if (caSselect)
                 {
                     LoginMap.BtnPage1CasElement.ClickSafe(Browser);
@@ -144,7 +141,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
              */
             try
             {
-                var wait = new WebDriverWait(Browser, TimeSpan.FromSeconds(15));
+                var wait = new WebDriverWait(Browser, TimeSpan.FromSeconds(Set.Fecredit.Default.Value));
                 wait.Until(ExpectedConditions.AlertIsPresent());
                 var alert = Browser.SwitchTo().Alert();
                 var message = alert.Text;
@@ -162,6 +159,23 @@ namespace AutoDataVPBank.Pages.FecreditPage
         public override void Teardown()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// After Click search on Enqiry Screen Page > Logout.
+        /// </summary>
+        public static void Logout()
+        {
+            try
+            {
+                Browser.SwitchTo().Window(_loginWindowHandle);
+                LoginMap.BtnPage1ExitElement.Click();
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
         }
     }
 }

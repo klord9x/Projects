@@ -41,6 +41,7 @@ namespace AutoDataVPBank
         {
             //getSerial
             _serial = CheckKey.getSerial();
+            Logg.Debug(FingerPrint.Value());
             txtSerial.Text = _serial;
             //
             labContactMe.Text = @"Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";

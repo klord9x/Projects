@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -18,44 +19,18 @@ namespace AutoDataVPBank.Pages.FecreditPage
     public class EnquiryScreenPage
     {
         //Number try get record from table before exit.
-        private static int _nTry = 5;
-
+        private static int _nTry = Set.Fecredit.TryTimes.Value;
         //Stop search next page.
         private static bool _stopNav;
-
         private static string _enquiryScreenWindow;
-        public static string Page1WindowHandle;
         private static string _signform;
         private static string _signto;
         private static string _active;
-
         private static string _product;
-
-        private static readonly List<string> Lheader =
-            new List<string>
-            {
-                "Full Name",
-                "Gender",
-                "Age",
-                "ID Card Number",
-                "Phone",
-                "State",
-                "Stage",
-                "Scheme",
-                "Company",
-                "Income",
-                "DSA Code",
-                "DSA Name",
-                "TSA Code",
-                "TSA Name",
-                "SA Phone number",
-                "ApplicationNo",
-                "Assign",
-                "References",
-                "History",
-                "FinAmountRequested",
-                "StateThuongTru"
-            };
+        private static EnquiryScreenPageElementMap ScreenMap => new EnquiryScreenPageElementMap();
+        private static EnquiryScreenPage _instance;
+        public static EnquiryScreenPage GetInstance => _instance ?? (_instance = new EnquiryScreenPage());
+        private static readonly List<string> Lheader = typeof(ReCord).GetProperties().Select(f => f.Name).ToList();
 
         public EnquiryScreenPage()
         {
@@ -73,7 +48,6 @@ namespace AutoDataVPBank.Pages.FecreditPage
             
         }
 
-        private static EnquiryScreenPageElementMap ScreenMap => new EnquiryScreenPageElementMap();
 
         /// <summary>
         /// 2. Enquiry Screen Page, Search content.
@@ -98,16 +72,127 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 ScreenMap.TxtSingedElement.Clear();
                 ScreenMap.TxtSingedElement.SendKeys(_signform);
                 ScreenMap.BtnBtnSearchElement.ClickSafe(DriverFactory.Browser);
-
-                //switch back to original window. Page 1. Logout
-                DriverFactory.Browser.SwitchTo().Window(Page1WindowHandle);
-                FecreditLoginPage.LoginMap.BtnPage1ExitElement.Click();
+                FecreditLoginPage.Logout();
                 DriverFactory.Browser.SwitchTo().Window(_enquiryScreenWindow);
 
                 //TODO: Try find result if exist Maxtimeout = 5': 
                 DriverFactory.Browser.WaitingPageRefreshed(By.CssSelector("#selPageIndex > option"));
 
-                ExcelProcess();
+                MainProcess();
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
+            
+        }
+
+        private void MainProcess()
+        {
+            try
+            {
+                var pathExcelFile = Set.Fecredit.Paths.Data + @"\VPBank_" +
+                                    new String(_signform.Where(Char.IsDigit).ToArray()) + "_" +
+                                    new String(_signto.Where(Char.IsDigit).ToArray()) + ".xls";
+                //check File exits
+                if (File.Exists(pathExcelFile))
+                {
+                    File.Delete(pathExcelFile);
+                }
+                //Start Excel and get Application object.
+                Microsoft.Office.Interop.Excel.Application oXl;
+                try
+                {
+                    oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                    Logg.Error(e);
+                    throw ;
+                }
+
+
+                //Get a new workbook.
+                _Workbook oWb = oXl.Workbooks.Add("");
+                var oSheet = (_Worksheet)oWb.ActiveSheet;
+                //            Add table headers going cell by cell.
+
+                for (var i = 0; i < Lheader.Count; i++)
+                {
+                    oSheet.Cells[1, i + 1] = Lheader[i];
+                }
+
+                //Format A1:D1 as bold, vertical alignment = center.
+                oSheet.Range["A1", "U1"].Font.Bold = true;
+                oSheet.Range["A1", "U1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
+                var indexRecord = 2;
+                var lxxReCords = new List<ReCord>();
+
+                //TODO Click next page or select next page:
+                //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
+                var n = 1;
+                var page = 12;
+                if (_active == "Reject Review")
+                {
+                    page = 1;
+                }
+
+                try
+                {
+                    var lastOption = DriverFactory.Browser.FindElement(By.CssSelector("#selPageIndex > option:last-child"));
+                    Int32.TryParse(lastOption.GetAttributeSafe("value"), out n);
+                }
+                catch (Exception e)
+                {
+                    Logg.Error(e.Message);
+                }
+                if (n > page)
+                {
+                    n = n - page;
+                }
+                else
+                {
+                    return;
+                }
+
+
+                for (var i = n; i > 0; i--)
+                {
+                    if (CancelTask())
+                    {
+                        break;
+                    }
+                    //i = 450;
+                    // select the drop down list
+                    DriverFactory.Browser.ExecuteJavaScript("document.getElementById('customer').remove();");
+                    var selectElement = new SelectElement(DriverFactory.Browser.FindElement(By.CssSelector("#selPageIndex")));
+                    selectElement.SelectByValue(i.ToString());
+
+                    //TODO: Fail for first chose option; or each select option (Firefox).
+                    //Wait until have element.
+                    DriverFactory.Browser.FindElementSafeV2(By.Id("customer"));
+                    if (!_stopNav)
+                    {
+                        GetDataTable(lxxReCords, ref indexRecord, oSheet);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                oXl.Visible = false;
+                oXl.UserControl = false;
+                oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
+                    false, false, XlSaveAsAccessMode.xlNoChange,
+                    Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+
+                oWb.Close();
+                //oXl.Workbooks.Open(pathExcelFile);
+                Process.Start(pathExcelFile);
             }
             catch (Exception e)
             {
@@ -317,7 +402,7 @@ namespace AutoDataVPBank.Pages.FecreditPage
         {
             try
             {
-                DriverFactory.Browser.WaitForPageLoad(60);
+                DriverFactory.Browser.WaitForPageLoad(Set.Fecredit.PageLoad.Value);
                 var elemTable = DriverFactory.Browser.FindElementSafeV2(By.XPath("//*[@id='formID206']/table[4]"));
                 // Fetch all Row of the table
                 var lstTrElem = new List<IWebElement>(elemTable.FindElementsSafe(DriverFactory.Browser, By.TagName("tr")));
@@ -371,6 +456,9 @@ namespace AutoDataVPBank.Pages.FecreditPage
                         }
 
                         // Create an array to multiple values at once.
+                        //var arr = ((IEnumerable) recData).Cast<ReCord>()
+                        //    .Select(x => x.ToString())
+                        //    .ToArray();
                         var arrRecord = new List<string>();
                         lxxReCords.Add(recData);
                         arrRecord.Add(fullNameRow);
@@ -418,116 +506,6 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 Logg.Error(e.Message);
                 throw;
             }
-        }
-
-        private void ExcelProcess()
-        {
-            try
-            {
-                var pathExcelFile = Application.StartupPath + @"\VPBank_" +
-                                    new String(_signform.Where(Char.IsDigit).ToArray()) + "_" +
-                                    new String(_signto.Where(Char.IsDigit).ToArray()) + ".xls";
-                //check File exits
-                if (File.Exists(pathExcelFile))
-                {
-                    File.Delete(pathExcelFile);
-                }
-                //Start Excel and get Application object.
-                Microsoft.Office.Interop.Excel.Application oXl;
-                try
-                {
-                    oXl = new Microsoft.Office.Interop.Excel.Application { Visible = true };
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, @"Need Install Excel app!", MessageBoxButtons.OK,
-                        MessageBoxIcon.Exclamation);
-                    Logg.Error(e);
-                    return;
-                }
-
-
-                //Get a new workbook.
-                _Workbook oWb = oXl.Workbooks.Add("");
-                var oSheet = (_Worksheet)oWb.ActiveSheet;
-                //            Add table headers going cell by cell.
-
-                for (var i = 0; i < Lheader.Count; i++)
-                {
-                    oSheet.Cells[1, i + 1] = Lheader[i];
-                }
-
-                //Format A1:D1 as bold, vertical alignment = center.
-                oSheet.Range["A1", "U1"].Font.Bold = true;
-                oSheet.Range["A1", "U1"].VerticalAlignment = XlVAlign.xlVAlignCenter;
-                var indexRecord = 2;
-                var lxxReCords = new List<ReCord>();
-
-                //TODO Click next page or select next page:
-                //*[@id="formID206"]/table[5]/tbody/tr/td/font/a[3]
-                var n = 1;
-                var page = 12;
-                if (_active == "Reject Review")
-                {
-                    page = 1;
-                }
-
-                try
-                {
-                    var lastOption = DriverFactory.Browser.FindElement(By.CssSelector("#selPageIndex > option:last-child"));
-                    Int32.TryParse(lastOption.GetAttributeSafe("value"), out n);
-                }
-                catch (Exception e)
-                {
-                    Logg.Error(e.Message);
-                }
-                if (n > page)
-                {
-                    n = n - page;
-                }
-                else
-                {
-                    return;
-                }
-
-
-                for (var i = n; i > 0; i--)
-                {
-                    //i = 450;
-                    // select the drop down list
-                    DriverFactory.Browser.ExecuteJavaScript("document.getElementById('customer').remove();");
-                    var selectElement = new SelectElement(DriverFactory.Browser.FindElement(By.CssSelector("#selPageIndex")));
-                    selectElement.SelectByValue(i.ToString());
-
-                    //TODO: Fail for first chose option; or each select option (Firefox).
-                    //Wait until have element.
-                    DriverFactory.Browser.FindElementSafeV2(By.Id("customer"));
-                    if (!_stopNav)
-                    {
-                        GetDataTable(lxxReCords, ref indexRecord, oSheet);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                oXl.Visible = false;
-                oXl.UserControl = false;
-                oWb.SaveAs(pathExcelFile, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing,
-                    false, false, XlSaveAsAccessMode.xlNoChange,
-                    Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-
-                oWb.Close();
-                //oXl.Workbooks.Open(pathExcelFile);
-                Process.Start(pathExcelFile);
-            }
-            catch (Exception e)
-            {
-                Logg.Error(e.Message);
-                throw;
-            }
-            
         }
     }
 }

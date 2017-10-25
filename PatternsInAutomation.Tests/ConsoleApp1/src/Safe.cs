@@ -189,7 +189,7 @@ namespace AutoDataVPBank
             {
                 if (element == null) return;
                 element.Click();
-                driver.WaitForPageLoad(15);
+                driver.WaitForPageLoad(Set.Fecredit.PageLoad.Value);
             }
             catch (WebDriverException e)
             {
@@ -210,7 +210,7 @@ namespace AutoDataVPBank
             while (s.Elapsed < TimeSpan.FromSeconds(300))
                 try
                 {
-                    var resultElement = browser.FindElement(by, 5);
+                    var resultElement = browser.FindElement(by, Set.Fecredit.Default.Value);
                     if (resultElement != null)
                         break;
                 }
@@ -224,10 +224,10 @@ namespace AutoDataVPBank
 
         public static IWebElement FindElementSafeV2(this IWebDriver driver, By by, bool displayed = true)
         {
-            WaitForPageLoad(driver, Set.CloneNickSettings.PageLoad.Times.GetValue());
+            WaitForPageLoad(driver, Set.Fecredit.PageLoad.Times.GetValue());
             try
             {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Set.CloneNickSettings.SignUp.Times.GetValue()));
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(Set.Fecredit.Default.Times.GetValue()));
                 return wait.Until(d =>
                 {
                     try
@@ -320,10 +320,10 @@ namespace AutoDataVPBank
                     {
                         driver.Navigate().GoToUrl(url);
                         if (sleep)
-                            SleepSafe(0, Set.CloneNickSettings.Default.Times.GetValue());
+                            SleepSafe(0, Set.Fecredit.Default.Times.GetValue());
 
                         if (driver.Url.Contains(url))
-                            driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                            driver.WaitForPageLoad(Set.Fecredit.PageLoad.Times.GetValue());
                     }
 
                     catch (WebDriverTimeoutException e)
@@ -350,12 +350,12 @@ namespace AutoDataVPBank
                 {
                     driver.Navigate().GoToUrl(url);
                     if (sleep)
-                        SleepSafe(0, Set.CloneNickSettings.Default.Times.Min);
+                        SleepSafe(0, Set.Fecredit.Default.Times.Min);
                     //var driver2 = DriverFactory.Browser.Value;
                     //driver2.Navigate().GoToUrl(url);
 
                     if (driver.Url.Contains(url))
-                        driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                        driver.WaitForPageLoad(Set.Fecredit.PageLoad.Times.GetValue());
                     else
                         Logg.Error(@"Can not Navigate to: " + url);
                 }
@@ -377,9 +377,9 @@ namespace AutoDataVPBank
                     return;
                 driver.Navigate().Refresh();
                 if (wait)
-                    driver.WaitForPageLoad(Set.CloneNickSettings.PageLoad.Times.GetValue());
+                    driver.WaitForPageLoad(Set.Fecredit.PageLoad.Value);
                 if (sleep)
-                    SleepSafe(0, time > 0 ? time : 69);
+                    SleepSafe(0, time > 0 ? time : Set.Fecredit.Default.Value);
             }
             catch (Exception e)
             {
@@ -456,65 +456,5 @@ namespace AutoDataVPBank
                 throw;
             }
         }
-
-        /*public static void WaitForPageLoad(this IWebDriver driver, int maxWaitTimeInSeconds)
-        {
-            var state = string.Empty;
-            if (driver == null)
-            {
-                return;
-            }
-            try
-            {
-                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(maxWaitTimeInSeconds));
-
-                //Checks every 500 ms whether predicate returns true if returns exit otherwise keep trying till it returns ture
-                wait.Until(d =>
-                {
-                    try
-                    {
-                        state = ((IJavaScriptExecutor)driver).ExecuteScript(@"return document.readyState").ToString();
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        //Ignore
-                    }
-                    catch (NoSuchWindowException)
-                    {
-                        //when popup is closed, switch to last windows
-                        driver.SwitchTo().Window(driver.WindowHandles.Last());
-                    }
-                    catch (WebDriverException)
-                    {
-
-                    }
-                    //In IE7 there are chances we may get state as loaded instead of complete
-                    return (state.Equals("complete", StringComparison.InvariantCultureIgnoreCase) || state.Equals("loaded", StringComparison.InvariantCultureIgnoreCase));
-
-                });
-            }
-            catch (TimeoutException)
-            {
-                //sometimes Page remains in Interactive mode and never becomes Complete, then we can still try to access the controls
-                if (!state.Equals("interactive", StringComparison.InvariantCultureIgnoreCase))
-                    throw;
-            }
-            catch (NullReferenceException)
-            {
-                //sometimes Page remains in Interactive mode and never becomes Complete, then we can still try to access the controls
-                if (!state.Equals("interactive", StringComparison.InvariantCultureIgnoreCase))
-                    throw;
-            }
-            catch (WebDriverException)
-            {
-                if (driver.WindowHandles.Count == 1)
-                {
-                    driver.SwitchTo().Window(driver.WindowHandles[0]);
-                }
-                state = ((IJavaScriptExecutor)driver).ExecuteScript(@"return document.readyState").ToString();
-                if (!(state.Equals("complete", StringComparison.InvariantCultureIgnoreCase) || state.Equals("loaded", StringComparison.InvariantCultureIgnoreCase)))
-                    throw;
-            }
-        }*/
     }
 }
