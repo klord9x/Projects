@@ -2,8 +2,9 @@
 using System.ComponentModel;
 using System.Security;
 using System.Threading;
-using AutoDataVPBank.src;
+using System.Windows.Forms;
 using OpenQA.Selenium;
+using static AutoDataVPBank.Library;
 
 namespace AutoDataVPBank.core
 {
@@ -38,7 +39,7 @@ namespace AutoDataVPBank.core
             try
             {
                 MoWorker.ReportProgress(0);
-                Library.CancelTokenSrc = new CancellationTokenSource();
+                CancelTokenSrc = new CancellationTokenSource();
                 try
                 {
                     Process();
@@ -46,37 +47,37 @@ namespace AutoDataVPBank.core
                 catch (Exception ex)
                 {
                     //TODO: Fail when not exist.
-                    Library.Logg.Error(ex.Message);
-                    Library.KillProcess();
+                    Logg.Error(ex.Message);
+                    KillProcess();
                 }
 
                 _total++;
             }
             catch (ArgumentException ae)
             {
-                Library.Logg.Error(ae.Message);
+                Logg.Error(ae.Message);
 
             }
             catch (ThreadInterruptedException tie)
             {
-                Library.Logg.Error(tie.Message);
+                Logg.Error(tie.Message);
 
             }
             catch (SecurityException se)
             {
-                Library.Logg.Error(se.Message);
+                Logg.Error(se.Message);
 
             }
             catch (Exception ex)
             {
-                Library.Logg.Error(ex.Message);
+                Logg.Error(ex.Message);
 
             }
             finally
             {
                 Monitor.Exit(SyncLock);
 
-                Library.Logg.Info("---------End One------------");
+                Logg.Info("---------End One------------");
             }
         }
         
@@ -103,12 +104,16 @@ namespace AutoDataVPBank.core
                 _resetEvent.Set(); // signal that worker is done
 
                 //Set again Status button here:
-                Library.MForm.btnRun.Enabled = true;
-                Library.MForm.btnRun.Text = @"Start";
+                MForm.btnRun.Invoke((MethodInvoker)delegate
+                {
+                    MForm.btnRun.Enabled = true;
+                    MForm.btnRun.Text = @"Start";
+                });
+                
             }
             catch (Exception exception)
             {
-                Library.Logg.Error(exception.Message);
+                Logg.Error(exception.Message);
                 throw;
             }
         }
@@ -118,15 +123,15 @@ namespace AutoDataVPBank.core
             //If it was cancelled midway
             if (e.Cancelled)
             {
-                Library.MForm.lb_process_status.Text = @"Task Cancelled.";
+                MForm.lb_process_status.Text = @"Task Cancelled.";
             }
             else if (e.Error != null)
             {
-                Library.MForm.lb_process_status.Text = @"Error while performing background operation.";
+                MForm.lb_process_status.Text = @"Error while performing background operation.";
             }
             else
             {
-                Library.MForm.lb_process_status.Text = @"Task Completed...";
+                MForm.lb_process_status.Text = @"Task Completed...";
             }
         }
 
@@ -139,13 +144,13 @@ namespace AutoDataVPBank.core
         {
             try
             {
-                Library.IsRun = true;
+                IsRun = true;
                 Setup();
-                Library.JobName = GetType().Name;
+                JobName = GetType().Name;
                 // Signal the shutdown event
-                Library.ShutdownEvent.Reset();
+                ShutdownEvent.Reset();
                 // Make sure to resume any paused threads
-                Library.PauseEvent.Set();
+                PauseEvent.Set();
                 _resetEvent.Set();
                 //Start the async operation here
                 if (MoWorker.IsBusy)
@@ -154,8 +159,8 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    Library.MForm.btnRun.Enabled = false;
-                    Library.MForm.lb_process_status.Text = @"Cancelling...";
+                    MForm.btnRun.Enabled = false;
+                    MForm.lb_process_status.Text = @"Cancelling...";
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -166,8 +171,12 @@ namespace AutoDataVPBank.core
                 }
                 else
                 {
-                    Library.MForm.btnRun.Text = @"Stop";
-                    Library.MForm.lb_process_status.Text = @"Running...";
+                    MForm.btnRun.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.btnRun.Text = @"Stop";
+                    });
+                    
+                    MForm.lb_process_status.Text = @"Running...";
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();
@@ -183,7 +192,7 @@ namespace AutoDataVPBank.core
             }
             catch (Exception e)
             {
-                Library.Logg.Error(e.Message);
+                Logg.Error(e.Message);
                 throw;
             }
         }
@@ -192,12 +201,13 @@ namespace AutoDataVPBank.core
         {
             try
             {
-                Library.IsRun = false;
+                IsRun = false;
                 // Signal the shutdown event
-                Library.ShutdownEvent.Set();
+                ShutdownEvent.Set();
                 // Make sure to resume any paused threads
-                Library.PauseEvent.Set();
-                Library.CancelTokenSrc.Cancel();
+                PauseEvent.Set();
+                CancelTokenSrc.Cancel();
+                DriverFactory.StopBrowser();
             }
             catch (WebDriverException)
             {
@@ -228,8 +238,8 @@ namespace AutoDataVPBank.core
                     //_mOWorker.CancelAsync();
                     //_resetEvent.Set();
                     //_resetEvent.WaitOne(); // will block until _resetEvent.Set() call made
-                    Library.MForm.btnRun.Enabled = false;
-                    Library.MForm.lb_process_status.Text = @"Cancelling...";
+                    MForm.btnRun.Enabled = false;
+                    MForm.lb_process_status.Text = @"Cancelling...";
 
                     // Notify the worker thread that a cancel has been requested.
                     // The cancel will not actually happen until the thread in the
@@ -240,8 +250,11 @@ namespace AutoDataVPBank.core
                 }
                 else
                 {
-                    Library.MForm.btnRun.Text = @"Stop";
-                    Library.MForm.lb_process_status.Text = @"Running...";
+                    MForm.btnRun.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.btnRun.Text = @"Stop";
+                    });
+                    MForm.lb_process_status.Text = @"Running...";
 
                     // Kickoff the worker thread to begin it's DoWork function.
                     MoWorker.RunWorkerAsync();

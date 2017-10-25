@@ -150,6 +150,11 @@ namespace AutoDataVPBank
                         //when popup is closed, switch to last windows
                         driver.SwitchTo().Window(driver.WindowHandles.Last());
                     }
+                    catch (WebDriverException e)
+                    {
+                        Logg.Error(e.Message);
+                        throw;
+                    }
                     //In IE7 there are chances we may get state as loaded instead of complete
                     return state.Equals("complete", StringComparison.InvariantCultureIgnoreCase) ||
                            state.Equals("loaded", StringComparison.InvariantCultureIgnoreCase);

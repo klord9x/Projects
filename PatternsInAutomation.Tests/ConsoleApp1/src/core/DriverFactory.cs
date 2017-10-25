@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using AutoDataVPBank.src;
+using System.IO;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -118,9 +118,18 @@ namespace AutoDataVPBank.core
                 {
                     options.AddArgument("--user-agent=" + userAgent);
                 }
-                
+
+                var dir = AppDomain.CurrentDomain.BaseDirectory + "\\extensions";
+                if (Directory.Exists(dir))
+                {
+                    var directory = new DirectoryInfo(dir);
+                    var files = directory.GetFiles();
+                    foreach (var file in files)
+                        options.AddExtension(Path.GetFullPath(file.FullName));
+                }
+
                 // add parameter which will disable the extension
-                options.AddArgument("--disable-extensions");
+                //options.AddArgument("--disable-extensions");
                 options.AddArgument("disable-infobars");
                 Browser = new ChromeDriver(chromeDriverService, options, Library.TimeOuts);
             }

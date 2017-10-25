@@ -79,16 +79,22 @@ namespace AutoDataVPBank.Pages.FecreditPage
                 Browser.SwitchTo().Frame("frameForwardToApp");
                 Browser.SwitchTo().Frame("contents");
                 //TODO: Improve, click fast not see button:
-                do
-                {
-                    LoginMap.BtnPage2Click1Element.ClickSafe(Browser);
-                } while (caSselect && LoginMap.BtnPage2CasClick2Element == null || LoginMap.BtnPage2Click2Element == null);
-                
                 if (caSselect)
                 {
+                    do
+                    {
+                        LoginMap.BtnPage2Click1Element.ClickSafe(Browser);
+                    } while (LoginMap.BtnPage2CasClick2Element == null);
                     LoginMap.BtnPage2CasClick2Element.ClickSafe(Browser);
                 }
-                else LoginMap.BtnPage2Click2Element.ClickSafe(Browser);
+                else
+                {
+                    do
+                    {
+                        LoginMap.BtnPage2Click1Element.ClickSafe(Browser);
+                    } while (LoginMap.BtnPage2Click2Element == null);
+                    LoginMap.BtnPage2Click2Element.ClickSafe(Browser);
+                }
 
             }
             catch (WebDriverException e)

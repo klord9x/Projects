@@ -100,11 +100,9 @@ namespace AutoDataVPBank
                 switch (text)
                 {
                     case "Start":
-                        btnRun.Text = @"Stop";
                         FecreditLoginPage.Start();
                         break;
                     default:
-                        btnRun.Text = @"Start";
                         BaseWorker.Stop();
                         break;
                 }
@@ -127,11 +125,6 @@ namespace AutoDataVPBank
         private void button1_Click_1(object sender, EventArgs e)
         {
             txtSerial.Visible = true;
-        }
-
-        private void cboActive_SelectedValueChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
-namespace AutoDataVPBank.src
+namespace AutoDataVPBank
 {
     public class Setting
     {

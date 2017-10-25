@@ -27,7 +27,8 @@ namespace AutoDataVPBank.Pages.FecreditPage
             {
                 var listBy = new List<By>
                 {
-                    By.XPath("//*[@id='178']/div[1]")
+                    By.CssSelector("div[onmouseover*='img1189']"),
+                    By.CssSelector(@"#\\31 78 > div")
                 };
                 return Browser.ExistElement(listBy);
             }
@@ -39,8 +40,8 @@ namespace AutoDataVPBank.Pages.FecreditPage
             {
                 var listBy = new List<By>
                 {
-                    By.XPath("//*[@id='4619']/div[1]"),
-                    By.CssSelector("#4619 > div:nth-child(1)")
+                    By.CssSelector("div[onmouseover*='img14720']"),
+                    By.CssSelector(@"#\\34 619 > div:nth-child(1)")
                 };
                 return Browser.ExistElement(listBy);
             }
