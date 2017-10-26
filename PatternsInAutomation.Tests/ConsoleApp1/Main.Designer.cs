@@ -70,7 +70,7 @@
             // 
             this.txtPass.Location = new System.Drawing.Point(254, 45);
             this.txtPass.Name = "txtPass";
-            this.txtPass.Size = new System.Drawing.Size(60, 20);
+            this.txtPass.Size = new System.Drawing.Size(80, 20);
             this.txtPass.TabIndex = 1;
             this.txtPass.UseSystemPasswordChar = true;
             // 
@@ -277,7 +277,7 @@
             // 
             this.licInfo.DateFormat = null;
             this.licInfo.DateTimeFormat = null;
-            this.licInfo.Location = new System.Drawing.Point(340, 45);
+            this.licInfo.Location = new System.Drawing.Point(347, 45);
             this.licInfo.Name = "licInfo";
             this.licInfo.Size = new System.Drawing.Size(224, 121);
             this.licInfo.TabIndex = 17;

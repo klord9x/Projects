@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using AutoDataVPBank.core;
 using Microsoft.Office.Interop.Excel;
@@ -12,7 +12,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using static AutoDataVPBank.Library;
-using Application = System.Windows.Forms.Application;
 
 namespace AutoDataVPBank.Pages.FecreditPage
 {
@@ -30,7 +29,10 @@ namespace AutoDataVPBank.Pages.FecreditPage
         private static EnquiryScreenPageElementMap ScreenMap => new EnquiryScreenPageElementMap();
         private static EnquiryScreenPage _instance;
         public static EnquiryScreenPage GetInstance => _instance ?? (_instance = new EnquiryScreenPage());
-        private static readonly List<string> Lheader = typeof(ReCord).GetProperties().Select(f => f.Name).ToList();
+        private static readonly List<string> Lheader = typeof(ReCord).GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(f => f.Name).ToList();
+        private static string _fullNameRow;
+        private static string _detailHref;
+        private static string _assigned;
 
         public EnquiryScreenPage()
         {
@@ -161,6 +163,11 @@ namespace AutoDataVPBank.Pages.FecreditPage
 
                 for (var i = n; i > 0; i--)
                 {
+                    MForm.lb_process_status.Invoke((MethodInvoker)delegate
+                    {
+                        MForm.lb_process_status.Text = $@"Running: Page[{i}/{n}]";
+                    });
+                   
                     if (CancelTask())
                     {
                         break;
@@ -358,29 +365,28 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     Logg.Error("History error:" + exception.Message);
                     throw;
                 }
-
-                var rec = new ReCord
-                {
-                    FullName = "",
-                    Gender = selSex,
-                    Age = txtAge,
-                    IdCardNumber = txtTinNo,
-                    Phone = mobile,
-                    State = selState,
-                    Stage = "",
-                    Scheme = scheme,
-                    Company = companyName,
-                    Income = inCome1,
-                    DsaCode = selDsaCode,
-                    DsaName = selDsaName,
-                    TsaCode = selTsaCode,
-                    TsaName = selTsaName,
-                    SaPhoneNumber = servicePhone,
-                    ReferncesName = strReferences,
-                    History = history,
-                    FinAmountRequested = finAmountRequested,
-                    StateThuongTru = selStateThuongTru
-                };
+                var rec = ReCord.GetInstance;
+                rec.FullName = _fullNameRow;
+                rec.Gender = selSex;
+                rec.Age = txtAge;
+                rec.IdCardNumber = txtTinNo;
+                rec.Phone = mobile;
+                rec.State = selState;
+                rec.Stage = _active;
+                rec.Scheme = scheme;
+                rec.Company = companyName;
+                rec.Income = inCome1;
+                rec.DsaCode = selDsaCode;
+                rec.DsaName = selDsaName;
+                rec.TsaCode = selTsaCode;
+                rec.TsaName = selTsaName;
+                rec.SaPhoneNumber = servicePhone;
+                rec.ApplicationNo = _detailHref;
+                rec.Assign = _assigned;
+                rec.ReferncesName = strReferences;
+                rec.History = history;
+                rec.FinAmountRequested = finAmountRequested;
+                rec.StateThuongTru = selStateThuongTru;
 
                 DriverFactory.Browser.Close();
                 return rec;
@@ -424,14 +430,14 @@ namespace AutoDataVPBank.Pages.FecreditPage
                     var lstTdElem = new List<IWebElement>(elemTr.FindElementsSafe(DriverFactory.Browser, By.TagName("td")));
                     if (lstTdElem.Count > 0)
                     {
-                        var detailHref = lstTdElem[0].TextSafe();
-                        Logg.Error(@"Detail : " + detailHref);
+                        _detailHref = lstTdElem[0].TextSafe();
+                        Logg.Error(@"Detail : " + _detailHref);
                         //string applicationNo = 
-                        var assigned = lstTdElem[1].TextSafe();
-                        var fullNameRow = lstTdElem[2].TextSafe();
-                        if (fullNameRow.Trim() == "") continue;
+                        _assigned = lstTdElem[1].TextSafe();
+                        _fullNameRow = lstTdElem[2].TextSafe();
+                        if (_fullNameRow.Trim() == "") continue;
                         var dateAsignCurrent =
-                            DateTime.ParseExact(assigned, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            DateTime.ParseExact(_assigned, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         if (dateAsignCurrent < dateAsignFrom || dateAsignCurrent >= dateAsignTo)
                         {
                             temp++;
@@ -440,51 +446,24 @@ namespace AutoDataVPBank.Pages.FecreditPage
                         //Click to detail1 Row:
                         //Or can be identified as href link 
                         //Check number
-                        var isNumeric = detailHref.All(char.IsDigit);
+                        var isNumeric = _detailHref.All(char.IsDigit);
                         if (!isNumeric)
                         {
                             continue;
                         }
-                        Logg.Error(@"Get detail for: " + detailHref);
-                        var element = DriverFactory.Browser.FindElementSafeV2(By.PartialLinkText(detailHref));
+                        Logg.Error(@"Get detail for: " + _detailHref);
+                        var element = DriverFactory.Browser.FindElementSafeV2(By.PartialLinkText(_detailHref));
 
                         var recData = GetAllDetail(element);
-                        Logg.Error(@"End Get detail for: " + detailHref);
+                        Logg.Error(@"End Get detail for: " + _detailHref);
                         if (recData == null)
                         {
-                            recData = new ReCord();
+                            recData = ReCord.GetInstance;
                         }
-
-                        // Create an array to multiple values at once.
-                        //var arr = ((IEnumerable) recData).Cast<ReCord>()
-                        //    .Select(x => x.ToString())
-                        //    .ToArray();
-                        var arrRecord = new List<string>();
                         lxxReCords.Add(recData);
-                        arrRecord.Add(fullNameRow);
-                        arrRecord.Add(recData.Gender);
-                        arrRecord.Add(recData.Age);
-                        arrRecord.Add(recData.IdCardNumber);
-                        arrRecord.Add(recData.Phone);
-                        arrRecord.Add(recData.State);
-                        arrRecord.Add(_active);
-                        arrRecord.Add(recData.Scheme);
-                        arrRecord.Add(recData.Company);
-                        arrRecord.Add(recData.Income);
-                        arrRecord.Add(recData.DsaCode);
-                        arrRecord.Add(recData.DsaName);
-                        arrRecord.Add(recData.TsaCode);
-                        arrRecord.Add(recData.TsaName);
-                        arrRecord.Add(recData.SaPhoneNumber);
-                        arrRecord.Add(detailHref);
-                        arrRecord.Add(assigned);
-                        arrRecord.Add(recData.ReferncesName);
-                        arrRecord.Add(recData.History);
-                        arrRecord.Add(recData.FinAmountRequested);
-                        arrRecord.Add(recData.StateThuongTru);
                         var indexRow = "A" + indexRecord;
                         var indexCol = "U" + indexRecord;
-                        oSheet.Range[indexRow, indexCol].Value2 = arrRecord.ToArray();
+                        oSheet.Range[indexRow, indexCol].Value2 = GetListValueFromObject(recData).ToArray();
                         //AutoFit columns A:D.
                         var oRng = oSheet.Range["A1", "V1"];
                         oRng.EntireColumn.AutoFit();

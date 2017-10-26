@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -240,6 +241,22 @@ namespace AutoDataVPBank
             if (propertyInfo == null) return null;
 
             return propertyInfo.GetValue(src, null);
+        }
+
+        public static List<string> GetListValueFromObject(object obj)
+        {
+            try
+            {
+                var type = obj.GetType();
+                var properties = type.GetProperties();
+
+                return properties.Select(property => property.GetValue(obj, null).ToString()).ToList();
+            }
+            catch (Exception e)
+            {
+                Logg.Error(e.Message);
+                throw;
+            }
         }
         /// <summary>
         /// Get Object from xml string and Type

@@ -242,6 +242,10 @@ namespace AutoDataVPBank
                         Logg.Error(e.Message);
                         return null;
                     }
+                    catch (WebDriverException)
+                    {
+                        throw;
+                    }
                     catch (InvalidOperationException e)
                     {
                         Logg.Error(e.Message);

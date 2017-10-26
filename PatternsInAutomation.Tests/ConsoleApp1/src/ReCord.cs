@@ -23,5 +23,8 @@ namespace AutoDataVPBank
         public string History { get; set; }
         public string FinAmountRequested { get; set; }
         public string StateThuongTru { get; set; }
+
+        private static ReCord _instance;
+        public static ReCord GetInstance => _instance ?? (_instance = new ReCord());
     }
 }
