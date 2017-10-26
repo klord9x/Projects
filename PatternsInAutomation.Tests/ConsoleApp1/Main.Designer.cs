@@ -284,11 +284,13 @@
             // 
             // txtSerial
             // 
+            this.txtSerial.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.txtSerial.Location = new System.Drawing.Point(37, 240);
             this.txtSerial.Name = "txtSerial";
             this.txtSerial.Size = new System.Drawing.Size(297, 20);
             this.txtSerial.TabIndex = 11;
             this.txtSerial.Text = "...";
+            this.txtSerial.Visible = false;
             // 
             // MainForm
             // 

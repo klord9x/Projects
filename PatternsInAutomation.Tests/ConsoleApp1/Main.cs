@@ -40,7 +40,6 @@ namespace AutoDataVPBank
         private void Main_Load(object sender, EventArgs e)
         {
             DefaultData();
-            CheckLicense();
         }
 
         private void DefaultData()
@@ -91,6 +90,8 @@ namespace AutoDataVPBank
                 //    SendMail(_uniqKey);
                 //    return;
                 //}
+
+                CheckLicense();
                 try
                 {
                     var dateAsignFrom =
