@@ -14,13 +14,13 @@ namespace AutoDataVPBank
 {
     public partial class MainForm : Form
     {
-        private readonly string _serial = @"admin@123";
+        //private readonly string _serial = @"admin@123";
         private static MainForm _inst;
         private static readonly FecreditLoginPage FecreditLoginPage = FecreditLoginPage.GetInstance;
-        private readonly string _uniqKey = FingerPrint.Value();
+        //private readonly string _uniqKey = FingerPrint.Value();
         byte[] _certPubicKeyData;
 
-        public MainForm()
+        private MainForm()
         {
             InitializeComponent();
             // Initialize log4net.
@@ -48,7 +48,6 @@ namespace AutoDataVPBank
             //getSerial
             //_serial = CheckKey.getSerial();
             //Logg.Debug("Serial Key:" + FingerPrint.Value());
-            txtSerial.Text = @"Please input serial here...";
             //
             labContactMe.Text = @"Contact me: CÔNG TY TNHH CÔNG NGHỆ METAFAT";
             labEmail.Text = @"Email: metafatvn@gmail.com - Phone: 0896892998";
@@ -87,11 +86,11 @@ namespace AutoDataVPBank
                 //    return;
                 //}
                 //TODO: Check serial 
-                if (!CheckSerial())
-                {
-                    SendMail(_uniqKey);
-                    return;
-                }
+                //if (!CheckSerial())
+                //{
+                //    SendMail(_uniqKey);
+                //    return;
+                //}
                 try
                 {
                     var dateAsignFrom =
@@ -128,7 +127,7 @@ namespace AutoDataVPBank
             
         }
 
-        private bool CheckSerial()
+        /*private bool CheckSerial()
         {
             try
             {
@@ -151,71 +150,86 @@ namespace AutoDataVPBank
                 Logg.Error(e.Message);
                 throw;
             }
-        }
+        }*/
 
         private bool CheckLicense()
         {
-            //Initialize variables with default values
-            MyLicense _lic = null;
-            string _msg = string.Empty;
-            LicenseStatus _status = LicenseStatus.UNDEFINED;
-
-            //Read public key from assembly
-            Assembly _assembly = Assembly.GetExecutingAssembly();
-            using (MemoryStream _mem = new MemoryStream())
+            try
             {
-                _assembly.GetManifestResourceStream("AutoDataVPBank.LicenseVerify.cer")?.CopyTo(_mem);
+                //Initialize variables with default values
+                MyLicense lic = null;
+                string msg;
+                LicenseStatus status;
 
-                _certPubicKeyData = _mem.ToArray();
+                //Read public key from assembly
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                using (MemoryStream mem = new MemoryStream())
+                {
+                    assembly.GetManifestResourceStream("AutoDataVPBank.LicenseVerify.cer")?.CopyTo(mem);
+
+                    _certPubicKeyData = mem.ToArray();
+                }
+
+                //Check if the XML license file exists
+                if (File.Exists("license.lic"))
+                {
+                    lic = (MyLicense)LicenseHandler.ParseLicenseFromBASE64String(
+                        typeof(MyLicense),
+                        File.ReadAllText("license.lic"),
+                        _certPubicKeyData,
+                        out status,
+                        out msg);
+                }
+                else
+                {
+                    status = LicenseStatus.INVALID;
+                    msg = "Your copy of this application is not activated";
+                }
+
+                switch (status)
+                {
+                    case LicenseStatus.VALID:
+
+                        //TODO: If license is valid, you can do extra checking here
+                        //TODO: E.g., check license expiry date if you have added expiry date property to your license entity
+                        //TODO: Also, you can set feature switch here based on the different properties you added to your license entity 
+
+                        //Here for demo, just show the license information and RETURN without additional checking       
+                        licInfo.ShowLicenseInfo(lic);
+
+                        return true;
+
+                    case LicenseStatus.UNDEFINED:
+                        break;
+                    case LicenseStatus.INVALID:
+                        break;
+                    case LicenseStatus.CRACKED:
+                        break;
+                    default:
+                        //for the other status of license file, show the warning message
+                        //and also popup the activation form for user to activate your application
+                        MessageBox.Show(msg, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                        using (FrmActivation frm = new FrmActivation())
+                        {
+                            frm.CertificatePublicKeyData = _certPubicKeyData;
+                            frm.ShowDialog();
+
+                            //Exit the application after activation to reload the license file 
+                            //Actually it is not nessessary, you may just call the API to reload the license file
+                            //Here just simplied the demo process
+
+                            Application.Exit();
+                        }
+                        break;
+                }
             }
-
-            //Check if the XML license file exists
-            if (File.Exists("license.lic"))
+            catch (Exception e)
             {
-                _lic = (MyLicense)LicenseHandler.ParseLicenseFromBASE64String(
-                    typeof(MyLicense),
-                    File.ReadAllText("license.lic"),
-                    _certPubicKeyData,
-                    out _status,
-                    out _msg);
+                Logg.Error(e.Message);
+                throw;
             }
-            else
-            {
-                _status = LicenseStatus.INVALID;
-                _msg = "Your copy of this application is not activated";
-            }
-
-            switch (_status)
-            {
-                case LicenseStatus.VALID:
-
-                    //TODO: If license is valid, you can do extra checking here
-                    //TODO: E.g., check license expiry date if you have added expiry date property to your license entity
-                    //TODO: Also, you can set feature switch here based on the different properties you added to your license entity 
-
-                    //Here for demo, just show the license information and RETURN without additional checking       
-                    licInfo.ShowLicenseInfo(_lic);
-
-                    return true;
-
-                default:
-                    //for the other status of license file, show the warning message
-                    //and also popup the activation form for user to activate your application
-                    MessageBox.Show(_msg, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                    using (FrmActivation frm = new FrmActivation())
-                    {
-                        frm.CertificatePublicKeyData = _certPubicKeyData;
-                        frm.ShowDialog();
-
-                        //Exit the application after activation to reload the license file 
-                        //Actually it is not nessessary, you may just call the API to reload the license file
-                        //Here just simplied the demo process
-
-                        Application.Exit();
-                    }
-                    break;
-            }
+            
             return false;
         }
 

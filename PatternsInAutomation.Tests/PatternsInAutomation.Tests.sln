@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDataVPBank", "ConsoleApp1\AutoDataVPBank.csproj", "{DFF4BCE9-4867-4AFD-B846-4CAC247898DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivationAutoVPBank", "ActivationAutoVPBank\ActivationAutoVPBank.csproj", "{CCA580A7-B7D9-4E45-8759-C683E5D55330}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivationControls4Win", "Core\ActivationControls4Win\ActivationControls4Win.csproj", "{DDF06EAC-02DF-4BDA-A883-98B856BC1765}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLicense", "Core\QLicense\QLicense.csproj", "{1980E43F-C5E4-4A2B-95A6-1AEBDC7EE2B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{CCA580A7-B7D9-4E45-8759-C683E5D55330}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCA580A7-B7D9-4E45-8759-C683E5D55330}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCA580A7-B7D9-4E45-8759-C683E5D55330}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDF06EAC-02DF-4BDA-A883-98B856BC1765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF06EAC-02DF-4BDA-A883-98B856BC1765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF06EAC-02DF-4BDA-A883-98B856BC1765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF06EAC-02DF-4BDA-A883-98B856BC1765}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1980E43F-C5E4-4A2B-95A6-1AEBDC7EE2B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1980E43F-C5E4-4A2B-95A6-1AEBDC7EE2B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1980E43F-C5E4-4A2B-95A6-1AEBDC7EE2B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1980E43F-C5E4-4A2B-95A6-1AEBDC7EE2B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

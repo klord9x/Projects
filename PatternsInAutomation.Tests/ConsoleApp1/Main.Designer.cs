@@ -46,22 +46,21 @@
             this.label7 = new System.Windows.Forms.Label();
             this.cboBrowser = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.txtSerial = new System.Windows.Forms.TextBox();
             this.labContactMe = new System.Windows.Forms.Label();
             this.labEmail = new System.Windows.Forms.Label();
-            this.btn_serial = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.cboProDuct = new System.Windows.Forms.ComboBox();
             this.lb_process_status = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.licInfo = new QLicense.Windows.Controls.LicenseInfoControl();
+            this.txtSerial = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(269, 188);
+            this.btnRun.Location = new System.Drawing.Point(274, 184);
             this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(60, 43);
+            this.btnRun.Size = new System.Drawing.Size(60, 34);
             this.btnRun.TabIndex = 0;
             this.btnRun.Text = "Start";
             this.btnRun.UseVisualStyleBackColor = true;
@@ -69,7 +68,7 @@
             // 
             // txtPass
             // 
-            this.txtPass.Location = new System.Drawing.Point(254, 42);
+            this.txtPass.Location = new System.Drawing.Point(254, 45);
             this.txtPass.Name = "txtPass";
             this.txtPass.Size = new System.Drawing.Size(60, 20);
             this.txtPass.TabIndex = 1;
@@ -77,7 +76,7 @@
             // 
             // txtUser
             // 
-            this.txtUser.Location = new System.Drawing.Point(92, 42);
+            this.txtUser.Location = new System.Drawing.Point(92, 45);
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(97, 20);
             this.txtUser.TabIndex = 2;
@@ -85,7 +84,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(33, 45);
+            this.label1.Location = new System.Drawing.Point(33, 48);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 3;
@@ -94,7 +93,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(195, 45);
+            this.label2.Location = new System.Drawing.Point(195, 48);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 13);
             this.label2.TabIndex = 4;
@@ -102,7 +101,7 @@
             // 
             // txtSignFo
             // 
-            this.txtSignFo.Location = new System.Drawing.Point(92, 90);
+            this.txtSignFo.Location = new System.Drawing.Point(92, 93);
             this.txtSignFo.Name = "txtSignFo";
             this.txtSignFo.Size = new System.Drawing.Size(97, 20);
             this.txtSignFo.TabIndex = 1;
@@ -110,7 +109,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(33, 94);
+            this.label3.Location = new System.Drawing.Point(33, 97);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 13);
             this.label3.TabIndex = 4;
@@ -118,7 +117,7 @@
             // 
             // txtSignTo
             // 
-            this.txtSignTo.Location = new System.Drawing.Point(217, 90);
+            this.txtSignTo.Location = new System.Drawing.Point(217, 93);
             this.txtSignTo.Name = "txtSignTo";
             this.txtSignTo.Size = new System.Drawing.Size(97, 20);
             this.txtSignTo.TabIndex = 1;
@@ -126,7 +125,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(195, 94);
+            this.label4.Location = new System.Drawing.Point(195, 97);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(16, 13);
             this.label4.TabIndex = 4;
@@ -136,7 +135,7 @@
             // 
             this.cboActive.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboActive.FormattingEnabled = true;
-            this.cboActive.Location = new System.Drawing.Point(92, 142);
+            this.cboActive.Location = new System.Drawing.Point(92, 145);
             this.cboActive.Name = "cboActive";
             this.cboActive.Size = new System.Drawing.Size(156, 21);
             this.cboActive.TabIndex = 5;
@@ -145,7 +144,7 @@
             // 
             this.radioButtonCAS.AutoSize = true;
             this.radioButtonCAS.Checked = true;
-            this.radioButtonCAS.Location = new System.Drawing.Point(96, 68);
+            this.radioButtonCAS.Location = new System.Drawing.Point(96, 71);
             this.radioButtonCAS.Name = "radioButtonCAS";
             this.radioButtonCAS.Size = new System.Drawing.Size(46, 17);
             this.radioButtonCAS.TabIndex = 6;
@@ -156,7 +155,7 @@
             // radioButtonCASSystem
             // 
             this.radioButtonCASSystem.AutoSize = true;
-            this.radioButtonCASSystem.Location = new System.Drawing.Point(172, 68);
+            this.radioButtonCASSystem.Location = new System.Drawing.Point(172, 71);
             this.radioButtonCASSystem.Name = "radioButtonCASSystem";
             this.radioButtonCASSystem.Size = new System.Drawing.Size(124, 17);
             this.radioButtonCASSystem.TabIndex = 6;
@@ -177,7 +176,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(33, 145);
+            this.label6.Location = new System.Drawing.Point(33, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(41, 13);
             this.label6.TabIndex = 8;
@@ -186,7 +185,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(33, 172);
+            this.label7.Location = new System.Drawing.Point(33, 175);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(45, 13);
             this.label7.TabIndex = 9;
@@ -199,7 +198,7 @@
             this.cboBrowser.Items.AddRange(new object[] {
             "Firefox",
             "Chrome"});
-            this.cboBrowser.Location = new System.Drawing.Point(92, 169);
+            this.cboBrowser.Location = new System.Drawing.Point(92, 172);
             this.cboBrowser.Name = "cboBrowser";
             this.cboBrowser.Size = new System.Drawing.Size(156, 21);
             this.cboBrowser.TabIndex = 10;
@@ -207,19 +206,11 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(33, 70);
+            this.label8.Location = new System.Drawing.Point(33, 73);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(34, 13);
             this.label8.TabIndex = 3;
             this.label8.Text = "Mode";
-            // 
-            // txtSerial
-            // 
-            this.txtSerial.Location = new System.Drawing.Point(1, 248);
-            this.txtSerial.Name = "txtSerial";
-            this.txtSerial.Size = new System.Drawing.Size(352, 20);
-            this.txtSerial.TabIndex = 11;
-            this.txtSerial.Text = "...";
             // 
             // labContactMe
             // 
@@ -238,27 +229,17 @@
             this.labEmail.AutoSize = true;
             this.labEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labEmail.ForeColor = System.Drawing.Color.Red;
-            this.labEmail.Location = new System.Drawing.Point(266, 18);
+            this.labEmail.Location = new System.Drawing.Point(251, 24);
             this.labEmail.Name = "labEmail";
             this.labEmail.Size = new System.Drawing.Size(48, 15);
             this.labEmail.TabIndex = 13;
             this.labEmail.Text = "Email:";
             this.labEmail.Visible = false;
             // 
-            // btn_serial
-            // 
-            this.btn_serial.BackColor = System.Drawing.Color.Transparent;
-            this.btn_serial.Location = new System.Drawing.Point(140, 220);
-            this.btn_serial.Name = "btn_serial";
-            this.btn_serial.Size = new System.Drawing.Size(49, 22);
-            this.btn_serial.TabIndex = 14;
-            this.btn_serial.Text = "Serial:";
-            this.btn_serial.UseVisualStyleBackColor = false;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(33, 119);
+            this.label9.Location = new System.Drawing.Point(33, 122);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 13);
             this.label9.TabIndex = 16;
@@ -269,7 +250,7 @@
             this.cboProDuct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProDuct.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboProDuct.FormattingEnabled = true;
-            this.cboProDuct.Location = new System.Drawing.Point(92, 116);
+            this.cboProDuct.Location = new System.Drawing.Point(92, 119);
             this.cboProDuct.Name = "cboProDuct";
             this.cboProDuct.Size = new System.Drawing.Size(222, 20);
             this.cboProDuct.TabIndex = 15;
@@ -277,7 +258,7 @@
             // lb_process_status
             // 
             this.lb_process_status.AutoSize = true;
-            this.lb_process_status.Location = new System.Drawing.Point(93, 202);
+            this.lb_process_status.Location = new System.Drawing.Point(93, 205);
             this.lb_process_status.Name = "lb_process_status";
             this.lb_process_status.Size = new System.Drawing.Size(38, 13);
             this.lb_process_status.TabIndex = 4;
@@ -286,7 +267,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(34, 202);
+            this.label11.Location = new System.Drawing.Point(34, 205);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(40, 13);
             this.label11.TabIndex = 4;
@@ -296,20 +277,29 @@
             // 
             this.licInfo.DateFormat = null;
             this.licInfo.DateTimeFormat = null;
-            this.licInfo.Location = new System.Drawing.Point(361, 42);
+            this.licInfo.Location = new System.Drawing.Point(340, 45);
             this.licInfo.Name = "licInfo";
-            this.licInfo.Size = new System.Drawing.Size(224, 152);
+            this.licInfo.Size = new System.Drawing.Size(224, 121);
             this.licInfo.TabIndex = 17;
+            // 
+            // txtSerial
+            // 
+            this.txtSerial.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            this.txtSerial.Location = new System.Drawing.Point(37, 240);
+            this.txtSerial.Name = "txtSerial";
+            this.txtSerial.Size = new System.Drawing.Size(297, 20);
+            this.txtSerial.TabIndex = 11;
+            this.txtSerial.Text = "...";
+            this.txtSerial.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 269);
+            this.ClientSize = new System.Drawing.Size(583, 267);
             this.Controls.Add(this.licInfo);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.cboProDuct);
-            this.Controls.Add(this.btn_serial);
             this.Controls.Add(this.labEmail);
             this.Controls.Add(this.labContactMe);
             this.Controls.Add(this.txtSerial);
@@ -365,14 +355,13 @@
         private System.Windows.Forms.Label label7;
         public System.Windows.Forms.ComboBox cboBrowser;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox txtSerial;
         private System.Windows.Forms.Label labContactMe;
         private System.Windows.Forms.Label labEmail;
-        private System.Windows.Forms.Button btn_serial;
         private System.Windows.Forms.Label label9;
         public System.Windows.Forms.ComboBox cboProDuct;
         private System.Windows.Forms.Label label11;
         public System.Windows.Forms.Label lb_process_status;
         private QLicense.Windows.Controls.LicenseInfoControl licInfo;
+        private System.Windows.Forms.TextBox txtSerial;
     }
 }

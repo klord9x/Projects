@@ -12,6 +12,9 @@ namespace AutoDataVPBank
         [ShowInLicenseInfo(true, "Enable Feature Full", ShowInLicenseInfoAttribute.FormatType.String)]
         public bool EnableFeatureFull { get; set; }
 
+        private static MyLicense _instance;
+        public static MyLicense GetInstance => _instance ?? (_instance = new MyLicense());
+
         public MyLicense()
         {
             //Initialize app name for the license
