@@ -90,8 +90,6 @@ namespace AutoDataVPBank
                 //    SendMail(_uniqKey);
                 //    return;
                 //}
-
-                CheckLicense();
                 try
                 {
                     var dateAsignFrom =
@@ -224,6 +222,11 @@ namespace AutoDataVPBank
             //MessageBox.Show(e.KeyCode.ToString());
             if (e.Control && e.KeyCode == Keys.K)
                 txtSerial.Visible = true;
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            CheckLicense();
         }
     }
 }
